@@ -1,234 +1,168 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>IT Fundamentals | The Climb</title>
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
+/* Reverse scrolling + stage activation + route climber positioning */
 
-  <body>
-    <!-- Background image + dark overlay live in CSS on .bg -->
-    <div class="bg" aria-hidden="true"></div>
+(function () {
+  const stageIds = [
+    "stage-basecamp",
+    "stage-discover",
+    "stage-transition",
+    "stage-secure",
+    "stage-above",
+    "stage-ready",
+  ];
 
-    <aside class="rail">
-      <div class="rail-card rail-brand">
-        <div class="brand-kicker">ITFUNDAMENTALS.CH</div>
-        <div class="brand-title">The climb</div>
-      </div>
+  const stages = stageIds
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
 
-      <nav class="rail-nav" aria-label="Climb stages">
-        <button class="stage-pill" data-goto="stage-basecamp" type="button">
-          <span class="stage-num">1</span>
-          <span class="stage-name">Base camp</span>
-        </button>
+  const navButtons = Array.from(document.querySelectorAll(".stage-pill"));
+  const cards = Array.from(document.querySelectorAll(".card"));
 
-        <button class="stage-pill" data-goto="stage-discover" type="button">
-          <span class="stage-num">2</span>
-          <span class="stage-name">Discover</span>
-        </button>
+  const routeSvg = document.querySelector(".route-svg");
+  const climbPath = document.getElementById("climbPath");
+  const climber = document.getElementById("climber");
+  const mileNodes = Array.from(document.querySelectorAll(".mile"));
 
-        <button class="stage-pill" data-goto="stage-transition" type="button">
-          <span class="stage-num">3</span>
-          <span class="stage-name">Transition</span>
-        </button>
+  if (!stages.length) return;
 
-        <button class="stage-pill" data-goto="stage-secure" type="button">
-          <span class="stage-num">4</span>
-          <span class="stage-name">Secure</span>
-        </button>
+  let activeIndex = 0;
 
-        <button class="stage-pill" data-goto="stage-above" type="button">
-          <span class="stage-num">5</span>
-          <span class="stage-name">Above the clouds</span>
-        </button>
+  function clamp(n, min, max) {
+    return Math.max(min, Math.min(max, n));
+  }
 
-        <button class="stage-pill" data-goto="stage-ready" type="button">
-          <span class="stage-num">6</span>
-          <span class="stage-name">Ready</span>
-        </button>
-      </nav>
+  function setActive(index) {
+    activeIndex = clamp(index, 0, stages.length - 1);
 
-      <div class="rail-card rail-hint">
-        <div class="hint-title">Scroll down to climb up</div>
-        <div class="hint-sub">Or click a stage</div>
-      </div>
-    </aside>
+    navButtons.forEach((btn) => {
+      const target = btn.getAttribute("data-goto");
+      const isActive = target === stageIds[activeIndex];
+      btn.classList.toggle("is-active", isActive);
+    });
 
-    <main class="content">
-      <div class="stage-ui" aria-hidden="true">
-        <div class="route">
-          <svg class="route-svg" viewBox="0 0 260 900" preserveAspectRatio="xMidYMid meet">
-            <defs>
-              <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="6" result="blur" />
-                <feColorMatrix
-                  in="blur"
-                  type="matrix"
-                  values="1 0 0 0 0
-                          0 1 0 0 0
-                          0 0 1 0 0
-                          0 0 0 0.65 0"
-                  result="glow"
-                />
-                <feMerge>
-                  <feMergeNode in="glow" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
+    stages.forEach((s, i) => {
+      const card = s.querySelector(".card");
+      if (card) card.classList.toggle("is-visible", i === activeIndex);
+    });
 
-              <linearGradient id="routeFade" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stop-color="rgba(255,255,255,0.35)" />
-                <stop offset="100%" stop-color="rgba(255,255,255,0.12)" />
-              </linearGradient>
-            </defs>
+    mileNodes.forEach((m, i) => {
+      m.classList.toggle("is-hit", i <= activeIndex);
+    });
 
-            <path
-              id="climbPath"
-              d="M 190 860
-                 C 120 790, 185 740, 150 680
-                 C 110 610, 185 580, 160 510
-                 C 120 420, 210 390, 175 310
-                 C 140 235, 210 210, 165 135
-                 C 125 75, 175 45, 190 30"
-              fill="none"
-              stroke="url(#routeFade)"
-              stroke-width="8"
-              stroke-linecap="round"
-              stroke-dasharray="2 18"
-              filter="url(#softGlow)"
-            />
+    updateClimberForStage(activeIndex);
+  }
 
-            <g id="milestones" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2">
-              <circle class="mile" data-mile="0" cx="190" cy="860" r="9" />
-              <circle class="mile" data-mile="1" cx="152" cy="690" r="9" />
-              <circle class="mile" data-mile="2" cx="160" cy="510" r="9" />
-              <circle class="mile" data-mile="3" cx="175" cy="310" r="9" />
-              <circle class="mile" data-mile="4" cx="165" cy="135" r="9" />
-              <circle class="mile" data-mile="5" cx="190" cy="30" r="9" />
-            </g>
+  function scrollToStage(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
 
-            <g id="climber" transform="translate(190,860)">
-              <circle r="12" fill="rgba(255,255,255,0.18)" />
-              <circle r="6" fill="rgba(255,255,255,0.95)" />
-              <circle r="2.5" cx="-10" cy="-2" fill="rgba(255,255,255,0.9)" />
-              <circle r="2.5" cx="-2" cy="10" fill="rgba(255,255,255,0.9)" />
-            </g>
-          </svg>
+  navButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const target = btn.getAttribute("data-goto");
+      if (!target) return;
+      scrollToStage(target);
+    });
+  });
 
-          <div class="route-label route-label-top">
-            <span class="cloud-ico" aria-hidden="true">☁</span>
-          </div>
-        </div>
-      </div>
+  /* Make cards visible for the first stage immediately */
+  cards.forEach((c, idx) => c.classList.toggle("is-visible", idx === 0));
 
-      <section class="stage" id="stage-basecamp" data-index="0">
-        <article class="card" data-anim="slide">
-          <div class="tag">BASE CAMP</div>
-          <h2>Stabilise what you already use</h2>
-          <ul>
-            <li>Reduce scattered tools and ad hoc setups</li>
-            <li>Establish a clear security baseline</li>
-            <li>Set up backup and monitoring foundations</li>
-            <li>Remove avoidable risk and unplanned spend</li>
-          </ul>
-          <div class="icon-row">
-            <span class="mini-ico" title="Base camp">⛺</span>
-            <span class="mini-ico" title="Checklist">📋</span>
-            <span class="mini-ico" title="Stability">🧭</span>
-          </div>
-        </article>
-      </section>
+  /* Intersection observer to decide which stage is active */
+  const io = new IntersectionObserver(
+    (entries) => {
+      const visible = entries
+        .filter((e) => e.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
-      <section class="stage" id="stage-discover" data-index="1">
-        <article class="card" data-anim="slide">
-          <div class="tag">DISCOVER</div>
-          <h2>Understand the current state</h2>
-          <ul>
-            <li>Short review of tools, risks, and priorities</li>
-            <li>Confirm users, devices, domain, and scope</li>
-            <li>Agree the simplest path forward</li>
-          </ul>
-          <div class="icon-row">
-            <span class="mini-ico" title="Discovery">🔎</span>
-            <span class="mini-ico" title="People">👥</span>
-            <span class="mini-ico" title="Scope">🗺️</span>
-          </div>
-        </article>
-      </section>
+      if (!visible) return;
 
-      <section class="stage" id="stage-transition" data-index="2">
-        <article class="card" data-anim="slide">
-          <div class="tag">TRANSITION</div>
-          <h2>Move into Microsoft 365 cleanly</h2>
-          <ul>
-            <li>Migrate email, calendars, and files</li>
-            <li>Set up Teams, SharePoint, OneDrive</li>
-            <li>Minimal disruption, clean cutover</li>
-          </ul>
-          <div class="icon-row">
-            <span class="mini-ico" title="Migration">🚚</span>
-            <span class="mini-ico" title="M365">☁</span>
-            <span class="mini-ico" title="Cutover">✅</span>
-          </div>
-        </article>
-      </section>
+      const idx = parseInt(visible.target.getAttribute("data-index") || "0", 10);
+      if (!Number.isNaN(idx) && idx !== activeIndex) setActive(idx);
+    },
+    {
+      threshold: [0.45, 0.55, 0.65],
+      rootMargin: "0px 0px 0px 0px",
+    }
+  );
 
-      <section class="stage" id="stage-secure" data-index="3">
-        <article class="card" data-anim="slide">
-          <div class="tag">SECURE</div>
-          <h2>Security by default</h2>
-          <ul>
-            <li>MFA enforced for all users</li>
-            <li>Baseline policies applied</li>
-            <li>Safer sharing and permissions</li>
-          </ul>
-          <div class="icon-row">
-            <span class="mini-ico" title="Security">🛡️</span>
-            <span class="mini-ico" title="MFA">🔐</span>
-            <span class="mini-ico" title="Policies">⚙️</span>
-          </div>
-        </article>
-      </section>
+  stages.forEach((s) => io.observe(s));
 
-      <section class="stage" id="stage-above" data-index="4">
-        <article class="card" data-anim="slide">
-          <div class="tag">ABOVE THE CLOUDS</div>
-          <h2>Managed, monitored, backed up</h2>
-          <ul>
-            <li>Backup for Microsoft 365 data with tested recovery</li>
-            <li>Monitoring and alerting for issues that matter</li>
-            <li>Onboarding and offboarding done properly</li>
-            <li>Predictable cost and calmer day to day operations</li>
-          </ul>
-          <div class="icon-row">
-            <span class="mini-ico" title="Monitoring">📡</span>
-            <span class="mini-ico" title="Backup">🧰</span>
-            <span class="mini-ico" title="Operations">🧑‍💻</span>
-          </div>
-        </article>
-      </section>
+  /* Reverse scroll */
+  const reverseScrollEnabled = true;
+  let reverseScrollLock = false;
 
-      <section class="stage" id="stage-ready" data-index="5">
-        <article class="card" data-anim="slide">
-          <div class="tag">READY</div>
-          <h2>AI and automation, when you choose</h2>
-          <ul>
-            <li>Centralised data and clean permissions</li>
-            <li>Auditable access and safer sharing</li>
-            <li>Practical automation that reduces effort</li>
-          </ul>
-          <div class="icon-row">
-            <span class="mini-ico" title="AI">✨</span>
-            <span class="mini-ico" title="Automation">🤖</span>
-            <span class="mini-ico" title="Outcomes">📈</span>
-          </div>
-        </article>
-      </section>
+  function onWheel(e) {
+    if (!reverseScrollEnabled) return;
+    if (reverseScrollLock) return;
 
-      <footer class="endcap" aria-hidden="true"></footer>
-    </main>
+    const el = document.activeElement;
+    if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.isContentEditable)) return;
 
-    <script src="./app.js"></script>
-  </body>
-</html>
+    e.preventDefault();
+    const delta = e.deltaY;
+
+    reverseScrollLock = true;
+    window.scrollBy({ top: -delta, left: 0, behavior: "auto" });
+    requestAnimationFrame(() => {
+      reverseScrollLock = false;
+    });
+  }
+
+  window.addEventListener("wheel", onWheel, { passive: false });
+
+  /* Place climber on the route path */
+  function updateClimberForStage(stageIndex) {
+    if (!routeSvg || !climbPath || !climber) return;
+
+    const total = climbPath.getTotalLength();
+    const t = stages.length <= 1 ? 0 : stageIndex / (stages.length - 1);
+    const len = total * (1 - t);
+
+    const pt = climbPath.getPointAtLength(len);
+    climber.setAttribute("transform", `translate(${pt.x},${pt.y})`);
+  }
+
+  /* Smooth progress between stages while scrolling */
+  function updateClimberFromScroll() {
+    if (!routeSvg || !climbPath || !climber) return;
+
+    const total = climbPath.getTotalLength();
+
+    const current = stages[activeIndex];
+    const next = stages[clamp(activeIndex + 1, 0, stages.length - 1)];
+
+    const rect = current.getBoundingClientRect();
+    const nextRect = next.getBoundingClientRect();
+
+    let prog = 0;
+    if (next !== current) {
+      const span = nextRect.top - rect.top;
+      if (Math.abs(span) > 1) {
+        prog = clamp((0 - rect.top) / span, 0, 1);
+      }
+    }
+
+    const t0 = stages.length <= 1 ? 0 : activeIndex / (stages.length - 1);
+    const t1 = stages.length <= 1 ? 0 : clamp(activeIndex + 1, 0, stages.length - 1) / (stages.length - 1);
+    const t = t0 + (t1 - t0) * prog;
+
+    const len = total * (1 - t);
+    const pt = climbPath.getPointAtLength(len);
+    climber.setAttribute("transform", `translate(${pt.x},${pt.y})`);
+  }
+
+  let raf = 0;
+  function onScroll() {
+    if (raf) cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(() => {
+      updateClimberFromScroll();
+    });
+  }
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  /* Start the user at the first stage, with the image sitting behind */
+  setActive(0);
+  updateClimberFromScroll();
+})();

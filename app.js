@@ -1,4 +1,4 @@
-/* Reverse scrolling + stage activation + route climber positioning */
+/* Reverse scrolling + stage activation + route climber positioning + gradual night sky */
 
 (function () {
   const stageIds = [
@@ -30,25 +30,9 @@
     return Math.max(min, Math.min(max, n));
   }
 
-  function setActive(index) {
-    activeIndex = clamp(index, 0, stages.length - 1);
-
-    navButtons.forEach((btn) => {
-      const target = btn.getAttribute("data-goto");
-      const isActive = target === stageIds[activeIndex];
-      btn.classList.toggle("is-active", isActive);
-    });
-
-    stages.forEach((s, i) => {
-      const card = s.querySelector(".card");
-      if (card) card.classList.toggle("is-visible", i === activeIndex);
-    });
-
-    mileNodes.forEach((m, i) => {
-      m.classList.toggle("is-hit", i <= activeIndex);
-    });
-
-    updateClimberForStage(activeIndex);
+  function smoothstep(edge0, edge1, x) {
+    const t = clamp((x - edge0) / (edge1 - edge0), 0, 1);
+    return t * t * (3 - 2 * t);
   }
 
   function scrollToStage(id) {
@@ -65,10 +49,8 @@
     });
   });
 
-  /* Make cards visible for the first stage immediately */
   cards.forEach((c, idx) => c.classList.toggle("is-visible", idx === 0));
 
-  /* Intersection observer to decide which stage is active */
   const io = new IntersectionObserver(
     (entries) => {
       const visible = entries
@@ -88,7 +70,6 @@
 
   stages.forEach((s) => io.observe(s));
 
-  /* Reverse scroll */
   const reverseScrollEnabled = true;
   let reverseScrollLock = false;
 
@@ -111,7 +92,25 @@
 
   window.addEventListener("wheel", onWheel, { passive: false });
 
-  /* Place climber on the route path */
+  function setActive(index) {
+    activeIndex = clamp(index, 0, stages.length - 1);
+
+    navButtons.forEach((btn) => {
+      const target = btn.getAttribute("data-goto");
+      const isActive = target === stageIds[activeIndex];
+      btn.classList.toggle("is-active", isActive);
+    });
+
+    stages.forEach((s, i) => {
+      const card = s.querySelector(".card");
+      if (card) card.classList.toggle("is-visible", i === activeIndex);
+    });
+
+    mileNodes.forEach((m, i) => {
+      m.classList.toggle("is-hit", i <= activeIndex);
+    });
+  }
+
   function updateClimberForStage(stageIndex) {
     if (!routeSvg || !climbPath || !climber) return;
 
@@ -123,12 +122,7 @@
     climber.setAttribute("transform", `translate(${pt.x},${pt.y})`);
   }
 
-  /* Smooth progress between stages while scrolling */
-  function updateClimberFromScroll() {
-    if (!routeSvg || !climbPath || !climber) return;
-
-    const total = climbPath.getTotalLength();
-
+  function computeContinuousProgress() {
     const current = stages[activeIndex];
     const next = stages[clamp(activeIndex + 1, 0, stages.length - 1)];
 
@@ -147,9 +141,31 @@
     const t1 = stages.length <= 1 ? 0 : clamp(activeIndex + 1, 0, stages.length - 1) / (stages.length - 1);
     const t = t0 + (t1 - t0) * prog;
 
+    return clamp(t, 0, 1);
+  }
+
+  function updateClimberFromScroll() {
+    if (!routeSvg || !climbPath || !climber) return;
+
+    const total = climbPath.getTotalLength();
+    const t = computeContinuousProgress();
     const len = total * (1 - t);
+
     const pt = climbPath.getPointAtLength(len);
     climber.setAttribute("transform", `translate(${pt.x},${pt.y})`);
+  }
+
+  function updateNightFromScroll() {
+    const t = computeContinuousProgress();
+
+    /*
+      Gradual night ramp:
+      Start blending in just after Secure (index 3) and fully on by Ready (index 5).
+      That is roughly t = 0.60 to 1.00 (for 6 stages).
+    */
+    const night = smoothstep(0.60, 1.00, t);
+
+    document.documentElement.style.setProperty("--night-alpha", night.toFixed(3));
   }
 
   let raf = 0;
@@ -157,12 +173,14 @@
     if (raf) cancelAnimationFrame(raf);
     raf = requestAnimationFrame(() => {
       updateClimberFromScroll();
+      updateNightFromScroll();
     });
   }
 
   window.addEventListener("scroll", onScroll, { passive: true });
 
-  /* Start the user at the first stage, with the image sitting behind */
   setActive(0);
+  updateClimberForStage(0);
   updateClimberFromScroll();
+  updateNightFromScroll();
 })();
