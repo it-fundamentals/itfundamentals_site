@@ -12,7 +12,6 @@
   </head>
 
   <body>
-    <!-- Left rail -->
     <aside class="rail" aria-label="Climb stages">
       <div class="rail_inner">
         <div class="rail_brand">
@@ -47,16 +46,6 @@
           </a>
         </nav>
 
-        <div class="rail_climber" aria-hidden="true">
-          <div class="climber">
-            <div class="climber_head"></div>
-            <div class="climber_body"></div>
-            <div class="climber_arm"></div>
-            <div class="climber_leg"></div>
-          </div>
-          <div class="climber_rope"></div>
-        </div>
-
         <div class="rail_hint">
           Scroll down to climb up<br />
           Or click a stage
@@ -64,9 +53,7 @@
       </div>
     </aside>
 
-    <!-- Main content -->
     <main class="page" id="page" aria-label="From base camp to the clouds">
-      <!-- Top of page, this is where you end up after climbing -->
       <section class="topcap" id="topcap" aria-label="Top of the climb">
         <div class="topcap_inner">
           <div class="topcap_badge">IT Fundamentals</div>
@@ -83,14 +70,12 @@
         </div>
       </section>
 
-      <!-- Stage: Ready -->
       <section class="stage stage_ready" id="stage-ready" data-stage="ready" aria-label="Ready">
         <div class="stage_inner">
           <div class="stage_card">
             <div class="stage_kicker">
               <span class="stage_tag">READY</span>
               <span class="stage_icon" aria-hidden="true">
-                <!-- Spark icon -->
                 <svg viewBox="0 0 24 24" fill="none">
                   <path
                     d="M12 2l1.1 5.4L18 8.5l-4.2 2.7L15 16l-3-3.2L9 16l1.2-4.8L6 8.5l4.9-1.1L12 2z"
@@ -116,21 +101,14 @@
             </ul>
           </div>
         </div>
-        <div class="clouds" aria-hidden="true">
-          <span class="cloud cloud_a"></span>
-          <span class="cloud cloud_b"></span>
-          <span class="cloud cloud_c"></span>
-        </div>
       </section>
 
-      <!-- Stage: Above the clouds -->
       <section class="stage stage_clouds" id="stage-clouds" data-stage="clouds" aria-label="Above the clouds">
         <div class="stage_inner">
           <div class="stage_card">
             <div class="stage_kicker">
               <span class="stage_tag">ABOVE THE CLOUDS</span>
               <span class="stage_icon" aria-hidden="true">
-                <!-- Cloud icon -->
                 <svg viewBox="0 0 24 24" fill="none">
                   <path
                     d="M7.5 18.5h9.6a4.1 4.1 0 0 0 .6-8.2A5.6 5.6 0 0 0 6.2 9.4a3.7 3.7 0 0 0 1.3 9.1z"
@@ -151,20 +129,14 @@
             </ul>
           </div>
         </div>
-        <div class="clouds" aria-hidden="true">
-          <span class="cloud cloud_d"></span>
-          <span class="cloud cloud_e"></span>
-        </div>
       </section>
 
-      <!-- Stage: Secure -->
       <section class="stage stage_secure" id="stage-secure" data-stage="secure" aria-label="Secure">
         <div class="stage_inner">
           <div class="stage_card">
             <div class="stage_kicker">
               <span class="stage_tag">SECURE</span>
               <span class="stage_icon" aria-hidden="true">
-                <!-- Shield icon -->
                 <svg viewBox="0 0 24 24" fill="none">
                   <path
                     d="M12 2l8 4v6c0 5.2-3.2 9.6-8 10-4.8-.4-8-4.8-8-10V6l8-4z"
@@ -193,14 +165,12 @@
         </div>
       </section>
 
-      <!-- Stage: Transition -->
       <section class="stage stage_transition" id="stage-transition" data-stage="transition" aria-label="Transition">
         <div class="stage_inner">
           <div class="stage_card">
             <div class="stage_kicker">
               <span class="stage_tag">TRANSITION</span>
               <span class="stage_icon" aria-hidden="true">
-                <!-- Arrow path icon -->
                 <svg viewBox="0 0 24 24" fill="none">
                   <path
                     d="M5 7h9a4 4 0 0 1 0 8H10"
@@ -234,14 +204,12 @@
         </div>
       </section>
 
-      <!-- Stage: Discover -->
       <section class="stage stage_discover" id="stage-discover" data-stage="discover" aria-label="Discover">
         <div class="stage_inner">
           <div class="stage_card">
             <div class="stage_kicker">
               <span class="stage_tag">DISCOVER</span>
               <span class="stage_icon" aria-hidden="true">
-                <!-- Compass icon -->
                 <svg viewBox="0 0 24 24" fill="none">
                   <path
                     d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"
@@ -268,7 +236,6 @@
         </div>
       </section>
 
-      <!-- Stage: Base camp -->
       <section class="stage stage_basecamp" id="stage-basecamp" data-stage="basecamp" aria-label="Base camp landing">
         <div class="hero">
           <canvas id="skyCanvas" class="sky_canvas" aria-hidden="true"></canvas>
@@ -295,7 +262,6 @@
             <div class="stage_kicker">
               <span class="stage_tag">BASE CAMP</span>
               <span class="stage_icon" aria-hidden="true">
-                <!-- Tent icon -->
                 <svg viewBox="0 0 24 24" fill="none">
                   <path
                     d="M3 20l9-16 9 16H3z"
@@ -328,6 +294,117 @@
         </div>
       </section>
     </main>
+
+    <!-- Fixed mountain climb scene -->
+    <div class="mountain_scene" aria-hidden="true">
+      <div class="mountain_backglow"></div>
+
+      <svg class="mountain_svg" viewBox="0 0 520 900" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="mtnFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="rgba(255,255,255,0.14)" />
+            <stop offset="0.55" stop-color="rgba(255,255,255,0.08)" />
+            <stop offset="1" stop-color="rgba(255,255,255,0.03)" />
+          </linearGradient>
+
+          <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="6" result="blur" />
+            <feColorMatrix
+              in="blur"
+              type="matrix"
+              values="
+                1 0 0 0 0
+                0 1 0 0 0
+                0 0 1 0 0
+                0 0 0 0.6 0"
+              result="col"
+            />
+            <feMerge>
+              <feMergeNode in="col" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+
+          <filter id="pinGlow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="8" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        <!-- stylised mountain silhouette -->
+        <path
+          class="mtn_shape"
+          d="M410 820
+             C360 760 320 705 300 650
+             C280 595 290 545 315 505
+             C340 465 358 445 360 415
+             C362 388 352 360 330 330
+             C300 290 270 260 258 220
+             C246 180 268 150 290 120
+             C315 85 315 55 300 35
+             C286 18 256 25 240 45
+             C222 70 210 105 190 130
+             C165 160 140 190 125 225
+             C110 260 112 310 125 345
+             C138 380 150 420 140 450
+             C130 482 98 520 84 560
+             C70 600 82 650 112 690
+             C155 746 200 788 230 820
+             Z"
+          fill="url(#mtnFill)"
+          stroke="rgba(255,255,255,0.12)"
+          stroke-width="2"
+          filter="url(#softGlow)"
+        />
+
+        <!-- climb route -->
+        <path
+          id="climbPath"
+          class="climb_path"
+          d="M195 812
+             C185 770 200 740 215 715
+             C240 675 260 660 270 630
+             C286 582 250 560 235 530
+             C210 482 220 450 250 420
+             C290 380 285 350 265 320
+             C245 290 230 270 235 240
+             C242 205 270 185 286 160
+             C305 130 298 98 280 78
+             C265 62 245 70 230 90"
+          fill="none"
+          stroke="rgba(255,255,255,0.30)"
+          stroke-width="3"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-dasharray="2 10"
+        />
+
+        <!-- stage pins, positioned on the path by JS -->
+        <g id="pins" class="pins_group">
+          <circle class="pin" data-pin="basecamp" r="8" cx="0" cy="0"></circle>
+          <circle class="pin" data-pin="discover" r="8" cx="0" cy="0"></circle>
+          <circle class="pin" data-pin="transition" r="8" cx="0" cy="0"></circle>
+          <circle class="pin" data-pin="secure" r="8" cx="0" cy="0"></circle>
+          <circle class="pin" data-pin="clouds" r="8" cx="0" cy="0"></circle>
+          <circle class="pin" data-pin="ready" r="8" cx="0" cy="0"></circle>
+        </g>
+
+        <!-- climber -->
+        <g id="climberOnPath" class="climber_on_path">
+          <circle class="climber_dot" r="9" cx="0" cy="0"></circle>
+          <circle class="climber_dot_inner" r="3.2" cx="0" cy="0"></circle>
+        </g>
+      </svg>
+
+      <div class="mtn_clouds">
+        <span class="mtn_cloud mc1"></span>
+        <span class="mtn_cloud mc2"></span>
+        <span class="mtn_cloud mc3"></span>
+      </div>
+    </div>
 
     <script src="app.js"></script>
   </body>

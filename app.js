@@ -1,37 +1,32 @@
 /* IT Fundamentals site behaviour
-   Reverse scroll to climb
+   Reverse scroll
    Stage highlighting
    Slide out cards
-   Sky animation (day night, stars, shooting stars)
+   Sky animation
+   Mountain climb animation: climber moves along path based on scroll progress
 */
 
 (function () {
-  const stages = [
-    "basecamp",
-    "discover",
-    "transition",
-    "secure",
-    "clouds",
-    "ready"
-  ];
-
-  const stageEls = stages
-    .map((s) => document.querySelector(`[data-stage="${s}"]`))
-    .filter(Boolean);
+  const stages = ["basecamp", "discover", "transition", "secure", "clouds", "ready"];
 
   const railItems = Array.from(document.querySelectorAll(".rail_item"));
   const basecampCard = document.querySelector(".basecamp_card");
-  const climber = document.querySelector(".climber");
-  const climberRail = document.querySelector(".rail_climber");
 
-  // Start at the bottom so the mountain is the landing view
+  const path = document.getElementById("climbPath");
+  const climberGroup = document.getElementById("climberOnPath");
+  const pinsGroup = document.getElementById("pins");
+  const pinEls = pinsGroup ? Array.from(pinsGroup.querySelectorAll(".pin")) : [];
+
+  const stageSections = stages
+    .map((s) => document.querySelector(`#stage-${s}`))
+    .filter(Boolean);
+
   function startAtBottom() {
     requestAnimationFrame(() => {
       window.scrollTo(0, document.body.scrollHeight);
     });
   }
 
-  // Reverse scroll so wheel down moves up the page
   function enableReverseScroll() {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) return;
@@ -39,7 +34,6 @@
     window.addEventListener(
       "wheel",
       (e) => {
-        // allow pinch zoom and trackpad gestures
         if (e.ctrlKey) return;
         e.preventDefault();
         const delta = e.deltaY;
@@ -48,7 +42,6 @@
       { passive: false }
     );
 
-    // Key controls, inverted
     window.addEventListener("keydown", (e) => {
       const key = e.key;
       const isInput =
@@ -80,54 +73,20 @@
   function setActiveStage(stageName) {
     railItems.forEach((a) => a.classList.toggle("is_active", a.dataset.stage === stageName));
 
-    // Slide in card for current stage
     document.querySelectorAll(".stage").forEach((s) => s.classList.remove("is_active"));
     const stageSection = document.querySelector(`#stage-${stageName}`);
     if (stageSection) stageSection.classList.add("is_active");
 
-    // Basecamp card visibility
     if (stageName === "basecamp") {
       basecampCard?.classList.add("is_visible");
     } else {
       basecampCard?.classList.remove("is_visible");
     }
 
-    // Move climber along the rope, top is Ready, bottom is Base camp
-    const idx = stages.indexOf(stageName);
-    if (idx >= 0 && climber && climberRail) {
-      const total = stages.length - 1;
-      const t = idx / total; // basecamp 0, ready 1
-      const railHeight = climberRail.clientHeight;
-      const topPad = 6;
-      const bottomPad = 34;
-      const usable = Math.max(0, railHeight - topPad - bottomPad);
-      const y = topPad + usable * (1 - t);
-      climber.style.transform = `translateY(${y}px)`;
+    // Highlight pin
+    if (pinEls.length) {
+      pinEls.forEach((p) => p.classList.toggle("is_active", p.dataset.pin === stageName));
     }
-  }
-
-  function observeStages() {
-    const options = {
-      root: null,
-      threshold: [0.35, 0.55, 0.7]
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      const visible = entries
-        .filter((e) => e.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-
-      if (!visible) return;
-
-      const stageName = visible.target.getAttribute("data-stage");
-      if (stageName) setActiveStage(stageName);
-    }, options);
-
-    document.querySelectorAll(".stage").forEach((s) => observer.observe(s));
-
-    // Hero basecamp uses a nested structure, still treat it as active when in view
-    const basecampStage = document.querySelector("#stage-basecamp");
-    if (basecampStage) observer.observe(basecampStage);
   }
 
   function wireRailLinks() {
@@ -142,7 +101,96 @@
     });
   }
 
-  // Sky animation: blended day night gradient, stars, shooting stars
+  function observeStages() {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+
+        const stageName = visible.target.getAttribute("data-stage");
+        if (stageName) setActiveStage(stageName);
+      },
+      { threshold: [0.35, 0.55, 0.7] }
+    );
+
+    document.querySelectorAll(".stage").forEach((s) => observer.observe(s));
+  }
+
+  // Mountain climb mapping
+  // We map overall progress from basecamp to ready based on scroll position.
+  // Then move the climber along the SVG path using getPointAtLength.
+  function initMountainPins() {
+    if (!path || !pinEls.length) return;
+
+    const total = path.getTotalLength();
+
+    // fixed stage positions along the path, bottom to top
+    const stageT = {
+      basecamp: 0.05,
+      discover: 0.25,
+      transition: 0.45,
+      secure: 0.63,
+      clouds: 0.80,
+      ready: 0.93
+    };
+
+    pinEls.forEach((pin) => {
+      const name = pin.dataset.pin;
+      const t = stageT[name] ?? 0.1;
+      const pt = path.getPointAtLength(total * t);
+      pin.setAttribute("cx", String(pt.x));
+      pin.setAttribute("cy", String(pt.y));
+    });
+  }
+
+  function clamp01(v) {
+    return Math.max(0, Math.min(1, v));
+  }
+
+  function getOverallProgress() {
+    // Progress based on the viewport centre moving through the stage sections
+    const viewportMid = window.scrollY + window.innerHeight * 0.5;
+
+    const points = stageSections.map((el) => {
+      const top = el.offsetTop;
+      const mid = top + el.offsetHeight * 0.5;
+      return { el, mid };
+    });
+
+    // basecamp is last in DOM visually, but we started at bottom.
+    // We want progress 0 at basecamp and 1 at ready.
+    const byStage = stages.map((s) => points.find((p) => p.el.id === `stage-${s}`)).filter(Boolean);
+
+    if (!byStage.length) return 0;
+
+    const baseMid = byStage[0].mid;
+    const readyMid = byStage[byStage.length - 1].mid;
+
+    // As you climb, you go up the page, so scrollY decreases, viewportMid decreases.
+    // We invert mapping so progress increases as you move upwards.
+    const raw = (baseMid - viewportMid) / (baseMid - readyMid);
+    return clamp01(raw);
+  }
+
+  function updateClimber() {
+    if (!path || !climberGroup) return;
+
+    const total = path.getTotalLength();
+    const progress = getOverallProgress();
+
+    const pt = path.getPointAtLength(total * (0.06 + 0.88 * progress));
+    climberGroup.setAttribute("transform", `translate(${pt.x} ${pt.y})`);
+
+    // Optional: subtle scale as you climb, gives sense of height
+    const scale = 1 + progress * 0.14;
+    climberGroup.setAttribute("transform", `translate(${pt.x} ${pt.y}) scale(${scale})`);
+
+    // Make cards feel closer as you climb by toggling is_active based on proximity
+    // IntersectionObserver already handles stage activation, so just keep climber updated.
+  }
+
   function initSky() {
     const canvas = document.getElementById("skyCanvas");
     if (!canvas) return;
@@ -161,7 +209,6 @@
       ctx.scale(dpr, dpr);
     }
 
-    // Stars
     const stars = [];
     const starCount = 140;
 
@@ -178,7 +225,6 @@
       }
     }
 
-    // Shooting stars
     const shots = [];
     function spawnShot() {
       shots.push({
@@ -195,7 +241,6 @@
     let lastShot = 0;
 
     function drawGradient(t) {
-      // t 0..1 day to night
       const dayTop = [90, 190, 255];
       const dayBottom = [210, 245, 255];
       const nightTop = [8, 10, 30];
@@ -264,14 +309,12 @@
     }
 
     function tick(time) {
-      // Cycle day night about every 18 seconds
-      const cycle = (time % 18000) / 18000; // 0..1
+      const cycle = (time % 18000) / 18000;
       const wave = 0.5 + 0.5 * Math.sin(cycle * Math.PI * 2);
-      const nightAmount = 1 - wave; // 0 day, 1 night
+      const nightAmount = 1 - wave;
 
       ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
       drawGradient(nightAmount);
-
       drawStars(time, nightAmount);
 
       if (time - lastShot > 2200 + Math.random() * 1800) {
@@ -294,7 +337,6 @@
     requestAnimationFrame(tick);
   }
 
-  // Basecamp card should appear as soon as hero is mostly visible
   function observeBasecampCard() {
     const hero = document.querySelector("#stage-basecamp");
     if (!hero || !basecampCard) return;
@@ -315,6 +357,11 @@
     obs.observe(hero);
   }
 
+  function rafLoop() {
+    updateClimber();
+    requestAnimationFrame(rafLoop);
+  }
+
   function init() {
     startAtBottom();
     enableReverseScroll();
@@ -322,9 +369,10 @@
     observeStages();
     observeBasecampCard();
     initSky();
+    initMountainPins();
 
-    // Default active state
     setActiveStage("basecamp");
+    requestAnimationFrame(rafLoop);
   }
 
   if (document.readyState === "loading") {
