@@ -1,15 +1,11 @@
 :root {
-  --paper: #ffffff;
   --text: rgba(255, 255, 255, 0.92);
   --muted: rgba(255, 255, 255, 0.72);
-  --glass: rgba(10, 14, 20, 0.52);
-  --glass2: rgba(10, 14, 20, 0.34);
   --shadow: rgba(0, 0, 0, 0.42);
 
-  /* Dynamic shade over the mountain (JS updates this gradually) */
+  /* JS updates this gradually */
   --shade: 0.58;
 
-  /* Card slide animation control */
   --cardSlide: 38px;
 }
 
@@ -36,7 +32,6 @@ body {
   inset: 0;
   z-index: 0;
   background: url("assets/matterhorn.jpg") center / cover no-repeat;
-  transform: translateZ(0);
 }
 
 .bgShade {
@@ -185,94 +180,21 @@ body {
 .content {
   position: relative;
   min-height: 100vh;
-  padding: 26px 26px 26px 26px;
+  padding: 26px;
   display: grid;
-  grid-template-columns: 1fr 320px;
+  grid-template-columns: minmax(0, 1fr) 340px;
   gap: 22px;
   align-items: start;
 }
 
-/* Route panel */
-.routePanel {
-  position: sticky;
-  top: 18px;
-  align-self: start;
-  height: calc(100vh - 36px);
-  display: grid;
-  place-items: center;
-  pointer-events: none;
-}
-
-.routePanelInner {
-  pointer-events: auto;
-  width: 100%;
-  height: 100%;
-  border-radius: 26px;
-  background: rgba(10, 14, 20, 0.40);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
-  backdrop-filter: blur(14px);
-  position: relative;
-  overflow: hidden;
-}
-
-.routeSvg {
-  width: 100%;
-  height: 100%;
-}
-
-.routeRibbon {
-  fill: rgba(255, 255, 255, 0.10);
-  stroke: rgba(255, 255, 255, 0.10);
-  stroke-width: 1;
-}
-
-.routeDots {
-  fill: none;
-  stroke: rgba(255, 255, 255, 0.34);
-  stroke-width: 3;
-  stroke-dasharray: 2 10;
-  stroke-linecap: round;
-}
-
-.mile {
-  fill: rgba(255, 255, 255, 0.14);
-  stroke: rgba(255, 255, 255, 0.28);
-  stroke-width: 2;
-}
-
-.mile.is-hit {
-  fill: rgba(255, 255, 255, 0.85);
-  stroke: rgba(255, 255, 255, 0.95);
-}
-
-.climber circle {
-  fill: rgba(255, 255, 255, 0.92);
-}
-
-.climberGlow {
-  fill: rgba(255, 255, 255, 0.06);
-}
-
-.routeTopBtn {
-  position: absolute;
-  right: 14px;
-  top: 12px;
-  height: 38px;
-  width: 38px;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  background: rgba(255, 255, 255, 0.10);
-  color: rgba(255, 255, 255, 0.90);
-  cursor: pointer;
-}
-
-/* Stages and cards */
+/* Stages are centre column */
 .stages {
   position: relative;
   padding: 24px 0 64px;
+  max-width: 980px;
 }
 
+/* Each stage takes space so we can scroll */
 .stage {
   min-height: 92vh;
   display: grid;
@@ -281,7 +203,7 @@ body {
 }
 
 .card {
-  max-width: 820px;
+  width: min(860px, 100%);
   border-radius: 26px;
   background: rgba(10, 14, 20, 0.62);
   border: 1px solid rgba(255, 255, 255, 0.10);
@@ -343,6 +265,79 @@ ul {
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: rgba(255, 255, 255, 0.88);
   font-size: 16px;
+}
+
+/* Right route panel */
+.routePanel {
+  position: sticky;
+  top: 18px;
+  align-self: start;
+  height: calc(100vh - 36px);
+  display: grid;
+  place-items: center;
+}
+
+.routePanelInner {
+  width: 100%;
+  height: 100%;
+  border-radius: 26px;
+  background: rgba(10, 14, 20, 0.40);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(14px);
+  position: relative;
+  overflow: hidden;
+}
+
+.routeSvg {
+  width: 100%;
+  height: 100%;
+}
+
+.routeRibbon {
+  fill: rgba(255, 255, 255, 0.10);
+  stroke: rgba(255, 255, 255, 0.10);
+  stroke-width: 1;
+}
+
+.routeDots {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.34);
+  stroke-width: 3;
+  stroke-dasharray: 2 10;
+  stroke-linecap: round;
+}
+
+.mile {
+  fill: rgba(255, 255, 255, 0.14);
+  stroke: rgba(255, 255, 255, 0.28);
+  stroke-width: 2;
+}
+
+.mile.is-hit {
+  fill: rgba(255, 255, 255, 0.85);
+  stroke: rgba(255, 255, 255, 0.95);
+}
+
+.climber circle {
+  fill: rgba(255, 255, 255, 0.92);
+}
+
+.climberGlow {
+  fill: rgba(255, 255, 255, 0.06);
+}
+
+.routeTopBtn {
+  position: absolute;
+  right: 14px;
+  top: 12px;
+  height: 38px;
+  width: 38px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.10);
+  color: rgba(255, 255, 255, 0.90);
+  cursor: pointer;
 }
 
 /* Mobile */

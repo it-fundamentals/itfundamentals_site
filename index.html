@@ -23,7 +23,6 @@
         </div>
 
         <div class="navList" role="navigation" aria-label="Stages">
-          <!-- Buttons remain in climb order (Base camp to Ready) -->
           <button class="stage-pill is-active" data-goto="stage-basecamp" type="button">
             <span class="pillNum">1</span><span class="pillText">Base camp</span>
           </button>
@@ -50,7 +49,6 @@
         </div>
 
         <div class="navClimber" aria-hidden="true">
-          <!-- little climber icon bottom left -->
           <svg viewBox="0 0 64 64" class="miniClimber" aria-hidden="true">
             <circle cx="44" cy="14" r="6" />
             <path d="M20 34 L30 24 L40 30 L46 52" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" />
@@ -62,70 +60,9 @@
 
       <!-- Content -->
       <section class="content">
-        <!-- Right route panel -->
-        <div class="routePanel" aria-hidden="true">
-          <div class="routePanelInner">
-            <svg class="routeSvg" viewBox="0 0 240 820" preserveAspectRatio="none" aria-hidden="true">
-              <!-- soft route shape -->
-              <path
-                class="routeRibbon"
-                d="M180,20
-                   C120,60 110,110 150,160
-                   C195,215 170,265 120,310
-                   C70,355 80,410 130,455
-                   C190,510 165,560 120,610
-                   C70,660 85,710 125,760
-                   C160,800 150,810 120,820
-                   L60,820
-                   C80,760 55,720 40,680
-                   C20,630 35,585 70,540
-                   C115,485 105,440 70,390
-                   C35,340 40,290 90,240
-                   C145,185 135,130 90,85
-                   C55,50 55,25 70,10
-                   Z"
-              />
-              <!-- dotted path down the middle -->
-              <path
-                id="climbPath"
-                class="routeDots"
-                d="M120,790
-                   C115,740 95,705 75,675
-                   C55,645 70,605 90,575
-                   C110,545 120,510 95,470
-                   C70,430 80,395 105,360
-                   C130,325 140,285 110,245
-                   C80,205 95,170 115,145
-                   C135,120 140,85 120,55
-                   C105,30 120,22 120,30"
-              />
-              <!-- stage markers (bottom to top = basecamp to ready) -->
-              <g class="routeMiles">
-                <circle class="mile" data-idx="0" cx="120" cy="790" r="8" />
-                <circle class="mile" data-idx="1" cx="90" cy="575" r="8" />
-                <circle class="mile" data-idx="2" cx="105" cy="360" r="8" />
-                <circle class="mile" data-idx="3" cx="110" cy="245" r="8" />
-                <circle class="mile" data-idx="4" cx="115" cy="145" r="8" />
-                <circle class="mile" data-idx="5" cx="120" cy="55" r="8" />
-              </g>
-
-              <!-- climber dot that moves -->
-              <g id="climber" class="climber">
-                <circle cx="0" cy="0" r="10" />
-                <circle class="climberGlow" cx="0" cy="0" r="18" />
-              </g>
-            </svg>
-
-            <button class="routeTopBtn" type="button" title="Jump to top" aria-label="Jump to top">
-              ☁
-            </button>
-          </div>
-        </div>
-
-        <!-- IMPORTANT: Sections are ordered TOP to BOTTOM as Ready -> ... -> Base camp
-             so Base camp is physically at the bottom of the page. -->
+        <!-- Centre: stages (must be first in grid so it sits in the centre column) -->
         <div class="stages">
-          <!-- Ready (top) -->
+          <!-- TOP -->
           <article id="stage-ready" class="stage" data-index="5">
             <div class="card">
               <div class="eyebrow">READY</div>
@@ -143,7 +80,6 @@
             </div>
           </article>
 
-          <!-- Above the clouds -->
           <article id="stage-above" class="stage" data-index="4">
             <div class="card">
               <div class="eyebrow">ABOVE THE CLOUDS</div>
@@ -162,7 +98,6 @@
             </div>
           </article>
 
-          <!-- Secure -->
           <article id="stage-secure" class="stage" data-index="3">
             <div class="card">
               <div class="eyebrow">SECURE</div>
@@ -181,7 +116,6 @@
             </div>
           </article>
 
-          <!-- Transition -->
           <article id="stage-transition" class="stage" data-index="2">
             <div class="card">
               <div class="eyebrow">TRANSITION</div>
@@ -199,7 +133,6 @@
             </div>
           </article>
 
-          <!-- Discover -->
           <article id="stage-discover" class="stage" data-index="1">
             <div class="card">
               <div class="eyebrow">DISCOVER</div>
@@ -217,7 +150,7 @@
             </div>
           </article>
 
-          <!-- Base camp (bottom) -->
+          <!-- BOTTOM -->
           <article id="stage-basecamp" class="stage" data-index="0">
             <div class="card">
               <div class="eyebrow">BASE CAMP</div>
@@ -235,6 +168,62 @@
               </div>
             </div>
           </article>
+        </div>
+
+        <!-- Right: route panel -->
+        <div class="routePanel" aria-hidden="true">
+          <div class="routePanelInner">
+            <svg class="routeSvg" viewBox="0 0 240 820" preserveAspectRatio="none" aria-hidden="true">
+              <path
+                class="routeRibbon"
+                d="M180,20
+                   C120,60 110,110 150,160
+                   C195,215 170,265 120,310
+                   C70,355 80,410 130,455
+                   C190,510 165,560 120,610
+                   C70,660 85,710 125,760
+                   C160,800 150,810 120,820
+                   L60,820
+                   C80,760 55,720 40,680
+                   C20,630 35,585 70,540
+                   C115,485 105,440 70,390
+                   C35,340 40,290 90,240
+                   C145,185 135,130 90,85
+                   C55,50 55,25 70,10
+                   Z"
+              />
+              <path
+                id="climbPath"
+                class="routeDots"
+                d="M120,790
+                   C115,740 95,705 75,675
+                   C55,645 70,605 90,575
+                   C110,545 120,510 95,470
+                   C70,430 80,395 105,360
+                   C130,325 140,285 110,245
+                   C80,205 95,170 115,145
+                   C135,120 140,85 120,55
+                   C105,30 120,22 120,30"
+              />
+              <g class="routeMiles">
+                <circle class="mile" data-idx="0" cx="120" cy="790" r="8" />
+                <circle class="mile" data-idx="1" cx="90" cy="575" r="8" />
+                <circle class="mile" data-idx="2" cx="105" cy="360" r="8" />
+                <circle class="mile" data-idx="3" cx="110" cy="245" r="8" />
+                <circle class="mile" data-idx="4" cx="115" cy="145" r="8" />
+                <circle class="mile" data-idx="5" cx="120" cy="55" r="8" />
+              </g>
+
+              <g id="climber" class="climber">
+                <circle cx="0" cy="0" r="10" />
+                <circle class="climberGlow" cx="0" cy="0" r="18" />
+              </g>
+            </svg>
+
+            <button class="routeTopBtn" type="button" title="Jump to top" aria-label="Jump to top">
+              ☁
+            </button>
+          </div>
         </div>
       </section>
     </main>

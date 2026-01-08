@@ -1,13 +1,9 @@
-/* Reverse scrolling + stage activation + route climber positioning + gradual mountain shade */
 (function () {
   const stageIds = ["stage-basecamp", "stage-discover", "stage-transition", "stage-secure", "stage-above", "stage-ready"];
-  const stages = stageIds
-    .map((id) => document.getElementById(id))
-    .filter(Boolean);
+  const stages = stageIds.map((id) => document.getElementById(id)).filter(Boolean);
 
   const navButtons = Array.from(document.querySelectorAll(".stage-pill"));
   const cards = Array.from(document.querySelectorAll(".card"));
-  const routeSvg = document.querySelector(".routeSvg");
   const climbPath = document.getElementById("climbPath");
   const climber = document.getElementById("climber");
   const mileNodes = Array.from(document.querySelectorAll(".mile"));
@@ -17,8 +13,32 @@
 
   let activeIndex = 0;
 
+  try {
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  } catch (e) {}
+
   function clamp(n, min, max) {
     return Math.max(min, Math.min(max, n));
+  }
+
+  function updateShadeForT(t) {
+    const tt = clamp(t, 0, 1);
+    const eased = tt * tt * (3 - 2 * tt);
+    const shade = 0.62 - 0.40 * eased;
+    document.documentElement.style.setProperty("--shade", String(shade.toFixed(3)));
+  }
+
+  function updateClimberForStage(stageIndex) {
+    if (!climbPath || !climber) return;
+
+    const total = climbPath.getTotalLength();
+    const t = stageIds.length <= 1 ? 0 : stageIndex / (stageIds.length - 1);
+
+    const len = total * (1 - t);
+    const pt = climbPath.getPointAtLength(len);
+
+    climber.setAttribute("transform", `translate(${pt.x}, ${pt.y})`);
+    updateShadeForT(t);
   }
 
   function setActive(index) {
@@ -26,8 +46,7 @@
 
     navButtons.forEach((btn) => {
       const target = btn.getAttribute("data-goto");
-      const isActive = target === stageIds[activeIndex];
-      btn.classList.toggle("is-active", isActive);
+      btn.classList.toggle("is-active", target === stageIds[activeIndex]);
     });
 
     mileNodes.forEach((m) => {
@@ -36,7 +55,6 @@
     });
 
     updateClimberForStage(activeIndex);
-    updateShadeForT(activeIndex / (stageIds.length - 1));
   }
 
   function scrollToStage(id) {
@@ -54,34 +72,23 @@
   });
 
   if (jumpTopBtn) {
-    jumpTopBtn.addEventListener("click", () => {
-      scrollToStage("stage-ready");
-    });
+    jumpTopBtn.addEventListener("click", () => scrollToStage("stage-ready"));
   }
 
-  /* Card visibility */
-  function markCardVisibility() {
-    cards.forEach((card) => card.classList.add("is-visible"));
-  }
+  cards.forEach((card) => card.classList.add("is-visible"));
 
-  /* Observer to decide which stage is active.
-     We use data-index so the stage can be in any DOM order. */
   const io = new IntersectionObserver(
     (entries) => {
-      const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      const visible = entries
+        .filter((e) => e.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
       if (!visible) return;
 
-      const stageEl = visible.target;
-      const idx = parseInt(stageEl.getAttribute("data-index") || "0", 10);
-
-      if (!Number.isNaN(idx)) {
-        setActive(idx);
-      }
+      const idx = parseInt(visible.target.getAttribute("data-index") || "0", 10);
+      if (!Number.isNaN(idx)) setActive(idx);
     },
-    {
-      threshold: [0.45, 0.55, 0.65],
-      rootMargin: "0px 0px 0px 0px",
-    }
+    { threshold: [0.45, 0.55, 0.65] }
   );
 
   stages.forEach((s) => io.observe(s));
@@ -99,10 +106,8 @@
 
     e.preventDefault();
 
-    const delta = e.deltaY;
     reverseScrollLock = true;
-
-    window.scrollBy({ top: -delta, left: 0, behavior: "auto" });
+    window.scrollBy({ top: -e.deltaY, left: 0, behavior: "auto" });
 
     requestAnimationFrame(() => {
       reverseScrollLock = false;
@@ -111,45 +116,30 @@
 
   window.addEventListener("wheel", onWheel, { passive: false });
 
-  /* Route climber positioning */
-  function updateClimberForStage(stageIndex) {
-    if (!routeSvg || !climbPath || !climber) return;
+  /* Smooth climber and shade between stages */
+  let raf = 0;
 
-    const total = climbPath.getTotalLength();
-    const t = stageIds.length <= 1 ? 0 : stageIndex / (stageIds.length - 1);
+  function updateFromScroll() {
+    if (!climbPath || !climber) return;
 
-    const len = total * (1 - t);
-    const pt = climbPath.getPointAtLength(len);
-
-    climber.setAttribute("transform", `translate(${pt.x}, ${pt.y})`);
-  }
-
-  /* Smooth progress between stages while scrolling */
-  function updateClimberFromScroll() {
-    if (!routeSvg || !climbPath || !climber) return;
-
-    const current = stages.find((s) => Number(s.getAttribute("data-index")) === activeIndex) || document.getElementById(stageIds[activeIndex]);
+    const current = document.querySelector(`.stage[data-index="${activeIndex}"]`);
     const nextIndex = clamp(activeIndex + 1, 0, stageIds.length - 1);
-    const next = stages.find((s) => Number(s.getAttribute("data-index")) === nextIndex) || document.getElementById(stageIds[nextIndex]);
+    const next = document.querySelector(`.stage[data-index="${nextIndex}"]`);
 
     if (!current || !next) {
       updateClimberForStage(activeIndex);
-      updateShadeForT(activeIndex / (stageIds.length - 1));
       return;
     }
 
     const rectA = current.getBoundingClientRect();
     const rectB = next.getBoundingClientRect();
-
     const span = rectB.top - rectA.top;
+
     let prog = 0;
+    if (Math.abs(span) > 1) prog = clamp((0 - rectA.top) / span, 0, 1);
 
-    if (Math.abs(span) > 1) {
-      prog = clamp((0 - rectA.top) / span, 0, 1);
-    }
-
-    const t0 = stageIds.length <= 1 ? 0 : activeIndex / (stageIds.length - 1);
-    const t1 = stageIds.length <= 1 ? 0 : nextIndex / (stageIds.length - 1);
+    const t0 = activeIndex / (stageIds.length - 1);
+    const t1 = nextIndex / (stageIds.length - 1);
     const t = t0 + (t1 - t0) * prog;
 
     const total = climbPath.getTotalLength();
@@ -157,46 +147,31 @@
     const pt = climbPath.getPointAtLength(len);
 
     climber.setAttribute("transform", `translate(${pt.x}, ${pt.y})`);
-
     updateShadeForT(t);
   }
 
-  /* Gradual shade: darker at base camp, lighter at the top */
-  function updateShadeForT(t) {
-    const tt = clamp(t, 0, 1);
-
-    /* Base camp: ~0.62 darkness
-       Top:      ~0.22 darkness
-       Smooth curve so it feels natural */
-    const eased = tt * tt * (3 - 2 * tt); // smoothstep
-    const shade = 0.62 - 0.40 * eased;
-
-    document.documentElement.style.setProperty("--shade", String(shade.toFixed(3)));
-  }
-
-  let raf = 0;
   function onScroll() {
     if (raf) cancelAnimationFrame(raf);
-    raf = requestAnimationFrame(() => {
-      updateClimberFromScroll();
-    });
+    raf = requestAnimationFrame(updateFromScroll);
   }
 
   window.addEventListener("scroll", onScroll, { passive: true });
 
-  /* Start at Base camp (bottom), because we are climbing upwards */
+  /* FORCE landing at Base camp (bottom) */
   function startAtBaseCampBottom() {
-    markCardVisibility();
-
     const base = document.getElementById("stage-basecamp");
     if (!base) return;
 
-    const bottom = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-
-    window.scrollTo(0, bottom);
-
     setActive(0);
-    updateClimberFromScroll();
+
+    const jump = () => {
+      base.scrollIntoView({ behavior: "auto", block: "end" });
+      updateFromScroll();
+    };
+
+    jump();
+    setTimeout(jump, 120);
+    setTimeout(jump, 360);
   }
 
   if (document.readyState === "loading") {
@@ -204,4 +179,6 @@
   } else {
     startAtBaseCampBottom();
   }
+
+  window.addEventListener("load", startAtBaseCampBottom);
 })();
