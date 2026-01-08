@@ -20,6 +20,7 @@
 
   const climbPath = document.getElementById("climbPath");
   const climber = document.getElementById("climber");
+  const milesGroup = document.getElementById("miles");
 
   if (!stages.length) return;
 
@@ -53,7 +54,7 @@
     });
   });
 
-  // Stage reveal and stage activation
+  // Stage activation
   const stageObserver = new IntersectionObserver(
     (entries) => {
       const visible = entries.filter((e) => e.isIntersecting);
@@ -72,7 +73,7 @@
 
   stages.forEach((s) => stageObserver.observe(s));
 
-  // Card slide-in reveal
+  // Card reveal
   const cardObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((e) => {
@@ -84,15 +85,43 @@
 
   cards.forEach((c) => cardObserver.observe(c));
 
+  function scrollProgress() {
+    const doc = document.documentElement;
+    const max = Math.max(1, doc.scrollHeight - doc.clientHeight);
+    return clamp(doc.scrollTop / max, 0, 1);
+  }
+
+  function buildMiles() {
+    if (!climbPath || !milesGroup) return;
+
+    milesGroup.innerHTML = "";
+
+    const total = climbPath.getTotalLength();
+    const count = stages.length;
+
+    for (let i = 0; i < count; i++) {
+      const t = count === 1 ? 0 : i / (count - 1);
+      const len = total * t;
+      const pt = climbPath.getPointAtLength(len);
+
+      const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      dot.setAttribute("class", "mileDot");
+      dot.setAttribute("cx", String(pt.x));
+      dot.setAttribute("cy", String(pt.y));
+      dot.setAttribute("r", i === 0 || i === count - 1 ? "9" : "8");
+      milesGroup.appendChild(dot);
+    }
+  }
+
   // Route positioning (smooth, continuous with scroll)
   function updateClimber(progress01) {
     if (!climbPath || !climber) return;
 
     const total = climbPath.getTotalLength();
 
-    // progress 0 = base camp (bottom visually, top scroll)
-    // progress 1 = ready (top visually, bottom scroll)
-    const len = total * (1 - progress01);
+    // Base camp is at the bottom of the page (progress01 close to 1)
+    // Ready is near the top (progress01 close to 0)
+    const len = total * progress01;
     const pt = climbPath.getPointAtLength(len);
 
     climber.setAttribute("transform", `translate(${pt.x}, ${pt.y})`);
@@ -102,24 +131,19 @@
   function updateOverlay(progress01) {
     if (!overlay) return;
 
-    // Darkest at base camp, lightest near the top.
-    // This is continuous and updates every scroll tick.
+    // We want darkest at base camp (bottom), lightest at the top
+    // Because base camp corresponds to progress01 = 1, we invert for visuals
+    const climb = 1 - progress01;
+
     const darkest = 0.72;
     const lightest = 0.18;
 
-    const op = darkest + (lightest - darkest) * progress01;
+    const op = darkest + (lightest - darkest) * climb;
     overlay.style.opacity = String(op);
 
-    // Also soften the vignette slightly as you climb
-    const vignette = 0.78 + (0.62 - 0.78) * progress01;
+    const vignette = 0.78 + (0.62 - 0.78) * climb;
     overlay.style.background =
       `radial-gradient(1200px 700px at 55% 45%, rgba(0,0,0,${(vignette - 0.25).toFixed(3)}), rgba(0,0,0,${vignette.toFixed(3)}))`;
-  }
-
-  function scrollProgress() {
-    const doc = document.documentElement;
-    const max = Math.max(1, doc.scrollHeight - doc.clientHeight);
-    return clamp(doc.scrollTop / max, 0, 1);
   }
 
   let raf = 0;
@@ -139,12 +163,21 @@
   cards.forEach((c, i) => {
     if (i === 0) c.classList.add("is-visible");
   });
-  onScroll();
 
-  // Ensure we start at base camp visually (top of document with the flip)
-  // This prevents the browser restoring scroll to mid page after refresh.
+  // Ensure route length exists before first positioning, then position again after paint
+  function initRoute() {
+    buildMiles();
+    onScroll();
+    requestAnimationFrame(() => onScroll());
+  }
+
   window.addEventListener("load", () => {
     window.scrollTo(0, 0);
+    initRoute();
+  });
+
+  window.addEventListener("resize", () => {
+    buildMiles();
     onScroll();
   });
 })();
