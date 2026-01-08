@@ -2,410 +2,233 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IT Fundamentals | From base camp to the clouds</title>
-    <meta
-      name="description"
-      content="Secure cloud foundations for micro and small business. From base camp to the clouds."
-    />
-    <link rel="stylesheet" href="styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IT Fundamentals | The Climb</title>
+    <link rel="stylesheet" href="./styles.css" />
   </head>
 
   <body>
-    <aside class="rail" aria-label="Climb stages">
-      <div class="rail_inner">
-        <div class="rail_brand">
-          <div class="rail_brand_small">ITFUNDAMENTALS.CH</div>
-          <div class="rail_brand_big">The climb</div>
-        </div>
+    <!-- Background image + dark overlay live in CSS on .bg -->
+    <div class="bg" aria-hidden="true"></div>
 
-        <nav class="rail_nav" aria-label="Stages">
-          <a class="rail_item" href="#stage-ready" data-stage="ready">
-            <span class="rail_num">6</span>
-            <span class="rail_label">Ready</span>
-          </a>
-          <a class="rail_item" href="#stage-clouds" data-stage="clouds">
-            <span class="rail_num">5</span>
-            <span class="rail_label">Above the clouds</span>
-          </a>
-          <a class="rail_item" href="#stage-secure" data-stage="secure">
-            <span class="rail_num">4</span>
-            <span class="rail_label">Secure</span>
-          </a>
-          <a class="rail_item" href="#stage-transition" data-stage="transition">
-            <span class="rail_num">3</span>
-            <span class="rail_label">Transition</span>
-          </a>
-          <a class="rail_item" href="#stage-discover" data-stage="discover">
-            <span class="rail_num">2</span>
-            <span class="rail_label">Discover</span>
-          </a>
-          <a class="rail_item is_active" href="#stage-basecamp" data-stage="basecamp">
-            <span class="rail_num">1</span>
-            <span class="rail_label">Base camp</span>
-          </a>
-        </nav>
+    <aside class="rail">
+      <div class="rail-card rail-brand">
+        <div class="brand-kicker">ITFUNDAMENTALS.CH</div>
+        <div class="brand-title">The climb</div>
+      </div>
 
-        <div class="rail_hint">
-          Scroll down to climb up<br />
-          Or click a stage
-        </div>
+      <nav class="rail-nav" aria-label="Climb stages">
+        <button class="stage-pill" data-goto="stage-basecamp" type="button">
+          <span class="stage-num">1</span>
+          <span class="stage-name">Base camp</span>
+        </button>
+
+        <button class="stage-pill" data-goto="stage-discover" type="button">
+          <span class="stage-num">2</span>
+          <span class="stage-name">Discover</span>
+        </button>
+
+        <button class="stage-pill" data-goto="stage-transition" type="button">
+          <span class="stage-num">3</span>
+          <span class="stage-name">Transition</span>
+        </button>
+
+        <button class="stage-pill" data-goto="stage-secure" type="button">
+          <span class="stage-num">4</span>
+          <span class="stage-name">Secure</span>
+        </button>
+
+        <button class="stage-pill" data-goto="stage-above" type="button">
+          <span class="stage-num">5</span>
+          <span class="stage-name">Above the clouds</span>
+        </button>
+
+        <button class="stage-pill" data-goto="stage-ready" type="button">
+          <span class="stage-num">6</span>
+          <span class="stage-name">Ready</span>
+        </button>
+      </nav>
+
+      <div class="rail-card rail-hint">
+        <div class="hint-title">Scroll down to climb up</div>
+        <div class="hint-sub">Or click a stage</div>
       </div>
     </aside>
 
-    <main class="page" id="page" aria-label="From base camp to the clouds">
-      <section class="topcap" id="topcap" aria-label="Top of the climb">
-        <div class="topcap_inner">
-          <div class="topcap_badge">IT Fundamentals</div>
-          <h2 class="topcap_title">Clear, secure foundations that let your business move faster</h2>
-          <p class="topcap_text">
-            Once the baseline is stable, you can confidently layer on automation, AI assistants, and modern security
-            controls without turning IT into a daily fire drill.
-          </p>
+    <main class="content">
+      <div class="stage-ui" aria-hidden="true">
+        <div class="route">
+          <svg class="route-svg" viewBox="0 0 260 900" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="6" result="blur" />
+                <feColorMatrix
+                  in="blur"
+                  type="matrix"
+                  values="1 0 0 0 0
+                          0 1 0 0 0
+                          0 0 1 0 0
+                          0 0 0 0.65 0"
+                  result="glow"
+                />
+                <feMerge>
+                  <feMergeNode in="glow" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
 
-          <div class="topcap_cta">
-            <a class="btn_primary" href="mailto:hello@itfundamentals.ch">Book a discovery chat</a>
-            <a class="btn_secondary" href="#stage-basecamp">Back to base camp</a>
+              <linearGradient id="routeFade" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.35)" />
+                <stop offset="100%" stop-color="rgba(255,255,255,0.12)" />
+              </linearGradient>
+            </defs>
+
+            <path
+              id="climbPath"
+              d="M 190 860
+                 C 120 790, 185 740, 150 680
+                 C 110 610, 185 580, 160 510
+                 C 120 420, 210 390, 175 310
+                 C 140 235, 210 210, 165 135
+                 C 125 75, 175 45, 190 30"
+              fill="none"
+              stroke="url(#routeFade)"
+              stroke-width="8"
+              stroke-linecap="round"
+              stroke-dasharray="2 18"
+              filter="url(#softGlow)"
+            />
+
+            <g id="milestones" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2">
+              <circle class="mile" data-mile="0" cx="190" cy="860" r="9" />
+              <circle class="mile" data-mile="1" cx="152" cy="690" r="9" />
+              <circle class="mile" data-mile="2" cx="160" cy="510" r="9" />
+              <circle class="mile" data-mile="3" cx="175" cy="310" r="9" />
+              <circle class="mile" data-mile="4" cx="165" cy="135" r="9" />
+              <circle class="mile" data-mile="5" cx="190" cy="30" r="9" />
+            </g>
+
+            <g id="climber" transform="translate(190,860)">
+              <circle r="12" fill="rgba(255,255,255,0.18)" />
+              <circle r="6" fill="rgba(255,255,255,0.95)" />
+              <circle r="2.5" cx="-10" cy="-2" fill="rgba(255,255,255,0.9)" />
+              <circle r="2.5" cx="-2" cy="10" fill="rgba(255,255,255,0.9)" />
+            </g>
+          </svg>
+
+          <div class="route-label route-label-top">
+            <span class="cloud-ico" aria-hidden="true">☁</span>
           </div>
         </div>
+      </div>
+
+      <section class="stage" id="stage-basecamp" data-index="0">
+        <article class="card" data-anim="slide">
+          <div class="tag">BASE CAMP</div>
+          <h2>Stabilise what you already use</h2>
+          <ul>
+            <li>Reduce scattered tools and ad hoc setups</li>
+            <li>Establish a clear security baseline</li>
+            <li>Set up backup and monitoring foundations</li>
+            <li>Remove avoidable risk and unplanned spend</li>
+          </ul>
+          <div class="icon-row">
+            <span class="mini-ico" title="Base camp">⛺</span>
+            <span class="mini-ico" title="Checklist">📋</span>
+            <span class="mini-ico" title="Stability">🧭</span>
+          </div>
+        </article>
       </section>
 
-      <section class="stage stage_ready" id="stage-ready" data-stage="ready" aria-label="Ready">
-        <div class="stage_inner">
-          <div class="stage_card">
-            <div class="stage_kicker">
-              <span class="stage_tag">READY</span>
-              <span class="stage_icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M12 2l1.1 5.4L18 8.5l-4.2 2.7L15 16l-3-3.2L9 16l1.2-4.8L6 8.5l4.9-1.1L12 2z"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M20 14l.6 2.2L23 17l-2.1 1.1L20 20l-.9-1.9L17 17l2.4-.8L20 14z"
-                    stroke="currentColor"
-                    stroke-width="1.4"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
-            </div>
-            <h3 class="stage_title">AI and automation, when you choose</h3>
-            <ul class="stage_list">
-              <li>Clean identity and permissions so assistants can work safely</li>
-              <li>Centralised data locations with sensible sharing controls</li>
-              <li>Audit visibility so you can prove what happened and when</li>
-              <li>Practical automation that reduces admin, not creates risk</li>
-            </ul>
+      <section class="stage" id="stage-discover" data-index="1">
+        <article class="card" data-anim="slide">
+          <div class="tag">DISCOVER</div>
+          <h2>Understand the current state</h2>
+          <ul>
+            <li>Short review of tools, risks, and priorities</li>
+            <li>Confirm users, devices, domain, and scope</li>
+            <li>Agree the simplest path forward</li>
+          </ul>
+          <div class="icon-row">
+            <span class="mini-ico" title="Discovery">🔎</span>
+            <span class="mini-ico" title="People">👥</span>
+            <span class="mini-ico" title="Scope">🗺️</span>
           </div>
-        </div>
+        </article>
       </section>
 
-      <section class="stage stage_clouds" id="stage-clouds" data-stage="clouds" aria-label="Above the clouds">
-        <div class="stage_inner">
-          <div class="stage_card">
-            <div class="stage_kicker">
-              <span class="stage_tag">ABOVE THE CLOUDS</span>
-              <span class="stage_icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M7.5 18.5h9.6a4.1 4.1 0 0 0 .6-8.2A5.6 5.6 0 0 0 6.2 9.4a3.7 3.7 0 0 0 1.3 9.1z"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
-            </div>
-            <h3 class="stage_title">Managed, monitored, backed up</h3>
-            <ul class="stage_list">
-              <li>Backup for Microsoft 365 data with tested recovery</li>
-              <li>Monitoring and alerting for issues that matter</li>
-              <li>Onboarding and offboarding done properly</li>
-              <li>Predictable cost and calmer day to day operations</li>
-            </ul>
+      <section class="stage" id="stage-transition" data-index="2">
+        <article class="card" data-anim="slide">
+          <div class="tag">TRANSITION</div>
+          <h2>Move into Microsoft 365 cleanly</h2>
+          <ul>
+            <li>Migrate email, calendars, and files</li>
+            <li>Set up Teams, SharePoint, OneDrive</li>
+            <li>Minimal disruption, clean cutover</li>
+          </ul>
+          <div class="icon-row">
+            <span class="mini-ico" title="Migration">🚚</span>
+            <span class="mini-ico" title="M365">☁</span>
+            <span class="mini-ico" title="Cutover">✅</span>
           </div>
-        </div>
+        </article>
       </section>
 
-      <section class="stage stage_secure" id="stage-secure" data-stage="secure" aria-label="Secure">
-        <div class="stage_inner">
-          <div class="stage_card">
-            <div class="stage_kicker">
-              <span class="stage_tag">SECURE</span>
-              <span class="stage_icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M12 2l8 4v6c0 5.2-3.2 9.6-8 10-4.8-.4-8-4.8-8-10V6l8-4z"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M9.2 12.3l1.7 1.8 3.9-4"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
-            </div>
-            <h3 class="stage_title">Security by default</h3>
-            <ul class="stage_list">
-              <li>MFA enforced for all users</li>
-              <li>Baseline policies applied and kept current</li>
-              <li>Safer sharing and permissions</li>
-              <li>Reduced exposure to phishing and account takeover</li>
-            </ul>
+      <section class="stage" id="stage-secure" data-index="3">
+        <article class="card" data-anim="slide">
+          <div class="tag">SECURE</div>
+          <h2>Security by default</h2>
+          <ul>
+            <li>MFA enforced for all users</li>
+            <li>Baseline policies applied</li>
+            <li>Safer sharing and permissions</li>
+          </ul>
+          <div class="icon-row">
+            <span class="mini-ico" title="Security">🛡️</span>
+            <span class="mini-ico" title="MFA">🔐</span>
+            <span class="mini-ico" title="Policies">⚙️</span>
           </div>
-        </div>
+        </article>
       </section>
 
-      <section class="stage stage_transition" id="stage-transition" data-stage="transition" aria-label="Transition">
-        <div class="stage_inner">
-          <div class="stage_card">
-            <div class="stage_kicker">
-              <span class="stage_tag">TRANSITION</span>
-              <span class="stage_icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M5 7h9a4 4 0 0 1 0 8H10"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="M10 15l2.5-2.5M10 15l2.5 2.5"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="M5 7l2.5-2.5M5 7l2.5 2.5"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    stroke-linecap="round"
-                  />
-                </svg>
-              </span>
-            </div>
-            <h3 class="stage_title">Move into Microsoft 365 cleanly</h3>
-            <ul class="stage_list">
-              <li>Migrate email, calendars, and files</li>
-              <li>Set up Teams, SharePoint, OneDrive properly</li>
-              <li>Minimal disruption with a clean cutover</li>
-              <li>Clear ownership so people know where things live</li>
-            </ul>
+      <section class="stage" id="stage-above" data-index="4">
+        <article class="card" data-anim="slide">
+          <div class="tag">ABOVE THE CLOUDS</div>
+          <h2>Managed, monitored, backed up</h2>
+          <ul>
+            <li>Backup for Microsoft 365 data with tested recovery</li>
+            <li>Monitoring and alerting for issues that matter</li>
+            <li>Onboarding and offboarding done properly</li>
+            <li>Predictable cost and calmer day to day operations</li>
+          </ul>
+          <div class="icon-row">
+            <span class="mini-ico" title="Monitoring">📡</span>
+            <span class="mini-ico" title="Backup">🧰</span>
+            <span class="mini-ico" title="Operations">🧑‍💻</span>
           </div>
-        </div>
+        </article>
       </section>
 
-      <section class="stage stage_discover" id="stage-discover" data-stage="discover" aria-label="Discover">
-        <div class="stage_inner">
-          <div class="stage_card">
-            <div class="stage_kicker">
-              <span class="stage_tag">DISCOVER</span>
-              <span class="stage_icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                  />
-                  <path
-                    d="M14.7 9.3l-1.2 5.4-5.4 1.2 1.2-5.4 5.4-1.2z"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
-            </div>
-            <h3 class="stage_title">Understand the current state</h3>
-            <ul class="stage_list">
-              <li>Short review of tools, risks, and priorities</li>
-              <li>Confirm users, devices, domain, and scope</li>
-              <li>Agree the simplest path forward</li>
-              <li>Identify quick wins before the main uplift</li>
-            </ul>
+      <section class="stage" id="stage-ready" data-index="5">
+        <article class="card" data-anim="slide">
+          <div class="tag">READY</div>
+          <h2>AI and automation, when you choose</h2>
+          <ul>
+            <li>Centralised data and clean permissions</li>
+            <li>Auditable access and safer sharing</li>
+            <li>Practical automation that reduces effort</li>
+          </ul>
+          <div class="icon-row">
+            <span class="mini-ico" title="AI">✨</span>
+            <span class="mini-ico" title="Automation">🤖</span>
+            <span class="mini-ico" title="Outcomes">📈</span>
           </div>
-        </div>
+        </article>
       </section>
 
-      <section class="stage stage_basecamp" id="stage-basecamp" data-stage="basecamp" aria-label="Base camp landing">
-        <div class="hero">
-          <canvas id="skyCanvas" class="sky_canvas" aria-hidden="true"></canvas>
-          <div class="hero_image" aria-hidden="true"></div>
-          <div class="hero_vignette" aria-hidden="true"></div>
-
-          <div class="hero_card" role="region" aria-label="Hero content">
-            <div class="hero_brand">ITFUNDAMENTALS.CH</div>
-            <h1 class="hero_title">From base camp to the clouds</h1>
-            <p class="hero_sub">
-              Secure cloud foundations for micro and small business. We migrate email and files into Microsoft 365,
-              then keep it secure, backed up, monitored, and supported.
-            </p>
-
-            <div class="hero_cta">
-              <a class="btn_primary" href="#stage-discover">Start the climb</a>
-              <a class="btn_secondary" href="mailto:hello@itfundamentals.ch">Book a discovery chat</a>
-            </div>
-
-            <div class="hero_note">Swiss based managed IT for micro and small business.</div>
-          </div>
-
-          <div class="basecamp_card">
-            <div class="stage_kicker">
-              <span class="stage_tag">BASE CAMP</span>
-              <span class="stage_icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M3 20l9-16 9 16H3z"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M12 4v16"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    stroke-linecap="round"
-                  />
-                </svg>
-              </span>
-            </div>
-            <h3 class="stage_title">Stabilise what you already use</h3>
-            <ul class="stage_list">
-              <li>Reduce scattered tools and ad hoc setups</li>
-              <li>Establish a clear security baseline</li>
-              <li>Set up backup and monitoring foundations</li>
-              <li>Remove avoidable risk and unplanned spend</li>
-            </ul>
-          </div>
-
-          <div class="scroll_hint" aria-hidden="true">
-            <div class="scroll_hint_dot"></div>
-            <div class="scroll_hint_text">Scroll down to climb up</div>
-          </div>
-        </div>
-      </section>
+      <footer class="endcap" aria-hidden="true"></footer>
     </main>
 
-    <!-- Fixed mountain climb scene -->
-    <div class="mountain_scene" aria-hidden="true">
-      <div class="mountain_backglow"></div>
-
-      <svg class="mountain_svg" viewBox="0 0 520 900" preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <linearGradient id="mtnFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="rgba(255,255,255,0.14)" />
-            <stop offset="0.55" stop-color="rgba(255,255,255,0.08)" />
-            <stop offset="1" stop-color="rgba(255,255,255,0.03)" />
-          </linearGradient>
-
-          <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="6" result="blur" />
-            <feColorMatrix
-              in="blur"
-              type="matrix"
-              values="
-                1 0 0 0 0
-                0 1 0 0 0
-                0 0 1 0 0
-                0 0 0 0.6 0"
-              result="col"
-            />
-            <feMerge>
-              <feMergeNode in="col" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-
-          <filter id="pinGlow" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="8" result="b" />
-            <feMerge>
-              <feMergeNode in="b" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
-        <!-- stylised mountain silhouette -->
-        <path
-          class="mtn_shape"
-          d="M410 820
-             C360 760 320 705 300 650
-             C280 595 290 545 315 505
-             C340 465 358 445 360 415
-             C362 388 352 360 330 330
-             C300 290 270 260 258 220
-             C246 180 268 150 290 120
-             C315 85 315 55 300 35
-             C286 18 256 25 240 45
-             C222 70 210 105 190 130
-             C165 160 140 190 125 225
-             C110 260 112 310 125 345
-             C138 380 150 420 140 450
-             C130 482 98 520 84 560
-             C70 600 82 650 112 690
-             C155 746 200 788 230 820
-             Z"
-          fill="url(#mtnFill)"
-          stroke="rgba(255,255,255,0.12)"
-          stroke-width="2"
-          filter="url(#softGlow)"
-        />
-
-        <!-- climb route -->
-        <path
-          id="climbPath"
-          class="climb_path"
-          d="M195 812
-             C185 770 200 740 215 715
-             C240 675 260 660 270 630
-             C286 582 250 560 235 530
-             C210 482 220 450 250 420
-             C290 380 285 350 265 320
-             C245 290 230 270 235 240
-             C242 205 270 185 286 160
-             C305 130 298 98 280 78
-             C265 62 245 70 230 90"
-          fill="none"
-          stroke="rgba(255,255,255,0.30)"
-          stroke-width="3"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-dasharray="2 10"
-        />
-
-        <!-- stage pins, positioned on the path by JS -->
-        <g id="pins" class="pins_group">
-          <circle class="pin" data-pin="basecamp" r="8" cx="0" cy="0"></circle>
-          <circle class="pin" data-pin="discover" r="8" cx="0" cy="0"></circle>
-          <circle class="pin" data-pin="transition" r="8" cx="0" cy="0"></circle>
-          <circle class="pin" data-pin="secure" r="8" cx="0" cy="0"></circle>
-          <circle class="pin" data-pin="clouds" r="8" cx="0" cy="0"></circle>
-          <circle class="pin" data-pin="ready" r="8" cx="0" cy="0"></circle>
-        </g>
-
-        <!-- climber -->
-        <g id="climberOnPath" class="climber_on_path">
-          <circle class="climber_dot" r="9" cx="0" cy="0"></circle>
-          <circle class="climber_dot_inner" r="3.2" cx="0" cy="0"></circle>
-        </g>
-      </svg>
-
-      <div class="mtn_clouds">
-        <span class="mtn_cloud mc1"></span>
-        <span class="mtn_cloud mc2"></span>
-        <span class="mtn_cloud mc3"></span>
-      </div>
-    </div>
-
-    <script src="app.js"></script>
+    <script src="./app.js"></script>
   </body>
 </html>
