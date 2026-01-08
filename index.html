@@ -1,154 +1,194 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>IT Fundamentals | From base camp to the clouds</title>
-  <meta name="description" content="Secure cloud foundations for micro and small business. From base camp to the clouds." />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>IT Fundamentals</title>
+  <meta name="description" content="From base camp to the clouds. Secure cloud foundations for micro and small business." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <header class="hero" aria-label="Hero">
-    <div class="hero_media" role="img" aria-label="Mountain landscape"></div>
+  <!-- Sky and atmosphere layers -->
+  <div class="sky" aria-hidden="true">
+    <div class="sky_day"></div>
+    <div class="sky_night"></div>
+    <div class="stars"></div>
+    <div class="shooting shooting_1"></div>
+    <div class="shooting shooting_2"></div>
+    <div class="shooting shooting_3"></div>
+    <div class="clouds clouds_far"></div>
+    <div class="clouds clouds_near"></div>
+    <div class="vignette"></div>
+  </div>
 
-    <div class="sky sky_day" aria-hidden="true"></div>
-    <div class="sky sky_night" aria-hidden="true"></div>
+  <!-- Left climb column -->
+  <aside class="climb" aria-label="Climb stages">
+    <div class="climb_track" aria-hidden="true"></div>
 
-    <div class="hero_overlay"></div>
+    <div class="climb_climber" aria-hidden="true">
+      <!-- Simple, clean climber icon (SVG), styled via CSS -->
+      <svg class="climber_svg" viewBox="0 0 120 120" role="img" aria-label="">
+        <circle cx="72" cy="24" r="10" class="c_fill"></circle>
+        <path d="M35 18 C55 38, 70 54, 88 76" class="c_rope" fill="none" stroke-width="6" stroke-linecap="round"></path>
 
-    <div class="hero_content">
-      <div class="brand">ITFUNDAMENTALS.CH</div>
+        <path d="M62 36 L52 58 L68 70 L80 92" class="c_fill" fill="none" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path d="M52 58 L38 74" class="c_fill" fill="none" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path d="M68 70 L52 88" class="c_fill" fill="none" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"></path>
 
-      <h1 class="headline">
-        From base camp to the clouds
-      </h1>
-
-      <p class="subhead">
-        Secure cloud foundations for micro and small business.
-        We migrate email and files into Microsoft 365, then keep it secure, backed up, monitored, and supported.
-      </p>
-
-      <div class="cta_row">
-        <a class="btn_primary" href="#ascent">See the journey</a>
-        <a class="btn_secondary" href="mailto:hello@itfundamentals.ch">Book a discovery chat</a>
-      </div>
-
-      <div class="hero_note">
-        Swiss based managed IT for micro and small business.
-      </div>
-    </div>
-  </header>
-
-  <main id="ascent" class="ascent" aria-label="Ascent storyboard">
-    <div class="ascent_frame">
-      <div class="ascent_title">The journey</div>
-      <div class="ascent_intro">
-        Scroll to climb. Each stage builds a safer, calmer, and more manageable environment.
-      </div>
+        <circle cx="52" cy="58" r="6" class="c_fill"></circle>
+        <circle cx="68" cy="70" r="6" class="c_fill"></circle>
+      </svg>
     </div>
 
-    <section class="scroll_stage" aria-label="Ascent stages">
-      <div class="scroll_flip">
-        <div class="scroll_inner">
+    <nav class="climb_nav" aria-label="Stages">
+      <a class="climb_item" href="#stage-ready" data-stage="0">
+        <span class="climb_step">6</span>
+        <span class="climb_label">Ready</span>
+      </a>
+      <a class="climb_item" href="#stage-managed" data-stage="1">
+        <span class="climb_step">5</span>
+        <span class="climb_label">Above the clouds</span>
+      </a>
+      <a class="climb_item" href="#stage-secure" data-stage="2">
+        <span class="climb_step">4</span>
+        <span class="climb_label">Secure</span>
+      </a>
+      <a class="climb_item" href="#stage-transition" data-stage="3">
+        <span class="climb_step">3</span>
+        <span class="climb_label">Transition</span>
+      </a>
+      <a class="climb_item" href="#stage-discover" data-stage="4">
+        <span class="climb_step">2</span>
+        <span class="climb_label">Discover</span>
+      </a>
+      <a class="climb_item" href="#stage-basecamp" data-stage="5">
+        <span class="climb_step">1</span>
+        <span class="climb_label">Base camp</span>
+      </a>
+    </nav>
+  </aside>
 
-          <div class="rope_col" aria-hidden="true">
-            <div class="rope_line"></div>
-
-            <div class="rope_anchor anchor_1"></div>
-            <div class="rope_anchor anchor_2"></div>
-            <div class="rope_anchor anchor_3"></div>
-            <div class="rope_anchor anchor_4"></div>
-            <div class="rope_anchor anchor_5"></div>
-
-            <div class="climber" id="climber" aria-hidden="true">
-              <svg viewBox="0 0 64 64" width="44" height="44">
-                <circle cx="40" cy="12" r="6" />
-                <path d="M36 20 L26 30 L30 36 L22 44 L28 50 L38 40 L44 48 L52 44 L46 34 L52 26 L44 22 Z" />
-              </svg>
-            </div>
-          </div>
-
-          <div class="cards_col" id="cards_col" aria-label="Stage cards">
-
-            <article class="stage_card" data_stage="0">
-              <div class="stage_kicker">Base camp</div>
-              <h2 class="stage_heading">Stabilise what you already use</h2>
-              <ul class="stage_list">
-                <li>Scattered tools and ad hoc setups</li>
-                <li>No clear security baseline</li>
-                <li>No backup or monitoring</li>
-                <li>Unplanned spend and avoidable risk</li>
-              </ul>
-            </article>
-
-            <article class="stage_card" data_stage="1">
-              <div class="stage_kicker">Discover</div>
-              <h2 class="stage_heading">Understand the current state</h2>
-              <ul class="stage_list">
-                <li>Short review of tools, risks, and priorities</li>
-                <li>Confirm users, devices, domain, and scope</li>
-                <li>Agree the simplest path forward</li>
-              </ul>
-            </article>
-
-            <article class="stage_card" data_stage="2">
-              <div class="stage_kicker">Transition</div>
-              <h2 class="stage_heading">Move into Microsoft 365 cleanly</h2>
-              <ul class="stage_list">
-                <li>Migrate email, calendars, and files</li>
-                <li>Set up Teams, SharePoint, OneDrive</li>
-                <li>Minimal disruption, clean cutover</li>
-              </ul>
-            </article>
-
-            <article class="stage_card" data_stage="3">
-              <div class="stage_kicker">Secure</div>
-              <h2 class="stage_heading">Security by default</h2>
-              <ul class="stage_list">
-                <li>MFA enforced for all users</li>
-                <li>Baseline policies applied</li>
-                <li>Safer sharing and permissions</li>
-              </ul>
-            </article>
-
-            <article class="stage_card" data_stage="4">
-              <div class="stage_kicker">Above the clouds</div>
-              <h2 class="stage_heading">Managed, monitored, backed up</h2>
-              <ul class="stage_list">
-                <li>Backup for Microsoft 365 data</li>
-                <li>Monitoring and alerting</li>
-                <li>Onboarding and offboarding done properly</li>
-                <li>Predictable cost and calmer operations</li>
-              </ul>
-            </article>
-
-            <article class="stage_card stage_card_last" data_stage="5">
-              <div class="stage_kicker">Ready</div>
-              <h2 class="stage_heading">AI and automation, when you choose</h2>
-              <ul class="stage_list">
-                <li>Centralised data and clean permissions</li>
-                <li>Auditable access and safer sharing</li>
-                <li>Copilot becomes practical, not risky</li>
-              </ul>
-            </article>
-
-          </div>
+  <!-- Main content: stages first, landing last -->
+  <main class="page" aria-label="IT Fundamentals journey">
+    <section class="stage" id="stage-ready" data-index="0" aria-label="Ready">
+      <div class="stage_inner">
+        <div class="stage_panel">
+          <div class="stage_kicker">READY</div>
+          <h2 class="stage_title">AI and automation, when you choose</h2>
+          <ul class="stage_list">
+            <li>Clean identity and access posture, ready for modern tooling</li>
+            <li>Structured data and permissions, not random file shares</li>
+            <li>Safer collaboration and sharing patterns</li>
+            <li>Automation introduced only when it makes sense</li>
+          </ul>
+          <div class="stage_note">This is the point where AI adds value, not risk.</div>
         </div>
       </div>
     </section>
 
-    <footer class="footer">
-      <div class="footer_box">
-        <div class="footer_brand">IT Fundamentals</div>
-        <div class="footer_text">
-          Secure cloud foundations for micro and small business.
-        </div>
-        <div class="footer_cta">
-          <a class="btn_primary" href="mailto:hello@itfundamentals.ch">Book a discovery chat</a>
+    <section class="stage" id="stage-managed" data-index="1" aria-label="Above the clouds">
+      <div class="stage_inner">
+        <div class="stage_panel">
+          <div class="stage_kicker">ABOVE THE CLOUDS</div>
+          <h2 class="stage_title">Managed, monitored, backed up</h2>
+          <ul class="stage_list">
+            <li>Backup for Microsoft 365 data</li>
+            <li>Monitoring and alerting</li>
+            <li>Onboarding and offboarding done properly</li>
+            <li>Predictable cost and calmer operations</li>
+          </ul>
         </div>
       </div>
-    </footer>
+    </section>
+
+    <section class="stage" id="stage-secure" data-index="2" aria-label="Secure">
+      <div class="stage_inner">
+        <div class="stage_panel">
+          <div class="stage_kicker">SECURE</div>
+          <h2 class="stage_title">Security by default</h2>
+          <ul class="stage_list">
+            <li>MFA enforced for all users</li>
+            <li>Baseline policies applied</li>
+            <li>Safer sharing and permissions</li>
+            <li>Phishing resistant habits built in</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="stage" id="stage-transition" data-index="3" aria-label="Transition">
+      <div class="stage_inner">
+        <div class="stage_panel">
+          <div class="stage_kicker">TRANSITION</div>
+          <h2 class="stage_title">Move into Microsoft 365 cleanly</h2>
+          <ul class="stage_list">
+            <li>Migrate email, calendars, and files</li>
+            <li>Set up Teams, SharePoint, OneDrive properly</li>
+            <li>Minimal disruption, clean cutover</li>
+            <li>Remove legacy sprawl and duplicate tools</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="stage" id="stage-discover" data-index="4" aria-label="Discover">
+      <div class="stage_inner">
+        <div class="stage_panel">
+          <div class="stage_kicker">DISCOVER</div>
+          <h2 class="stage_title">Understand the current state</h2>
+          <ul class="stage_list">
+            <li>Short review of tools, risks, and priorities</li>
+            <li>Confirm users, devices, domain, and scope</li>
+            <li>Agree the simplest path forward</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="stage" id="stage-basecamp" data-index="5" aria-label="Base camp">
+      <div class="stage_inner">
+        <div class="stage_panel">
+          <div class="stage_kicker">BASE CAMP</div>
+          <h2 class="stage_title">Stabilise what you already use</h2>
+          <ul class="stage_list">
+            <li>Reduce scattered tools and ad hoc setups</li>
+            <li>Establish a clear security baseline</li>
+            <li>Set up backup and monitoring foundations</li>
+            <li>Remove avoidable risk and unplanned spend</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Landing section goes last -->
+    <section class="landing" id="landing" aria-label="Landing">
+      <header class="hero">
+        <div class="hero_overlay" aria-hidden="true"></div>
+
+        <div class="hero_content">
+          <div class="brand">ITFUNDAMENTALS.CH</div>
+
+          <h1 class="headline">From base camp to the clouds</h1>
+
+          <p class="subhead">
+            Secure cloud foundations for micro and small business.
+            We migrate email and files into Microsoft 365, then keep it secure, backed up, monitored, and supported.
+          </p>
+
+          <div class="cta_row">
+            <a class="btn_primary" href="#stage-basecamp">Start the climb</a>
+            <a class="btn_secondary" href="mailto:hello@itfundamentals.ch">Book a discovery chat</a>
+          </div>
+
+          <div class="hero_note">
+            Swiss based managed IT for micro and small business.
+          </div>
+        </div>
+
+        <div class="hero_image" aria-hidden="true"></div>
+      </header>
+    </section>
   </main>
 
   <script src="app.js"></script>

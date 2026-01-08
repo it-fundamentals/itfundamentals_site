@@ -1,27 +1,105 @@
-(function () {
-  const scroller = document.querySelector(".scroll_inner");
-  const climber = document.getElementById("climber");
+(() => {
+  const landing = document.getElementById("landing");
+  const stages = Array.from(document.querySelectorAll(".stage"));
+  const climb = document.querySelector(".climb");
+  const climbItems = Array.from(document.querySelectorAll(".climb_item"));
+  const climber = document.querySelector(".climb_climber");
 
-  if (!scroller || !climber) return;
-
-  function clamp(v, min, max) {
-    return Math.min(max, Math.max(min, v));
+  function prefersReducedMotion() {
+    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
-  function updateClimber() {
-    const maxScroll = scroller.scrollHeight - scroller.clientHeight;
-    const p = maxScroll > 0 ? scroller.scrollTop / maxScroll : 0;
+  function scrollToLandingBottom() {
+    if (!landing) return;
 
-    // Rope travel range, from lower anchor zone to upper anchor zone
-    const topPct = 6;
-    const bottomPct = 86;
-
-    const pct = bottomPct - (bottomPct - topPct) * clamp(p, 0, 1);
-    climber.style.top = pct + "%";
+    // Let layout settle, then jump to landing section.
+    // Use auto scroll so it feels instant and avoids odd animation on load.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        landing.scrollIntoView({ block: "start", behavior: "auto" });
+      });
+    });
   }
 
-  scroller.addEventListener("scroll", updateClimber, { passive: true });
-  window.addEventListener("resize", updateClimber);
+  function setActiveStageByIndex(activeIndex) {
+    stages.forEach((s, idx) => {
+      if (idx === activeIndex) s.classList.add("is_active");
+      else s.classList.remove("is_active");
+    });
 
-  updateClimber();
+    climbItems.forEach((a) => {
+      const idx = Number(a.getAttribute("data-stage"));
+      if (idx === activeIndex) a.classList.add("is_active");
+      else a.classList.remove("is_active");
+    });
+
+    // Move climber along the left track.
+    // We map stage index 0..5 into a Y range inside the sidebar.
+    const trackTop = 56;
+    const trackBottom = climb.clientHeight - 120;
+    const t = activeIndex / Math.max(1, (stages.length - 1));
+    const y = trackTop + (trackBottom - trackTop) * t;
+
+    climb.style.setProperty("--climberY", `${y}px`);
+  }
+
+  function installIntersectionObserver() {
+    // If reduced motion, we still highlight, but keep movement gentler.
+    const rootMargin = prefersReducedMotion()
+      ? "-40% 0px -40% 0px"
+      : "-55% 0px -35% 0px";
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        // Pick the entry closest to centre that is intersecting
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top));
+
+        if (visible.length) {
+          const idx = Number(visible[0].target.getAttribute("data-index"));
+          if (!Number.isNaN(idx)) setActiveStageByIndex(idx);
+        }
+      },
+      { threshold: 0.25, rootMargin }
+    );
+
+    stages.forEach((s) => io.observe(s));
+
+    // Default active stage on load
+    setActiveStageByIndex(5);
+  }
+
+  function wireNavClicks() {
+    climbItems.forEach((a) => {
+      a.addEventListener("click", (ev) => {
+        ev.preventDefault();
+        const href = a.getAttribute("href");
+        const target = href ? document.querySelector(href) : null;
+        if (!target) return;
+
+        target.scrollIntoView({
+          block: "center",
+          behavior: prefersReducedMotion() ? "auto" : "smooth",
+        });
+      });
+    });
+  }
+
+  // Load behaviour
+  window.addEventListener("load", () => {
+    wireNavClicks();
+    installIntersectionObserver();
+
+    // Start the user at the bottom landing section.
+    scrollToLandingBottom();
+  });
+
+  // If user refreshes mid-page or changes viewport size, keep mapping accurate.
+  window.addEventListener("resize", () => {
+    const active = document.querySelector(".stage.is_active");
+    if (!active) return;
+    const idx = Number(active.getAttribute("data-index"));
+    if (!Number.isNaN(idx)) setActiveStageByIndex(idx);
+  });
 })();
