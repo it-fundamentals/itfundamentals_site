@@ -1,60 +1,42 @@
 (function () {
-  const stageIds = ["stage-basecamp", "stage-discover", "stage-transition", "stage-secure", "stage-above", "stage-ready"];
-  const stages = stageIds.map((id) => document.getElementById(id)).filter(Boolean);
+  const overlay = document.getElementById("bgOverlay");
+  const scrollFlip = document.getElementById("scrollFlip");
 
-  const navButtons = Array.from(document.querySelectorAll(".stage-pill"));
+  const stageIds = [
+    "stage-basecamp",
+    "stage-discover",
+    "stage-transition",
+    "stage-secure",
+    "stage-above",
+    "stage-ready",
+  ];
+
+  const stages = stageIds
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
+
+  const navButtons = Array.from(document.querySelectorAll(".stagePill"));
   const cards = Array.from(document.querySelectorAll(".card"));
+
   const climbPath = document.getElementById("climbPath");
   const climber = document.getElementById("climber");
-  const mileNodes = Array.from(document.querySelectorAll(".mile"));
-  const jumpTopBtn = document.querySelector(".routeTopBtn");
 
   if (!stages.length) return;
 
   let activeIndex = 0;
 
-  try {
-    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-  } catch (e) {}
-
   function clamp(n, min, max) {
     return Math.max(min, Math.min(max, n));
   }
 
-  function updateShadeForT(t) {
-    const tt = clamp(t, 0, 1);
-    const eased = tt * tt * (3 - 2 * tt);
-    const shade = 0.62 - 0.40 * eased;
-    document.documentElement.style.setProperty("--shade", String(shade.toFixed(3)));
-  }
-
-  function updateClimberForStage(stageIndex) {
-    if (!climbPath || !climber) return;
-
-    const total = climbPath.getTotalLength();
-    const t = stageIds.length <= 1 ? 0 : stageIndex / (stageIds.length - 1);
-
-    const len = total * (1 - t);
-    const pt = climbPath.getPointAtLength(len);
-
-    climber.setAttribute("transform", `translate(${pt.x}, ${pt.y})`);
-    updateShadeForT(t);
-  }
-
   function setActive(index) {
-    activeIndex = clamp(index, 0, stageIds.length - 1);
+    activeIndex = clamp(index, 0, stages.length - 1);
 
     navButtons.forEach((btn) => {
       const target = btn.getAttribute("data-goto");
-      btn.classList.toggle("is-active", target === stageIds[activeIndex]);
+      const isActive = target === stageIds[activeIndex];
+      btn.classList.toggle("is-active", isActive);
     });
-
-    mileNodes.forEach((m) => {
-      const idx = Number(m.getAttribute("data-idx") || "0");
-      m.classList.toggle("is-hit", idx <= activeIndex);
-    });
-
-    updateClimberForStage(activeIndex);
   }
 
   function scrollToStage(id) {
@@ -71,114 +53,98 @@
     });
   });
 
-  if (jumpTopBtn) {
-    jumpTopBtn.addEventListener("click", () => scrollToStage("stage-ready"));
-  }
-
-  cards.forEach((card) => card.classList.add("is-visible"));
-
-  const io = new IntersectionObserver(
+  // Stage reveal and stage activation
+  const stageObserver = new IntersectionObserver(
     (entries) => {
-      const visible = entries
-        .filter((e) => e.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      const visible = entries.filter((e) => e.isIntersecting);
+      if (!visible.length) return;
 
-      if (!visible) return;
-
-      const idx = parseInt(visible.target.getAttribute("data-index") || "0", 10);
+      visible.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+      const top = visible[0];
+      const idx = parseInt(top.target.getAttribute("data-index") || "0", 10);
       if (!Number.isNaN(idx)) setActive(idx);
     },
-    { threshold: [0.45, 0.55, 0.65] }
+    {
+      threshold: [0.45, 0.55, 0.65],
+      rootMargin: "0px 0px 0px 0px",
+    }
   );
 
-  stages.forEach((s) => io.observe(s));
+  stages.forEach((s) => stageObserver.observe(s));
 
-  /* Reverse scroll (wheel down moves up the document) */
-  const reverseScrollEnabled = true;
-  let reverseScrollLock = false;
+  // Card slide-in reveal
+  const cardObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) e.target.classList.add("is-visible");
+      });
+    },
+    { threshold: 0.25 }
+  );
 
-  function onWheel(e) {
-    if (!reverseScrollEnabled) return;
-    if (reverseScrollLock) return;
+  cards.forEach((c) => cardObserver.observe(c));
 
-    const el = document.activeElement;
-    if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.isContentEditable)) return;
-
-    e.preventDefault();
-
-    reverseScrollLock = true;
-    window.scrollBy({ top: -e.deltaY, left: 0, behavior: "auto" });
-
-    requestAnimationFrame(() => {
-      reverseScrollLock = false;
-    });
-  }
-
-  window.addEventListener("wheel", onWheel, { passive: false });
-
-  /* Smooth climber and shade between stages */
-  let raf = 0;
-
-  function updateFromScroll() {
+  // Route positioning (smooth, continuous with scroll)
+  function updateClimber(progress01) {
     if (!climbPath || !climber) return;
 
-    const current = document.querySelector(`.stage[data-index="${activeIndex}"]`);
-    const nextIndex = clamp(activeIndex + 1, 0, stageIds.length - 1);
-    const next = document.querySelector(`.stage[data-index="${nextIndex}"]`);
-
-    if (!current || !next) {
-      updateClimberForStage(activeIndex);
-      return;
-    }
-
-    const rectA = current.getBoundingClientRect();
-    const rectB = next.getBoundingClientRect();
-    const span = rectB.top - rectA.top;
-
-    let prog = 0;
-    if (Math.abs(span) > 1) prog = clamp((0 - rectA.top) / span, 0, 1);
-
-    const t0 = activeIndex / (stageIds.length - 1);
-    const t1 = nextIndex / (stageIds.length - 1);
-    const t = t0 + (t1 - t0) * prog;
-
     const total = climbPath.getTotalLength();
-    const len = total * (1 - t);
+
+    // progress 0 = base camp (bottom visually, top scroll)
+    // progress 1 = ready (top visually, bottom scroll)
+    const len = total * (1 - progress01);
     const pt = climbPath.getPointAtLength(len);
 
     climber.setAttribute("transform", `translate(${pt.x}, ${pt.y})`);
-    updateShadeForT(t);
   }
 
+  // Gradual overlay fade while climbing (continuous)
+  function updateOverlay(progress01) {
+    if (!overlay) return;
+
+    // Darkest at base camp, lightest near the top.
+    // This is continuous and updates every scroll tick.
+    const darkest = 0.72;
+    const lightest = 0.18;
+
+    const op = darkest + (lightest - darkest) * progress01;
+    overlay.style.opacity = String(op);
+
+    // Also soften the vignette slightly as you climb
+    const vignette = 0.78 + (0.62 - 0.78) * progress01;
+    overlay.style.background =
+      `radial-gradient(1200px 700px at 55% 45%, rgba(0,0,0,${(vignette - 0.25).toFixed(3)}), rgba(0,0,0,${vignette.toFixed(3)}))`;
+  }
+
+  function scrollProgress() {
+    const doc = document.documentElement;
+    const max = Math.max(1, doc.scrollHeight - doc.clientHeight);
+    return clamp(doc.scrollTop / max, 0, 1);
+  }
+
+  let raf = 0;
   function onScroll() {
     if (raf) cancelAnimationFrame(raf);
-    raf = requestAnimationFrame(updateFromScroll);
+    raf = requestAnimationFrame(() => {
+      const p = scrollProgress();
+      updateClimber(p);
+      updateOverlay(p);
+    });
   }
 
   window.addEventListener("scroll", onScroll, { passive: true });
 
-  /* FORCE landing at Base camp (bottom) */
-  function startAtBaseCampBottom() {
-    const base = document.getElementById("stage-basecamp");
-    if (!base) return;
+  // Initial state
+  setActive(0);
+  cards.forEach((c, i) => {
+    if (i === 0) c.classList.add("is-visible");
+  });
+  onScroll();
 
-    setActive(0);
-
-    const jump = () => {
-      base.scrollIntoView({ behavior: "auto", block: "end" });
-      updateFromScroll();
-    };
-
-    jump();
-    setTimeout(jump, 120);
-    setTimeout(jump, 360);
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", startAtBaseCampBottom);
-  } else {
-    startAtBaseCampBottom();
-  }
-
-  window.addEventListener("load", startAtBaseCampBottom);
+  // Ensure we start at base camp visually (top of document with the flip)
+  // This prevents the browser restoring scroll to mid page after refresh.
+  window.addEventListener("load", () => {
+    window.scrollTo(0, 0);
+    onScroll();
+  });
 })();

@@ -1,12 +1,13 @@
 :root {
+  --bg: #070a12;
+  --panel: rgba(10, 14, 24, 0.76);
+  --panel2: rgba(10, 14, 24, 0.6);
   --text: rgba(255, 255, 255, 0.92);
   --muted: rgba(255, 255, 255, 0.72);
+  --soft: rgba(255, 255, 255, 0.16);
+  --soft2: rgba(255, 255, 255, 0.08);
   --shadow: rgba(0, 0, 0, 0.42);
-
-  /* JS updates this gradually */
-  --shade: 0.58;
-
-  --cardSlide: 38px;
+  --radius: 22px;
 }
 
 * {
@@ -21,199 +22,182 @@ body {
 body {
   margin: 0;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+  background: var(--bg);
   color: var(--text);
   overflow-x: hidden;
-  background: #04060a;
 }
 
-/* Background image */
 .bg {
   position: fixed;
   inset: 0;
+  background-image: url("./assets/matterhorn.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: scale(1.02);
+  filter: saturate(1.02) contrast(1.02);
   z-index: 0;
-  background: url("assets/matterhorn.jpg") center / cover no-repeat;
 }
 
-.bgShade {
-  position: absolute;
+.bgOverlay {
+  position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, var(--shade));
-  transition: background 120ms linear;
-}
-
-.bgVignette {
-  position: absolute;
-  inset: -20%;
-  background: radial-gradient(circle at 55% 40%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.35) 55%, rgba(0, 0, 0, 0.7) 100%);
+  background: radial-gradient(1200px 700px at 55% 45%, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.75));
+  opacity: 0.68;
+  z-index: 1;
   pointer-events: none;
 }
 
-/* Layout */
-.layout {
+.shell {
   position: relative;
-  z-index: 1;
-  min-height: 100vh;
+  z-index: 2;
   display: grid;
-  grid-template-columns: 360px 1fr;
+  grid-template-columns: 320px minmax(560px, 1fr) 340px;
+  gap: 28px;
+  padding: 26px 26px 26px 26px;
+  min-height: 100vh;
 }
 
-.nav {
+.nav,
+.route {
   position: sticky;
-  top: 0;
-  height: 100vh;
-  padding: 28px 18px 18px;
-  background: rgba(6, 10, 16, 0.58);
-  backdrop-filter: blur(14px);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  top: 18px;
+  align-self: start;
+  height: calc(100vh - 36px);
 }
 
 .navHeader {
-  border-radius: 18px;
-  padding: 18px 18px 16px;
-  background: rgba(10, 14, 20, 0.42);
-  box-shadow: 0 20px 60px var(--shadow);
+  padding: 18px 18px;
+  border-radius: var(--radius);
+  background: var(--panel);
+  box-shadow: 0 18px 40px var(--shadow);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
 }
 
 .brand {
   font-size: 12px;
-  letter-spacing: 0.18em;
-  opacity: 0.92;
+  letter-spacing: 0.16em;
+  opacity: 0.78;
 }
 
 .title {
+  font-size: 42px;
+  line-height: 1.02;
   margin-top: 6px;
-  font-size: 34px;
-  font-weight: 750;
-  letter-spacing: -0.02em;
+  font-weight: 820;
 }
 
-.navList {
+.stageNav {
   margin-top: 18px;
-  display: grid;
-  gap: 12px;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 14px;
 }
 
-.stage-pill {
+.stagePill {
   width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  background: rgba(10, 14, 20, 0.42);
-  color: var(--text);
-  border-radius: 18px;
-  padding: 14px 14px;
   display: grid;
-  grid-template-columns: 42px 1fr;
+  grid-template-columns: 44px 1fr;
   align-items: center;
   gap: 12px;
+  padding: 16px 16px;
+  border-radius: var(--radius);
+  background: var(--panel2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+  color: var(--text);
   cursor: pointer;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  text-align: left;
+  backdrop-filter: blur(10px);
   transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
 }
 
-.stage-pill:hover {
+.stagePill:hover {
   transform: translateY(-1px);
-  border-color: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.14);
 }
 
-.stage-pill.is-active {
-  background: rgba(255, 255, 255, 0.86);
-  color: rgba(10, 14, 20, 0.92);
-  border-color: rgba(255, 255, 255, 0.32);
-}
-
-.pillNum {
+.stagePill .num {
+  width: 34px;
+  height: 34px;
   display: grid;
   place-items: center;
-  height: 38px;
-  width: 38px;
   border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   font-weight: 800;
-  background: rgba(255, 255, 255, 0.08);
-  color: inherit;
-  border: 1px solid rgba(255, 255, 255, 0.10);
 }
 
-.stage-pill.is-active .pillNum {
-  background: rgba(10, 14, 20, 0.08);
-  border-color: rgba(10, 14, 20, 0.10);
+.stagePill .label {
+  font-size: 18px;
+  font-weight: 760;
+  letter-spacing: 0.01em;
 }
 
-.pillText {
-  font-size: 16px;
-  font-weight: 650;
-  text-align: left;
+.stagePill.is-active {
+  background: rgba(255, 255, 255, 0.9);
+  color: #0b1020;
+  border-color: rgba(255, 255, 255, 0.82);
 }
 
-.navHint {
-  margin-top: 16px;
-  border-radius: 18px;
-  padding: 16px 16px 14px;
-  background: rgba(10, 14, 20, 0.34);
+.stagePill.is-active .num {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.navFooter {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 14px;
+  padding: 18px 18px;
+  border-radius: var(--radius);
+  background: var(--panel2);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--muted);
+  backdrop-filter: blur(10px);
 }
 
 .hintTitle {
-  font-weight: 650;
-  color: var(--text);
+  font-weight: 750;
+  margin-bottom: 6px;
 }
 
 .hintSub {
-  margin-top: 6px;
-  opacity: 0.9;
+  opacity: 0.7;
 }
 
-.navClimber {
-  position: absolute;
-  left: 14px;
-  bottom: 10px;
-  opacity: 0.92;
-}
-
-.miniClimber {
-  width: 34px;
-  height: 34px;
-  color: rgba(255, 255, 255, 0.92);
-}
-
-/* Content */
 .content {
-  position: relative;
   min-height: 100vh;
-  padding: 26px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
-  gap: 22px;
-  align-items: start;
 }
 
-/* Stages are centre column */
-.stages {
-  position: relative;
-  padding: 24px 0 64px;
-  max-width: 980px;
+/* The trick: reverse the visual scroll direction without wheel hacks */
+.scrollFlip {
+  transform: scaleY(-1);
 }
 
-/* Each stage takes space so we can scroll */
-.stage {
+/* Flip each stage back to normal */
+.stageSection {
+  transform: scaleY(-1);
   min-height: 92vh;
   display: grid;
-  align-items: center;
-  padding: 22px 8px;
+  place-items: center;
+  padding: 60px 0;
 }
 
 .card {
-  width: min(860px, 100%);
-  border-radius: 26px;
-  background: rgba(10, 14, 20, 0.62);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.50);
-  padding: 26px 28px 22px;
-  backdrop-filter: blur(16px);
+  width: min(860px, 92%);
+  padding: 26px 28px;
+  border-radius: 28px;
+  background: rgba(8, 12, 20, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.44);
+  backdrop-filter: blur(12px);
 
+  /* Slide in from left */
   opacity: 0;
-  transform: translateX(calc(var(--cardSlide) * -1));
-  transition: transform 520ms cubic-bezier(0.2, 0.85, 0.2, 1), opacity 520ms ease;
+  transform: translateX(-56px);
+  transition: opacity 420ms ease, transform 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .card.is-visible {
@@ -221,143 +205,113 @@ body {
   transform: translateX(0);
 }
 
-.eyebrow {
+.chip {
   display: inline-block;
+  padding: 7px 12px;
+  border-radius: 999px;
   font-size: 12px;
   letter-spacing: 0.18em;
-  font-weight: 750;
-  opacity: 0.9;
-  padding: 8px 12px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  font-weight: 800;
+  opacity: 0.86;
+  background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-h2 {
-  margin: 12px 0 12px;
-  font-size: 46px;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
+.card h2 {
+  margin: 14px 0 10px 0;
+  font-size: 54px;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
 }
 
-ul {
-  margin: 12px 0 0;
-  padding-left: 20px;
-  color: rgba(255, 255, 255, 0.82);
+.card ul {
+  margin: 14px 0 0 0;
+  padding-left: 18px;
+  color: rgba(255, 255, 255, 0.78);
   font-size: 18px;
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
-.icons {
-  margin-top: 14px;
+.cardIcons {
+  margin-top: 16px;
   display: flex;
   gap: 10px;
 }
 
-.chip {
-  display: inline-grid;
-  place-items: center;
-  height: 34px;
-  min-width: 34px;
-  padding: 0 10px;
+.iconBubble {
+  width: 38px;
+  height: 38px;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.88);
-  font-size: 16px;
-}
-
-/* Right route panel */
-.routePanel {
-  position: sticky;
-  top: 18px;
-  align-self: start;
-  height: calc(100vh - 36px);
   display: grid;
   place-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.routePanelInner {
-  width: 100%;
+.routePanel {
   height: 100%;
-  border-radius: 26px;
-  background: rgba(10, 14, 20, 0.40);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
-  backdrop-filter: blur(14px);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(12px);
+  padding: 18px;
   position: relative;
   overflow: hidden;
 }
 
+.routeTopIcon {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: grid;
+  place-items: center;
+  opacity: 0.85;
+}
+
 .routeSvg {
   width: 100%;
-  height: 100%;
+  height: calc(100% - 6px);
+  display: block;
 }
 
-.routeRibbon {
-  fill: rgba(255, 255, 255, 0.10);
-  stroke: rgba(255, 255, 255, 0.10);
-  stroke-width: 1;
+@media (max-width: 1200px) {
+  .shell {
+    grid-template-columns: 300px 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .route {
+    display: none;
+  }
+
+  .card h2 {
+    font-size: 44px;
+  }
 }
 
-.routeDots {
-  fill: none;
-  stroke: rgba(255, 255, 255, 0.34);
-  stroke-width: 3;
-  stroke-dasharray: 2 10;
-  stroke-linecap: round;
-}
-
-.mile {
-  fill: rgba(255, 255, 255, 0.14);
-  stroke: rgba(255, 255, 255, 0.28);
-  stroke-width: 2;
-}
-
-.mile.is-hit {
-  fill: rgba(255, 255, 255, 0.85);
-  stroke: rgba(255, 255, 255, 0.95);
-}
-
-.climber circle {
-  fill: rgba(255, 255, 255, 0.92);
-}
-
-.climberGlow {
-  fill: rgba(255, 255, 255, 0.06);
-}
-
-.routeTopBtn {
-  position: absolute;
-  right: 14px;
-  top: 12px;
-  height: 38px;
-  width: 38px;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  background: rgba(255, 255, 255, 0.10);
-  color: rgba(255, 255, 255, 0.90);
-  cursor: pointer;
-}
-
-/* Mobile */
-@media (max-width: 980px) {
-  .layout {
+@media (max-width: 860px) {
+  .shell {
     grid-template-columns: 1fr;
   }
+
   .nav {
     position: relative;
     height: auto;
-    border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
-  .content {
-    grid-template-columns: 1fr;
+
+  .navFooter {
+    position: relative;
+    bottom: auto;
+    margin-top: 14px;
   }
-  .routePanel {
-    display: none;
-  }
-  h2 {
-    font-size: 38px;
+
+  .stageNav {
+    flex-direction: column;
   }
 }
