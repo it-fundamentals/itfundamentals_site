@@ -1,0 +1,327 @@
+:root {
+  --bg: #070a12;
+  --ink: #0b1020;
+  --paper: #ffffff;
+  --glass: rgba(255,255,255,0.08);
+  --glass2: rgba(255,255,255,0.14);
+  --text: rgba(255,255,255,0.92);
+  --muted: rgba(255,255,255,0.72);
+  --shadow: rgba(0,0,0,0.35);
+  --rope: rgba(255,255,255,0.55);
+  --rope2: rgba(255,255,255,0.25);
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  background: var(--bg);
+  color: var(--paper);
+}
+
+a { color: inherit; text-decoration: none; }
+
+.hero {
+  position: relative;
+  height: 92vh;
+  min-height: 720px;
+  overflow: hidden;
+}
+
+.hero_media {
+  position: absolute;
+  inset: 0;
+  background-image: url("assets/matterhorn.jpg");
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.02);
+  filter: contrast(1.05) saturate(0.95);
+}
+
+.sky {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.sky_day {
+  background: radial-gradient(1200px 600px at 60% 18%, rgba(255,255,255,0.35), rgba(255,255,255,0.0)),
+              linear-gradient(to bottom, rgba(120,190,255,0.55), rgba(80,150,225,0.10));
+  opacity: 1;
+  animation: sky_cycle 18s ease-in-out infinite;
+}
+
+.sky_night {
+  background: radial-gradient(900px 600px at 60% 18%, rgba(255,255,255,0.20), rgba(255,255,255,0.0)),
+              linear-gradient(to bottom, rgba(10,18,45,0.88), rgba(6,10,22,0.35));
+  opacity: 0;
+  animation: sky_cycle_night 18s ease-in-out infinite;
+}
+
+@keyframes sky_cycle {
+  0% { opacity: 1; }
+  45% { opacity: 1; }
+  55% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes sky_cycle_night {
+  0% { opacity: 0; }
+  45% { opacity: 0; }
+  55% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.hero_overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.10), rgba(0,0,0,0.55));
+}
+
+.hero_content {
+  position: relative;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 44px 22px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+}
+
+.brand {
+  letter-spacing: 0.22em;
+  font-weight: 650;
+  font-size: 14px;
+  opacity: 0.88;
+}
+
+.headline {
+  margin: 0;
+  font-size: clamp(36px, 4.8vw, 64px);
+  font-weight: 720;
+  line-height: 1.06;
+  text-shadow: 0 16px 42px var(--shadow);
+}
+
+.subhead {
+  max-width: 780px;
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.cta_row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.btn_primary, .btn_secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+.btn_primary {
+  background: rgba(255,255,255,0.92);
+  color: #101525;
+}
+
+.btn_secondary {
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.18);
+}
+
+.hero_note {
+  margin-top: 14px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.70);
+}
+
+.ascent {
+  background: radial-gradient(1200px 900px at 20% 10%, rgba(255,255,255,0.06), rgba(255,255,255,0.0)),
+              linear-gradient(to bottom, #070a12, #0a0f20);
+  padding-bottom: 64px;
+}
+
+.ascent_frame {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 52px 22px 16px 22px;
+}
+
+.ascent_title {
+  font-size: 20px;
+  font-weight: 720;
+  opacity: 0.92;
+}
+
+.ascent_intro {
+  margin-top: 10px;
+  max-width: 740px;
+  color: rgba(255,255,255,0.70);
+  line-height: 1.5;
+}
+
+.scroll_stage {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 22px;
+}
+
+.scroll_flip {
+  height: 82vh;
+  min-height: 600px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.10);
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 18px 60px rgba(0,0,0,0.30);
+  transform: rotate(180deg);
+}
+
+.scroll_inner {
+  height: 100%;
+  overflow-y: auto;
+  padding: 28px 22px;
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 22px;
+  transform: rotate(180deg);
+}
+
+.rope_col {
+  position: sticky;
+  top: 28px;
+  align-self: start;
+  height: calc(82vh - 56px);
+  min-height: 520px;
+}
+
+.rope_line {
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  bottom: 10px;
+  width: 4px;
+  transform: translateX(-50%);
+  background: linear-gradient(to bottom, var(--rope2), var(--rope), var(--rope2));
+  border-radius: 8px;
+  opacity: 0.95;
+}
+
+.rope_anchor {
+  position: absolute;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  transform: translateX(-50%);
+  border-radius: 99px;
+  background: rgba(255,255,255,0.82);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.anchor_1 { top: 6%; }
+.anchor_2 { top: 26%; }
+.anchor_3 { top: 46%; }
+.anchor_4 { top: 66%; }
+.anchor_5 { top: 86%; }
+
+.climber {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  top: 86%;
+  width: 44px;
+  height: 44px;
+  opacity: 0.92;
+  filter: drop-shadow(0 10px 22px rgba(0,0,0,0.35));
+}
+
+.climber svg {
+  fill: rgba(255,255,255,0.92);
+}
+
+.cards_col {
+  display: grid;
+  gap: 18px;
+  padding-bottom: 60px;
+}
+
+.stage_card {
+  border-radius: 16px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  padding: 18px 18px 16px 18px;
+}
+
+.stage_card_last {
+  margin-bottom: 18px;
+}
+
+.stage_kicker {
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.66);
+}
+
+.stage_heading {
+  margin: 10px 0 10px 0;
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.stage_list {
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(255,255,255,0.74);
+  line-height: 1.55;
+}
+
+.footer {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px 22px 0 22px;
+}
+
+.footer_box {
+  border-radius: 18px;
+  padding: 22px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.04);
+}
+
+.footer_brand {
+  font-weight: 720;
+  font-size: 16px;
+}
+
+.footer_text {
+  margin-top: 8px;
+  color: rgba(255,255,255,0.70);
+}
+
+.footer_cta {
+  margin-top: 14px;
+}
+
+@media (max-width: 860px) {
+  .scroll_inner {
+    grid-template-columns: 86px 1fr;
+  }
+  .rope_col {
+    height: calc(82vh - 56px);
+  }
+}
