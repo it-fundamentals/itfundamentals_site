@@ -1,168 +1,219 @@
-/* Reverse scrolling + stage activation + route climber positioning */
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>IT Fundamentals</title>
 
-(function () {
-  const stageIds = [
-    "stage-basecamp",
-    "stage-discover",
-    "stage-transition",
-    "stage-secure",
-    "stage-above",
-    "stage-ready",
-  ];
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
 
-  const stages = stageIds
-    .map((id) => document.getElementById(id))
-    .filter(Boolean);
+  <body>
+    <div class="bg" aria-hidden="true"></div>
 
-  const navButtons = Array.from(document.querySelectorAll(".stage-pill"));
-  const cards = Array.from(document.querySelectorAll(".card"));
+    <div class="fx fx-clouds" aria-hidden="true">
+      <div class="cloud-layer cloud-layer-1"></div>
+      <div class="cloud-layer cloud-layer-2"></div>
+      <div class="cloud-layer cloud-layer-3"></div>
+    </div>
 
-  const routeSvg = document.querySelector(".route-svg");
-  const climbPath = document.getElementById("climbPath");
-  const climber = document.getElementById("climber");
-  const mileNodes = Array.from(document.querySelectorAll(".mile"));
+    <div class="fx fx-night" aria-hidden="true">
+      <div class="stars"></div>
+      <div class="stars stars-2"></div>
+      <div class="shooting shooting-1"></div>
+      <div class="shooting shooting-2"></div>
+      <div class="shooting shooting-3"></div>
+    </div>
 
-  if (!stages.length) return;
+    <aside class="rail">
+      <div class="rail-card rail-brand">
+        <div class="brand-kicker">ITFUNDAMENTALS.CH</div>
+        <div class="brand-title">The climb</div>
+      </div>
 
-  let activeIndex = 0;
+      <nav class="rail-nav" aria-label="Stages">
+        <button class="stage-pill is-active" type="button" data-goto="stage-basecamp">
+          <span class="stage-num">1</span>
+          <span class="stage-name">Base camp</span>
+        </button>
 
-  function clamp(n, min, max) {
-    return Math.max(min, Math.min(max, n));
-  }
+        <button class="stage-pill" type="button" data-goto="stage-discover">
+          <span class="stage-num">2</span>
+          <span class="stage-name">Discover</span>
+        </button>
 
-  function setActive(index) {
-    activeIndex = clamp(index, 0, stages.length - 1);
+        <button class="stage-pill" type="button" data-goto="stage-transition">
+          <span class="stage-num">3</span>
+          <span class="stage-name">Transition</span>
+        </button>
 
-    navButtons.forEach((btn) => {
-      const target = btn.getAttribute("data-goto");
-      const isActive = target === stageIds[activeIndex];
-      btn.classList.toggle("is-active", isActive);
-    });
+        <button class="stage-pill" type="button" data-goto="stage-secure">
+          <span class="stage-num">4</span>
+          <span class="stage-name">Secure</span>
+        </button>
 
-    stages.forEach((s, i) => {
-      const card = s.querySelector(".card");
-      if (card) card.classList.toggle("is-visible", i === activeIndex);
-    });
+        <button class="stage-pill" type="button" data-goto="stage-above">
+          <span class="stage-num">5</span>
+          <span class="stage-name">Above the clouds</span>
+        </button>
 
-    mileNodes.forEach((m, i) => {
-      m.classList.toggle("is-hit", i <= activeIndex);
-    });
+        <button class="stage-pill" type="button" data-goto="stage-ready">
+          <span class="stage-num">6</span>
+          <span class="stage-name">Ready</span>
+        </button>
+      </nav>
 
-    updateClimberForStage(activeIndex);
-  }
+      <div class="rail-card rail-hint">
+        <div class="hint-title">Scroll down to climb up</div>
+        <div class="hint-sub">Or click a stage</div>
+      </div>
+    </aside>
 
-  function scrollToStage(id) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.scrollIntoView({ behavior: "smooth", block: "center" });
-  }
+    <main class="content">
+      <div class="stage-ui" aria-hidden="true">
+        <div class="route">
+          <div class="route-label"><span class="cloud-ico">☁</span></div>
 
-  navButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const target = btn.getAttribute("data-goto");
-      if (!target) return;
-      scrollToStage(target);
-    });
-  });
+          <svg class="route-svg" viewBox="0 0 220 780" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              id="climbPath"
+              d="M155 760
+                 C120 710, 165 650, 130 590
+                 C105 545, 145 510, 120 470
+                 C95 430, 140 390, 112 350
+                 C88 315, 134 280, 110 245
+                 C86 210, 130 175, 104 140
+                 C78 108, 120 78, 98 42
+                 C86 22, 106 16, 120 18"
+              stroke="rgba(255,255,255,0.22)"
+              stroke-width="2"
+              stroke-dasharray="2 8"
+              stroke-linecap="round"
+            />
 
-  /* Make cards visible for the first stage immediately */
-  cards.forEach((c, idx) => c.classList.toggle("is-visible", idx === 0));
+            <g id="milestones">
+              <circle class="mile" cx="155" cy="760" r="9" />
+              <circle class="mile" cx="130" cy="590" r="9" />
+              <circle class="mile" cx="112" cy="350" r="9" />
+              <circle class="mile" cx="110" cy="245" r="9" />
+              <circle class="mile" cx="104" cy="140" r="9" />
+              <circle class="mile" cx="120" cy="18" r="9" />
+            </g>
 
-  /* Intersection observer to decide which stage is active */
-  const io = new IntersectionObserver(
-    (entries) => {
-      const visible = entries
-        .filter((e) => e.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+            <g id="climber" transform="translate(155,760)">
+              <circle r="10" fill="rgba(255,255,255,0.85)"></circle>
+              <circle cx="-16" cy="7" r="5" fill="rgba(255,255,255,0.55)"></circle>
+            </g>
+          </svg>
+        </div>
+      </div>
 
-      if (!visible) return;
+      <section id="stage-basecamp" class="stage" data-index="0">
+        <div class="card is-visible">
+          <div class="tag">BASE CAMP</div>
+          <h2>Stabilise what you already use</h2>
+          <ul>
+            <li>Reduce scattered tools and ad hoc setups</li>
+            <li>Establish a clear security baseline</li>
+            <li>Set up backup and monitoring foundations</li>
+            <li>Remove avoidable risk and unplanned spend</li>
+          </ul>
+          <div class="icon-row">
+            <span class="mini-ico">⛺</span>
+            <span class="mini-ico">🧭</span>
+            <span class="mini-ico">🧰</span>
+          </div>
+        </div>
+      </section>
 
-      const idx = parseInt(visible.target.getAttribute("data-index") || "0", 10);
-      if (!Number.isNaN(idx) && idx !== activeIndex) setActive(idx);
-    },
-    {
-      threshold: [0.45, 0.55, 0.65],
-      rootMargin: "0px 0px 0px 0px",
-    }
-  );
+      <section id="stage-discover" class="stage" data-index="1">
+        <div class="card">
+          <div class="tag">DISCOVER</div>
+          <h2>Understand the current state</h2>
+          <ul>
+            <li>Short review of tools, risks, and priorities</li>
+            <li>Confirm users, devices, domain, and scope</li>
+            <li>Agree the simplest path forward</li>
+          </ul>
+          <div class="icon-row">
+            <span class="mini-ico">🔎</span>
+            <span class="mini-ico">📋</span>
+            <span class="mini-ico">🗺️</span>
+          </div>
+        </div>
+      </section>
 
-  stages.forEach((s) => io.observe(s));
+      <section id="stage-transition" class="stage" data-index="2">
+        <div class="card">
+          <div class="tag">TRANSITION</div>
+          <h2>Move into Microsoft 365 cleanly</h2>
+          <ul>
+            <li>Migrate email, calendars, and files</li>
+            <li>Set up Teams, SharePoint, OneDrive</li>
+            <li>Minimal disruption, clean cutover</li>
+          </ul>
+          <div class="icon-row">
+            <span class="mini-ico">📦</span>
+            <span class="mini-ico">☁</span>
+            <span class="mini-ico">⚙️</span>
+          </div>
+        </div>
+      </section>
 
-  /* Reverse scroll */
-  const reverseScrollEnabled = true;
-  let reverseScrollLock = false;
+      <section id="stage-secure" class="stage" data-index="3">
+        <div class="card">
+          <div class="tag">SECURE</div>
+          <h2>Security by default</h2>
+          <ul>
+            <li>MFA enforced for all users</li>
+            <li>Baseline policies applied</li>
+            <li>Safer sharing and permissions</li>
+          </ul>
+          <div class="icon-row">
+            <span class="mini-ico">🛡️</span>
+            <span class="mini-ico">🔐</span>
+            <span class="mini-ico">✅</span>
+          </div>
+        </div>
+      </section>
 
-  function onWheel(e) {
-    if (!reverseScrollEnabled) return;
-    if (reverseScrollLock) return;
+      <section id="stage-above" class="stage" data-index="4">
+        <div class="card">
+          <div class="tag">ABOVE THE CLOUDS</div>
+          <h2>Managed, monitored, backed up</h2>
+          <ul>
+            <li>Backup for Microsoft 365 data with tested recovery</li>
+            <li>Monitoring and alerting for issues that matter</li>
+            <li>Onboarding and offboarding done properly</li>
+            <li>Predictable cost and calmer day to day operations</li>
+          </ul>
+          <div class="icon-row">
+            <span class="mini-ico">📈</span>
+            <span class="mini-ico">🧑‍💻</span>
+            <span class="mini-ico">🗄️</span>
+          </div>
+        </div>
+      </section>
 
-    const el = document.activeElement;
-    if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.isContentEditable)) return;
+      <section id="stage-ready" class="stage" data-index="5">
+        <div class="card">
+          <div class="tag">READY</div>
+          <h2>AI and automation, when you choose</h2>
+          <ul>
+            <li>Centralised data and clean permissions</li>
+            <li>Auditable access and safer sharing</li>
+            <li>AI as a value add, not a risk</li>
+          </ul>
+          <div class="icon-row">
+            <span class="mini-ico">🤖</span>
+            <span class="mini-ico">⚡</span>
+            <span class="mini-ico">✨</span>
+          </div>
+        </div>
+      </section>
 
-    e.preventDefault();
-    const delta = e.deltaY;
-
-    reverseScrollLock = true;
-    window.scrollBy({ top: -delta, left: 0, behavior: "auto" });
-    requestAnimationFrame(() => {
-      reverseScrollLock = false;
-    });
-  }
-
-  window.addEventListener("wheel", onWheel, { passive: false });
-
-  /* Place climber on the route path */
-  function updateClimberForStage(stageIndex) {
-    if (!routeSvg || !climbPath || !climber) return;
-
-    const total = climbPath.getTotalLength();
-    const t = stages.length <= 1 ? 0 : stageIndex / (stages.length - 1);
-    const len = total * (1 - t);
-
-    const pt = climbPath.getPointAtLength(len);
-    climber.setAttribute("transform", `translate(${pt.x},${pt.y})`);
-  }
-
-  /* Smooth progress between stages while scrolling */
-  function updateClimberFromScroll() {
-    if (!routeSvg || !climbPath || !climber) return;
-
-    const total = climbPath.getTotalLength();
-
-    const current = stages[activeIndex];
-    const next = stages[clamp(activeIndex + 1, 0, stages.length - 1)];
-
-    const rect = current.getBoundingClientRect();
-    const nextRect = next.getBoundingClientRect();
-
-    let prog = 0;
-    if (next !== current) {
-      const span = nextRect.top - rect.top;
-      if (Math.abs(span) > 1) {
-        prog = clamp((0 - rect.top) / span, 0, 1);
-      }
-    }
-
-    const t0 = stages.length <= 1 ? 0 : activeIndex / (stages.length - 1);
-    const t1 = stages.length <= 1 ? 0 : clamp(activeIndex + 1, 0, stages.length - 1) / (stages.length - 1);
-    const t = t0 + (t1 - t0) * prog;
-
-    const len = total * (1 - t);
-    const pt = climbPath.getPointAtLength(len);
-    climber.setAttribute("transform", `translate(${pt.x},${pt.y})`);
-  }
-
-  let raf = 0;
-  function onScroll() {
-    if (raf) cancelAnimationFrame(raf);
-    raf = requestAnimationFrame(() => {
-      updateClimberFromScroll();
-    });
-  }
-
-  window.addEventListener("scroll", onScroll, { passive: true });
-
-  /* Start the user at the first stage, with the image sitting behind */
-  setActive(0);
-  updateClimberFromScroll();
-})();
+      <div class="endcap" aria-hidden="true"></div>
+    </main>
+  </body>
+</html>
