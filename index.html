@@ -1,219 +1,244 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>IT Fundamentals</title>
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IT Fundamentals | The climb</title>
     <link rel="stylesheet" href="styles.css" />
-    <script src="app.js" defer></script>
   </head>
 
   <body>
-    <div class="bg" aria-hidden="true"></div>
-
-    <div class="fx fx-clouds" aria-hidden="true">
-      <div class="cloud-layer cloud-layer-1"></div>
-      <div class="cloud-layer cloud-layer-2"></div>
-      <div class="cloud-layer cloud-layer-3"></div>
+    <!-- Background (Matterhorn) -->
+    <div class="bg" aria-hidden="true">
+      <div class="bgShade" aria-hidden="true"></div>
+      <div class="bgVignette" aria-hidden="true"></div>
     </div>
 
-    <div class="fx fx-night" aria-hidden="true">
-      <div class="stars"></div>
-      <div class="stars stars-2"></div>
-      <div class="shooting shooting-1"></div>
-      <div class="shooting shooting-2"></div>
-      <div class="shooting shooting-3"></div>
-    </div>
+    <main class="layout">
+      <!-- Left navigation -->
+      <aside class="nav">
+        <div class="navHeader">
+          <div class="brand">ITFUNDAMENTALS.CH</div>
+          <div class="title">The climb</div>
+        </div>
 
-    <aside class="rail">
-      <div class="rail-card rail-brand">
-        <div class="brand-kicker">ITFUNDAMENTALS.CH</div>
-        <div class="brand-title">The climb</div>
-      </div>
+        <div class="navList" role="navigation" aria-label="Stages">
+          <!-- Buttons remain in climb order (Base camp to Ready) -->
+          <button class="stage-pill is-active" data-goto="stage-basecamp" type="button">
+            <span class="pillNum">1</span><span class="pillText">Base camp</span>
+          </button>
+          <button class="stage-pill" data-goto="stage-discover" type="button">
+            <span class="pillNum">2</span><span class="pillText">Discover</span>
+          </button>
+          <button class="stage-pill" data-goto="stage-transition" type="button">
+            <span class="pillNum">3</span><span class="pillText">Transition</span>
+          </button>
+          <button class="stage-pill" data-goto="stage-secure" type="button">
+            <span class="pillNum">4</span><span class="pillText">Secure</span>
+          </button>
+          <button class="stage-pill" data-goto="stage-above" type="button">
+            <span class="pillNum">5</span><span class="pillText">Above the clouds</span>
+          </button>
+          <button class="stage-pill" data-goto="stage-ready" type="button">
+            <span class="pillNum">6</span><span class="pillText">Ready</span>
+          </button>
+        </div>
 
-      <nav class="rail-nav" aria-label="Stages">
-        <button class="stage-pill is-active" type="button" data-goto="stage-basecamp">
-          <span class="stage-num">1</span>
-          <span class="stage-name">Base camp</span>
-        </button>
+        <div class="navHint">
+          <div class="hintTitle">Scroll down to climb up</div>
+          <div class="hintSub">Or click a stage</div>
+        </div>
 
-        <button class="stage-pill" type="button" data-goto="stage-discover">
-          <span class="stage-num">2</span>
-          <span class="stage-name">Discover</span>
-        </button>
-
-        <button class="stage-pill" type="button" data-goto="stage-transition">
-          <span class="stage-num">3</span>
-          <span class="stage-name">Transition</span>
-        </button>
-
-        <button class="stage-pill" type="button" data-goto="stage-secure">
-          <span class="stage-num">4</span>
-          <span class="stage-name">Secure</span>
-        </button>
-
-        <button class="stage-pill" type="button" data-goto="stage-above">
-          <span class="stage-num">5</span>
-          <span class="stage-name">Above the clouds</span>
-        </button>
-
-        <button class="stage-pill" type="button" data-goto="stage-ready">
-          <span class="stage-num">6</span>
-          <span class="stage-name">Ready</span>
-        </button>
-      </nav>
-
-      <div class="rail-card rail-hint">
-        <div class="hint-title">Scroll down to climb up</div>
-        <div class="hint-sub">Or click a stage</div>
-      </div>
-    </aside>
-
-    <main class="content">
-      <div class="stage-ui" aria-hidden="true">
-        <div class="route">
-          <div class="route-label"><span class="cloud-ico">☁</span></div>
-
-          <svg class="route-svg" viewBox="0 0 220 780" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              id="climbPath"
-              d="M155 760
-                 C120 710, 165 650, 130 590
-                 C105 545, 145 510, 120 470
-                 C95 430, 140 390, 112 350
-                 C88 315, 134 280, 110 245
-                 C86 210, 130 175, 104 140
-                 C78 108, 120 78, 98 42
-                 C86 22, 106 16, 120 18"
-              stroke="rgba(255,255,255,0.22)"
-              stroke-width="2"
-              stroke-dasharray="2 8"
-              stroke-linecap="round"
-            />
-
-            <g id="milestones">
-              <circle class="mile" cx="155" cy="760" r="9" />
-              <circle class="mile" cx="130" cy="590" r="9" />
-              <circle class="mile" cx="112" cy="350" r="9" />
-              <circle class="mile" cx="110" cy="245" r="9" />
-              <circle class="mile" cx="104" cy="140" r="9" />
-              <circle class="mile" cx="120" cy="18" r="9" />
-            </g>
-
-            <g id="climber" transform="translate(155,760)">
-              <circle r="10" fill="rgba(255,255,255,0.85)"></circle>
-              <circle cx="-16" cy="7" r="5" fill="rgba(255,255,255,0.55)"></circle>
-            </g>
+        <div class="navClimber" aria-hidden="true">
+          <!-- little climber icon bottom left -->
+          <svg viewBox="0 0 64 64" class="miniClimber" aria-hidden="true">
+            <circle cx="44" cy="14" r="6" />
+            <path d="M20 34 L30 24 L40 30 L46 52" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" />
+            <path d="M30 24 L22 52" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" />
+            <path d="M40 30 L16 40" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" />
           </svg>
         </div>
-      </div>
+      </aside>
 
-      <section id="stage-basecamp" class="stage" data-index="0">
-        <div class="card is-visible">
-          <div class="tag">BASE CAMP</div>
-          <h2>Stabilise what you already use</h2>
-          <ul>
-            <li>Reduce scattered tools and ad hoc setups</li>
-            <li>Establish a clear security baseline</li>
-            <li>Set up backup and monitoring foundations</li>
-            <li>Remove avoidable risk and unplanned spend</li>
-          </ul>
-          <div class="icon-row">
-            <span class="mini-ico">⛺</span>
-            <span class="mini-ico">🧭</span>
-            <span class="mini-ico">🧰</span>
+      <!-- Content -->
+      <section class="content">
+        <!-- Right route panel -->
+        <div class="routePanel" aria-hidden="true">
+          <div class="routePanelInner">
+            <svg class="routeSvg" viewBox="0 0 240 820" preserveAspectRatio="none" aria-hidden="true">
+              <!-- soft route shape -->
+              <path
+                class="routeRibbon"
+                d="M180,20
+                   C120,60 110,110 150,160
+                   C195,215 170,265 120,310
+                   C70,355 80,410 130,455
+                   C190,510 165,560 120,610
+                   C70,660 85,710 125,760
+                   C160,800 150,810 120,820
+                   L60,820
+                   C80,760 55,720 40,680
+                   C20,630 35,585 70,540
+                   C115,485 105,440 70,390
+                   C35,340 40,290 90,240
+                   C145,185 135,130 90,85
+                   C55,50 55,25 70,10
+                   Z"
+              />
+              <!-- dotted path down the middle -->
+              <path
+                id="climbPath"
+                class="routeDots"
+                d="M120,790
+                   C115,740 95,705 75,675
+                   C55,645 70,605 90,575
+                   C110,545 120,510 95,470
+                   C70,430 80,395 105,360
+                   C130,325 140,285 110,245
+                   C80,205 95,170 115,145
+                   C135,120 140,85 120,55
+                   C105,30 120,22 120,30"
+              />
+              <!-- stage markers (bottom to top = basecamp to ready) -->
+              <g class="routeMiles">
+                <circle class="mile" data-idx="0" cx="120" cy="790" r="8" />
+                <circle class="mile" data-idx="1" cx="90" cy="575" r="8" />
+                <circle class="mile" data-idx="2" cx="105" cy="360" r="8" />
+                <circle class="mile" data-idx="3" cx="110" cy="245" r="8" />
+                <circle class="mile" data-idx="4" cx="115" cy="145" r="8" />
+                <circle class="mile" data-idx="5" cx="120" cy="55" r="8" />
+              </g>
+
+              <!-- climber dot that moves -->
+              <g id="climber" class="climber">
+                <circle cx="0" cy="0" r="10" />
+                <circle class="climberGlow" cx="0" cy="0" r="18" />
+              </g>
+            </svg>
+
+            <button class="routeTopBtn" type="button" title="Jump to top" aria-label="Jump to top">
+              ☁
+            </button>
           </div>
         </div>
-      </section>
 
-      <section id="stage-discover" class="stage" data-index="1">
-        <div class="card">
-          <div class="tag">DISCOVER</div>
-          <h2>Understand the current state</h2>
-          <ul>
-            <li>Short review of tools, risks, and priorities</li>
-            <li>Confirm users, devices, domain, and scope</li>
-            <li>Agree the simplest path forward</li>
-          </ul>
-          <div class="icon-row">
-            <span class="mini-ico">🔎</span>
-            <span class="mini-ico">📋</span>
-            <span class="mini-ico">🗺️</span>
-          </div>
+        <!-- IMPORTANT: Sections are ordered TOP to BOTTOM as Ready -> ... -> Base camp
+             so Base camp is physically at the bottom of the page. -->
+        <div class="stages">
+          <!-- Ready (top) -->
+          <article id="stage-ready" class="stage" data-index="5">
+            <div class="card">
+              <div class="eyebrow">READY</div>
+              <h2>AI and automation, when you choose</h2>
+              <ul>
+                <li>Centralised data and clean permissions</li>
+                <li>Auditable access and safer sharing</li>
+                <li>AI as a value add, not a risk</li>
+              </ul>
+              <div class="icons">
+                <span class="chip">🤖</span>
+                <span class="chip">⚡</span>
+                <span class="chip">✨</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Above the clouds -->
+          <article id="stage-above" class="stage" data-index="4">
+            <div class="card">
+              <div class="eyebrow">ABOVE THE CLOUDS</div>
+              <h2>Managed, monitored, backed up</h2>
+              <ul>
+                <li>Backup for Microsoft 365 data with tested recovery</li>
+                <li>Monitoring and alerting for issues that matter</li>
+                <li>Onboarding and offboarding done properly</li>
+                <li>Predictable cost and calmer day to day operations</li>
+              </ul>
+              <div class="icons">
+                <span class="chip">☁</span>
+                <span class="chip">🛡</span>
+                <span class="chip">🔔</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Secure -->
+          <article id="stage-secure" class="stage" data-index="3">
+            <div class="card">
+              <div class="eyebrow">SECURE</div>
+              <h2>Security by default</h2>
+              <ul>
+                <li>MFA enforced for all users</li>
+                <li>Baseline policies applied</li>
+                <li>Safer sharing and permissions</li>
+                <li>Device hygiene and access control</li>
+              </ul>
+              <div class="icons">
+                <span class="chip">🔒</span>
+                <span class="chip">🛡</span>
+                <span class="chip">✅</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Transition -->
+          <article id="stage-transition" class="stage" data-index="2">
+            <div class="card">
+              <div class="eyebrow">TRANSITION</div>
+              <h2>Move into Microsoft 365 cleanly</h2>
+              <ul>
+                <li>Migrate email, calendars, and files</li>
+                <li>Set up Teams, SharePoint, OneDrive</li>
+                <li>Minimal disruption, clean cutover</li>
+              </ul>
+              <div class="icons">
+                <span class="chip">📦</span>
+                <span class="chip">➡</span>
+                <span class="chip">☁</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Discover -->
+          <article id="stage-discover" class="stage" data-index="1">
+            <div class="card">
+              <div class="eyebrow">DISCOVER</div>
+              <h2>Understand the current state</h2>
+              <ul>
+                <li>Short review of tools, risks, and priorities</li>
+                <li>Confirm users, devices, domain, and scope</li>
+                <li>Agree the simplest path forward</li>
+              </ul>
+              <div class="icons">
+                <span class="chip">🧭</span>
+                <span class="chip">🗺</span>
+                <span class="chip">🔎</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Base camp (bottom) -->
+          <article id="stage-basecamp" class="stage" data-index="0">
+            <div class="card">
+              <div class="eyebrow">BASE CAMP</div>
+              <h2>Stabilise what you already use</h2>
+              <ul>
+                <li>Reduce scattered tools and ad hoc setups</li>
+                <li>Establish a clear security baseline</li>
+                <li>Set up backup and monitoring foundations</li>
+                <li>Remove avoidable risk and unplanned spend</li>
+              </ul>
+              <div class="icons">
+                <span class="chip">🏕</span>
+                <span class="chip">🧰</span>
+                <span class="chip">🧱</span>
+              </div>
+            </div>
+          </article>
         </div>
       </section>
-
-      <section id="stage-transition" class="stage" data-index="2">
-        <div class="card">
-          <div class="tag">TRANSITION</div>
-          <h2>Move into Microsoft 365 cleanly</h2>
-          <ul>
-            <li>Migrate email, calendars, and files</li>
-            <li>Set up Teams, SharePoint, OneDrive</li>
-            <li>Minimal disruption, clean cutover</li>
-          </ul>
-          <div class="icon-row">
-            <span class="mini-ico">📦</span>
-            <span class="mini-ico">☁</span>
-            <span class="mini-ico">⚙️</span>
-          </div>
-        </div>
-      </section>
-
-      <section id="stage-secure" class="stage" data-index="3">
-        <div class="card">
-          <div class="tag">SECURE</div>
-          <h2>Security by default</h2>
-          <ul>
-            <li>MFA enforced for all users</li>
-            <li>Baseline policies applied</li>
-            <li>Safer sharing and permissions</li>
-          </ul>
-          <div class="icon-row">
-            <span class="mini-ico">🛡️</span>
-            <span class="mini-ico">🔐</span>
-            <span class="mini-ico">✅</span>
-          </div>
-        </div>
-      </section>
-
-      <section id="stage-above" class="stage" data-index="4">
-        <div class="card">
-          <div class="tag">ABOVE THE CLOUDS</div>
-          <h2>Managed, monitored, backed up</h2>
-          <ul>
-            <li>Backup for Microsoft 365 data with tested recovery</li>
-            <li>Monitoring and alerting for issues that matter</li>
-            <li>Onboarding and offboarding done properly</li>
-            <li>Predictable cost and calmer day to day operations</li>
-          </ul>
-          <div class="icon-row">
-            <span class="mini-ico">📈</span>
-            <span class="mini-ico">🧑‍💻</span>
-            <span class="mini-ico">🗄️</span>
-          </div>
-        </div>
-      </section>
-
-      <section id="stage-ready" class="stage" data-index="5">
-        <div class="card">
-          <div class="tag">READY</div>
-          <h2>AI and automation, when you choose</h2>
-          <ul>
-            <li>Centralised data and clean permissions</li>
-            <li>Auditable access and safer sharing</li>
-            <li>AI as a value add, not a risk</li>
-          </ul>
-          <div class="icon-row">
-            <span class="mini-ico">🤖</span>
-            <span class="mini-ico">⚡</span>
-            <span class="mini-ico">✨</span>
-          </div>
-        </div>
-      </section>
-
-      <div class="endcap" aria-hidden="true"></div>
     </main>
+
+    <script src="app.js"></script>
   </body>
 </html>

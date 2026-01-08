@@ -1,20 +1,16 @@
 :root {
-  --bg: #070a12;
-  --ink: rgba(255, 255, 255, 0.92);
+  --paper: #ffffff;
+  --text: rgba(255, 255, 255, 0.92);
   --muted: rgba(255, 255, 255, 0.72);
+  --glass: rgba(10, 14, 20, 0.52);
+  --glass2: rgba(10, 14, 20, 0.34);
+  --shadow: rgba(0, 0, 0, 0.42);
 
-  --glass: rgba(10, 14, 26, 0.52);
-  --stroke: rgba(255, 255, 255, 0.12);
+  /* Dynamic shade over the mountain (JS updates this gradually) */
+  --shade: 0.58;
 
-  --radius: 22px;
-
-  --rail-w: 340px;
-  --content-pad: 64px;
-
-  --bg-image: url("./assets/matterhorn.jpg");
-
-  /* JS updates this as you scroll (0..1) */
-  --night-alpha: 0;
+  /* Card slide animation control */
+  --cardSlide: 38px;
 }
 
 * {
@@ -28,526 +24,345 @@ body {
 
 body {
   margin: 0;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue",
-    sans-serif;
-  color: var(--ink);
-  background: var(--bg);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+  color: var(--text);
   overflow-x: hidden;
+  background: #04060a;
 }
 
+/* Background image */
 .bg {
   position: fixed;
   inset: 0;
-  background-image: var(--bg-image);
-  background-size: cover;
-  background-position: center bottom;
-  background-attachment: fixed;
-  transform: translateZ(0);
   z-index: 0;
+  background: url("assets/matterhorn.jpg") center / cover no-repeat;
+  transform: translateZ(0);
 }
 
-/* Dark overlay to keep the mountain visible but not too bright */
-.bg::after {
-  content: "";
+.bgShade {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(1200px 700px at 58% 42%, rgba(10, 16, 32, 0.20), rgba(10, 16, 32, 0.62)),
-    linear-gradient(to top, rgba(5, 7, 14, 0.16), rgba(5, 7, 14, 0.78)),
-    linear-gradient(to bottom, rgba(5, 7, 14, 0.62), rgba(5, 7, 14, 0.12));
+  background: rgba(0, 0, 0, var(--shade));
+  transition: background 120ms linear;
+}
+
+.bgVignette {
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(circle at 55% 40%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.35) 55%, rgba(0, 0, 0, 0.7) 100%);
   pointer-events: none;
 }
 
-/* Effects layers */
-.fx {
-  position: fixed;
-  inset: 0;
+/* Layout */
+.layout {
+  position: relative;
   z-index: 1;
-  pointer-events: none;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 360px 1fr;
 }
 
-.fx-clouds {
-  opacity: 0.9;
-  filter: blur(0px);
-}
-
-/* Cloud layers are soft haze using stacked radial gradients,
-   then slid across slowly at different speeds for parallax */
-.cloud-layer {
-  position: absolute;
-  inset: -10% -20%;
-  background-repeat: repeat;
-  background-size: 1100px 520px;
-  opacity: 0.55;
-  mix-blend-mode: screen;
-}
-
-.cloud-layer-1 {
-  top: -16%;
-  height: 55%;
-  background-image:
-    radial-gradient(220px 90px at 140px 180px, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0) 70%),
-    radial-gradient(260px 110px at 380px 210px, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0) 72%),
-    radial-gradient(320px 140px at 720px 190px, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0) 72%),
-    radial-gradient(260px 110px at 980px 230px, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0) 72%);
-  animation: cloudsDrift1 46s linear infinite;
-}
-
-.cloud-layer-2 {
-  top: 10%;
-  height: 58%;
-  opacity: 0.42;
-  background-size: 1400px 620px;
-  background-image:
-    radial-gradient(300px 140px at 220px 260px, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0) 72%),
-    radial-gradient(360px 170px at 640px 240px, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0) 74%),
-    radial-gradient(280px 130px at 1080px 280px, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0) 74%);
-  animation: cloudsDrift2 70s linear infinite;
-}
-
-.cloud-layer-3 {
-  top: 38%;
-  height: 62%;
-  opacity: 0.28;
-  background-size: 1600px 720px;
-  background-image:
-    radial-gradient(380px 180px at 260px 320px, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0) 75%),
-    radial-gradient(420px 200px at 840px 340px, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0) 75%),
-    radial-gradient(360px 170px at 1280px 360px, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0) 76%);
-  animation: cloudsDrift3 96s linear infinite;
-}
-
-@keyframes cloudsDrift1 {
-  0% { transform: translate3d(-6%, 0, 0); }
-  100% { transform: translate3d(6%, 0, 0); }
-}
-
-@keyframes cloudsDrift2 {
-  0% { transform: translate3d(8%, 0, 0); }
-  100% { transform: translate3d(-8%, 0, 0); }
-}
-
-@keyframes cloudsDrift3 {
-  0% { transform: translate3d(-10%, 0, 0); }
-  100% { transform: translate3d(10%, 0, 0); }
-}
-
-/* Night layer opacity is controlled by --night-alpha (0..1) */
-.fx-night {
-  opacity: var(--night-alpha);
-  transition: opacity 80ms linear;
-}
-
-/* Stars are subtle and sit in the sky */
-.stars {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(1px 1px at 8% 12%, rgba(255,255,255,0.55), rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 18% 22%, rgba(255,255,255,0.50), rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 26% 10%, rgba(255,255,255,0.45), rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 34% 30%, rgba(255,255,255,0.48), rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 44% 16%, rgba(255,255,255,0.42), rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 56% 24%, rgba(255,255,255,0.46), rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 66% 12%, rgba(255,255,255,0.52), rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 74% 30%, rgba(255,255,255,0.44), rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 82% 18%, rgba(255,255,255,0.50), rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 92% 26%, rgba(255,255,255,0.46), rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 12% 40%, rgba(255,255,255,0.40), rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 38% 46%, rgba(255,255,255,0.42), rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 62% 44%, rgba(255,255,255,0.38), rgba(255,255,255,0) 60%),
-    radial-gradient(1px 1px at 86% 48%, rgba(255,255,255,0.40), rgba(255,255,255,0) 60%);
-  opacity: 0.55;
-  mix-blend-mode: screen;
-}
-
-.stars-2 {
-  opacity: 0.35;
-  transform: scale(1.02);
-  filter: blur(0.2px);
-}
-
-/* Shooting stars */
-.shooting {
-  position: absolute;
-  width: 240px;
-  height: 2px;
-  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.80), rgba(255,255,255,0));
-  opacity: 0;
-  transform: rotate(-18deg);
-  filter: drop-shadow(0 0 10px rgba(255,255,255,0.30));
-}
-
-.shooting::after {
-  content: "";
-  position: absolute;
-  right: 20px;
-  top: -5px;
-  width: 12px;
-  height: 12px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.75);
-  filter: blur(0.2px);
-  opacity: 0.6;
-}
-
-.shooting-1 {
-  top: 14%;
-  left: 62%;
-  animation: shootingStar 8.5s linear infinite;
-  animation-delay: 1.8s;
-}
-
-.shooting-2 {
-  top: 22%;
-  left: 38%;
-  animation: shootingStar 10.5s linear infinite;
-  animation-delay: 4.6s;
-}
-
-.shooting-3 {
-  top: 10%;
-  left: 28%;
-  animation: shootingStar 12.5s linear infinite;
-  animation-delay: 7.2s;
-}
-
-@keyframes shootingStar {
-  0% { opacity: 0; transform: translate3d(-160px, -120px, 0) rotate(-18deg); }
-  6% { opacity: 0.95; }
-  18% { opacity: 0; transform: translate3d(520px, 280px, 0) rotate(-18deg); }
-  100% { opacity: 0; transform: translate3d(520px, 280px, 0) rotate(-18deg); }
-}
-
-.rail {
-  position: fixed;
-  inset: 0 auto 0 0;
-  width: var(--rail-w);
-  padding: 22px 18px 18px;
-  z-index: 5;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.nav {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 28px 18px 18px;
+  background: rgba(6, 10, 16, 0.58);
   backdrop-filter: blur(14px);
-  background: linear-gradient(to right, rgba(6, 9, 18, 0.88), rgba(6, 9, 18, 0.38));
   border-right: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.rail-card {
-  border-radius: var(--radius);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.32);
-}
-
-.rail-brand {
+.navHeader {
+  border-radius: 18px;
   padding: 18px 18px 16px;
+  background: rgba(10, 14, 20, 0.42);
+  box-shadow: 0 20px 60px var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.brand-kicker {
-  font-size: 13px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.70);
-  margin-bottom: 6px;
+.brand {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  opacity: 0.92;
 }
 
-.brand-title {
+.title {
+  margin-top: 6px;
   font-size: 34px;
   font-weight: 750;
   letter-spacing: -0.02em;
 }
 
-.rail-nav {
-  display: flex;
-  flex-direction: column;
+.navList {
+  margin-top: 18px;
+  display: grid;
   gap: 12px;
 }
 
 .stage-pill {
-  display: grid;
-  grid-template-columns: 56px 1fr;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 14px;
-  border-radius: var(--radius);
+  width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.10);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(10, 14, 20, 0.42);
+  color: var(--text);
+  border-radius: 18px;
+  padding: 14px 14px;
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  align-items: center;
+  gap: 12px;
   cursor: pointer;
-  color: var(--ink);
-  text-align: left;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.24);
-  transition: transform 120ms ease, background 180ms ease, border-color 180ms ease;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
 }
 
 .stage-pill:hover {
   transform: translateY(-1px);
-  border-color: rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.16);
 }
 
 .stage-pill.is-active {
-  background: rgba(255, 255, 255, 0.90);
-  border-color: rgba(255, 255, 255, 0.90);
-  color: rgba(10, 14, 26, 0.95);
+  background: rgba(255, 255, 255, 0.86);
+  color: rgba(10, 14, 20, 0.92);
+  border-color: rgba(255, 255, 255, 0.32);
 }
 
-.stage-num {
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
+.pillNum {
   display: grid;
   place-items: center;
+  height: 38px;
+  width: 38px;
+  border-radius: 12px;
   font-weight: 800;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  color: rgba(255, 255, 255, 0.90);
-}
-
-.stage-pill.is-active .stage-num {
-  background: rgba(10, 14, 26, 0.10);
-  border-color: rgba(10, 14, 26, 0.10);
-  color: rgba(10, 14, 26, 0.90);
-}
-
-.stage-name {
-  font-size: 17px;
-  font-weight: 720;
-  letter-spacing: -0.01em;
-}
-
-.rail-hint {
-  margin-top: auto;
-  padding: 16px 16px 14px;
-  color: rgba(255, 255, 255, 0.78);
-}
-
-.hint-title {
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.hint-sub {
-  color: rgba(255, 255, 255, 0.62);
-}
-
-.content {
-  position: relative;
-  z-index: 2;
-  margin-left: var(--rail-w);
-  min-height: 100vh;
-}
-
-.stage-ui {
-  position: fixed;
-  inset: 0 0 0 var(--rail-w);
-  pointer-events: none;
-  z-index: 3;
-}
-
-.route {
-  position: absolute;
-  right: 58px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 320px;
-  height: min(82vh, 920px);
-  border-radius: 34px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
   border: 1px solid rgba(255, 255, 255, 0.10);
-  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.34);
-  backdrop-filter: blur(10px);
-  overflow: hidden;
 }
 
-.route::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(420px 720px at 45% 50%, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.01));
+.stage-pill.is-active .pillNum {
+  background: rgba(10, 14, 20, 0.08);
+  border-color: rgba(10, 14, 20, 0.10);
+}
+
+.pillText {
+  font-size: 16px;
+  font-weight: 650;
+  text-align: left;
+}
+
+.navHint {
+  margin-top: 16px;
+  border-radius: 18px;
+  padding: 16px 16px 14px;
+  background: rgba(10, 14, 20, 0.34);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+}
+
+.hintTitle {
+  font-weight: 650;
+  color: var(--text);
+}
+
+.hintSub {
+  margin-top: 6px;
   opacity: 0.9;
 }
 
-.route-svg {
+.navClimber {
   position: absolute;
-  inset: 20px 10px 20px 10px;
-  width: calc(100% - 20px);
-  height: calc(100% - 40px);
-}
-
-.mile {
-  fill: rgba(255, 255, 255, 0.10);
-  transition: transform 180ms ease, fill 180ms ease, stroke 180ms ease;
-}
-
-.mile.is-hit {
-  fill: rgba(255, 255, 255, 0.18);
-  stroke: rgba(255, 255, 255, 0.75);
-}
-
-.route-label {
-  position: absolute;
-  right: 18px;
-  top: 14px;
-  padding: 10px 12px;
-  border-radius: 14px;
-  background: rgba(10, 14, 26, 0.36);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  color: rgba(255, 255, 255, 0.75);
-}
-
-.cloud-ico {
-  font-size: 16px;
-}
-
-.stage {
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  padding: 0 var(--content-pad);
-  position: relative;
-}
-
-.card {
-  width: min(680px, 62vw);
-  border-radius: 28px;
-  padding: 26px 26px 22px;
-  background: rgba(8, 12, 22, 0.58);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.36);
-  transform: translateX(-44px);
-  opacity: 0;
-  transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 420ms ease;
-}
-
-.card.is-visible {
-  transform: translateX(0);
-  opacity: 1;
-}
-
-.tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.74);
-  margin-bottom: 12px;
-}
-
-.card h2 {
-  margin: 0 0 12px 0;
-  font-size: 38px;
-  letter-spacing: -0.02em;
-  line-height: 1.07;
-}
-
-.card ul {
-  margin: 0;
-  padding-left: 18px;
-  color: rgba(255, 255, 255, 0.82);
-  font-size: 16px;
-  line-height: 1.65;
-}
-
-.icon-row {
-  margin-top: 16px;
-  display: flex;
-  gap: 10px;
+  left: 14px;
+  bottom: 10px;
   opacity: 0.92;
 }
 
-.mini-ico {
+.miniClimber {
+  width: 34px;
+  height: 34px;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* Content */
+.content {
+  position: relative;
+  min-height: 100vh;
+  padding: 26px 26px 26px 26px;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 22px;
+  align-items: start;
+}
+
+/* Route panel */
+.routePanel {
+  position: sticky;
+  top: 18px;
+  align-self: start;
+  height: calc(100vh - 36px);
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.routePanelInner {
+  pointer-events: auto;
+  width: 100%;
+  height: 100%;
+  border-radius: 26px;
+  background: rgba(10, 14, 20, 0.40);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(14px);
+  position: relative;
+  overflow: hidden;
+}
+
+.routeSvg {
+  width: 100%;
+  height: 100%;
+}
+
+.routeRibbon {
+  fill: rgba(255, 255, 255, 0.10);
+  stroke: rgba(255, 255, 255, 0.10);
+  stroke-width: 1;
+}
+
+.routeDots {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.34);
+  stroke-width: 3;
+  stroke-dasharray: 2 10;
+  stroke-linecap: round;
+}
+
+.mile {
+  fill: rgba(255, 255, 255, 0.14);
+  stroke: rgba(255, 255, 255, 0.28);
+  stroke-width: 2;
+}
+
+.mile.is-hit {
+  fill: rgba(255, 255, 255, 0.85);
+  stroke: rgba(255, 255, 255, 0.95);
+}
+
+.climber circle {
+  fill: rgba(255, 255, 255, 0.92);
+}
+
+.climberGlow {
+  fill: rgba(255, 255, 255, 0.06);
+}
+
+.routeTopBtn {
+  position: absolute;
+  right: 14px;
+  top: 12px;
+  height: 38px;
+  width: 38px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.10);
+  color: rgba(255, 255, 255, 0.90);
+  cursor: pointer;
+}
+
+/* Stages and cards */
+.stages {
+  position: relative;
+  padding: 24px 0 64px;
+}
+
+.stage {
+  min-height: 92vh;
+  display: grid;
+  align-items: center;
+  padding: 22px 8px;
+}
+
+.card {
+  max-width: 820px;
+  border-radius: 26px;
+  background: rgba(10, 14, 20, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.50);
+  padding: 26px 28px 22px;
+  backdrop-filter: blur(16px);
+
+  opacity: 0;
+  transform: translateX(calc(var(--cardSlide) * -1));
+  transition: transform 520ms cubic-bezier(0.2, 0.85, 0.2, 1), opacity 520ms ease;
+}
+
+.card.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  font-weight: 750;
+  opacity: 0.9;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+h2 {
+  margin: 12px 0 12px;
+  font-size: 46px;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+ul {
+  margin: 12px 0 0;
+  padding-left: 20px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+.icons {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+}
+
+.chip {
   display: inline-grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
+  height: 34px;
+  min-width: 34px;
+  padding: 0 10px;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 16px;
 }
 
-.endcap {
-  height: 30vh;
-}
-
+/* Mobile */
 @media (max-width: 980px) {
-  :root {
-    --rail-w: 300px;
-    --content-pad: 22px;
+  .layout {
+    grid-template-columns: 1fr;
   }
-
-  .route {
-    right: 20px;
-    width: 280px;
-  }
-
-  .card {
-    width: min(680px, 70vw);
-  }
-
-  .card h2 {
-    font-size: 32px;
-  }
-}
-
-@media (max-width: 860px) {
-  .fx {
-    inset: 0;
-  }
-
-  .rail {
-    position: sticky;
-    top: 0;
-    width: 100%;
+  .nav {
+    position: relative;
     height: auto;
-    flex-direction: row;
-    align-items: stretch;
-    gap: 12px;
-    padding: 14px;
-    z-index: 6;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
-
-  .rail-brand,
-  .rail-hint {
-    display: none;
-  }
-
-  .rail-nav {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
-  }
-
-  .stage-pill {
-    grid-template-columns: 44px 1fr;
-    padding: 10px;
-  }
-
   .content {
-    margin-left: 0;
+    grid-template-columns: 1fr;
   }
-
-  .stage-ui {
-    inset: 64px 0 0 0;
-  }
-
-  .route {
+  .routePanel {
     display: none;
   }
-
-  .stage {
-    padding-top: 80px;
-  }
-
-  .card {
-    width: 92vw;
+  h2 {
+    font-size: 38px;
   }
 }
