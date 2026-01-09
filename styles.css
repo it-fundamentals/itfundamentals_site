@@ -59,10 +59,13 @@ body {
   top: 18px;
   z-index: 5;
 
-  right: var(--pad);
-  left: auto;
+  left: calc(var(--pad) + var(--navW) + var(--gap));
+  right: calc(var(--pad) + var(--routeW) + var(--gap));
 
-  width: min(var(--topBarMaxW), calc(100vw - (var(--pad) * 2) - var(--navW) - var(--gap)));
+  max-width: min(
+    var(--topBarMaxW),
+    calc(100vw - (var(--pad) * 2) - var(--navW) - var(--routeW) - (var(--gap) * 2))
+  );
 
   display: flex;
   align-items: center;
@@ -533,7 +536,6 @@ body {
   .topBar {
     left: var(--pad);
     right: var(--pad);
-    width: auto;
     max-width: none;
     justify-content: space-between;
   }
