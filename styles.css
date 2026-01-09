@@ -53,10 +53,7 @@ body {
 .topBar {
   position: fixed;
   top: 18px;
-
-  /* Keep the top bar out of the right route panel */
   right: calc(26px + 340px + 28px);
-
   z-index: 5;
   display: flex;
   align-items: center;
@@ -184,32 +181,32 @@ body {
 .logoRow {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 14px;
 }
 
 .logoImg {
-  width: 62px;
-  height: 62px;
+  width: 84px;
+  height: 84px;
   object-fit: contain;
-  border-radius: 14px;
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.10);
-  padding: 8px;
+  padding: 10px;
   flex: 0 0 auto;
 }
 
 .logoText {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  padding-top: 2px;
+  gap: 6px;
+  padding-top: 4px;
   min-width: 0;
 }
 
 .brand {
   font-size: 12px;
   letter-spacing: 0.16em;
-  opacity: 0.78;
+  opacity: 0.80;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -219,21 +216,27 @@ body {
   font-size: 13px;
   line-height: 1.25;
   opacity: 0.84;
-  max-width: 240px;
+  max-width: 220px;
 }
 
 .title {
   font-size: 42px;
   line-height: 1.02;
-  margin-top: 10px;
   font-weight: 820;
 }
 
+.titleClimb {
+  margin-top: 14px;
+}
+
 .stageNav {
-  margin-top: 18px;
   display: flex;
   flex-direction: column-reverse;
   gap: 14px;
+}
+
+.stageNavOffset {
+  margin-top: 18px;
 }
 
 .stagePill {
@@ -285,27 +288,6 @@ body {
 .stagePill.is-active .num {
   background: rgba(0, 0, 0, 0.06);
   border-color: rgba(0, 0, 0, 0.08);
-}
-
-.navFooter {
-  position: absolute;
-  left: 14px;
-  right: 14px;
-  bottom: 14px;
-  padding: 18px 18px;
-  border-radius: var(--radius);
-  background: var(--panel2);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-}
-
-.hintTitle {
-  font-weight: 750;
-  margin-bottom: 6px;
-}
-
-.hintSub {
-  opacity: 0.7;
 }
 
 .content {
@@ -457,6 +439,29 @@ body {
   color: rgba(255, 255, 255, 0.78);
 }
 
+.pageShell {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  padding: 26px;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.pageSide {
+  position: sticky;
+  top: 18px;
+  align-self: start;
+}
+
+.pageMain {
+  min-height: calc(100vh - 52px);
+  display: grid;
+  place-items: center;
+}
+
 @media (max-width: 1200px) {
   .shell {
     grid-template-columns: 300px 1fr;
@@ -476,6 +481,10 @@ body {
     left: 12px;
     justify-content: space-between;
   }
+
+  .pageShell {
+    grid-template-columns: 300px 1fr;
+  }
 }
 
 @media (max-width: 860px) {
@@ -492,19 +501,16 @@ body {
     height: auto;
   }
 
-  .navFooter {
-    position: relative;
-    left: auto;
-    right: auto;
-    bottom: auto;
-    margin-top: 14px;
-  }
-
-  .stageNav {
-    flex-direction: column;
-  }
-
   .topLinks {
     display: none;
+  }
+
+  .pageShell {
+    grid-template-columns: 1fr;
+  }
+
+  .pageSide {
+    position: relative;
+    top: auto;
   }
 }
