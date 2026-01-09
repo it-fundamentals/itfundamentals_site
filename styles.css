@@ -49,6 +49,92 @@ body {
   pointer-events: none;
 }
 
+/* Top bar menu and language toggle */
+.topBar {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px;
+  border-radius: 18px;
+  background: rgba(10, 14, 24, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.30);
+  backdrop-filter: blur(12px);
+}
+
+.topLinks {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topLink {
+  display: inline-block;
+  padding: 10px 12px;
+  border-radius: 14px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 720;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.topLink:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.langToggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 6px;
+  border-left: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.langBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 10px;
+  border-radius: 14px;
+  cursor: pointer;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.langBtn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.langBtn.is-active {
+  background: rgba(255, 255, 255, 0.90);
+  color: #0b1020;
+  border-color: rgba(255, 255, 255, 0.82);
+}
+
+.langBtn .flag {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.langBtn .code {
+  font-weight: 820;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+}
+
 .shell {
   position: relative;
   z-index: 2;
@@ -67,6 +153,34 @@ body {
   height: calc(100vh - 36px);
 }
 
+.nav {
+  position: sticky;
+  overflow: hidden;
+}
+
+.navSilo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.navSiloSvg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  transform: translateX(-34px) scale(1.05);
+  filter: blur(0px);
+}
+
+.navHeader,
+.stageNav,
+.navFooter {
+  position: relative;
+  z-index: 1;
+}
+
 .navHeader {
   padding: 18px 18px;
   border-radius: var(--radius);
@@ -76,16 +190,45 @@ body {
   backdrop-filter: blur(10px);
 }
 
+.logoRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logoImg {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  padding: 8px;
+}
+
+.logoText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .brand {
   font-size: 12px;
   letter-spacing: 0.16em;
   opacity: 0.78;
 }
 
+.tagline {
+  font-size: 13px;
+  line-height: 1.2;
+  opacity: 0.82;
+  max-width: 210px;
+}
+
 .title {
   font-size: 42px;
   line-height: 1.02;
-  margin-top: 6px;
+  margin-top: 10px;
   font-weight: 820;
 }
 
@@ -194,8 +337,6 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 28px 70px rgba(0, 0, 0, 0.44);
   backdrop-filter: blur(12px);
-
-  /* Slide out from the left column and expand */
   transform-origin: left center;
   opacity: 0;
   transform: translateX(-170px) scaleX(0.86);
@@ -288,6 +429,40 @@ body {
   fill: rgba(255, 255, 255, 0.35);
 }
 
+/* Simple page layout for the new pages */
+.simplePageShell {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 26px;
+}
+
+.simpleCard {
+  width: min(980px, 92%);
+  padding: 28px 30px;
+  border-radius: 28px;
+  background: rgba(8, 12, 20, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.44);
+  backdrop-filter: blur(12px);
+}
+
+.simpleCard h1 {
+  margin: 0 0 12px 0;
+  font-size: 48px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.simpleCard p {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.78);
+}
+
 @media (max-width: 1200px) {
   .shell {
     grid-template-columns: 300px 1fr;
@@ -300,6 +475,12 @@ body {
 
   .card h2 {
     font-size: 44px;
+  }
+
+  .topBar {
+    right: 12px;
+    left: 12px;
+    justify-content: space-between;
   }
 }
 
@@ -321,5 +502,9 @@ body {
 
   .stageNav {
     flex-direction: column;
+  }
+
+  .topLinks {
+    display: none;
   }
 }

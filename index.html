@@ -14,71 +14,137 @@
     <!-- Gradual overlay that lightens as you climb -->
     <div class="bgOverlay" aria-hidden="true" id="bgOverlay"></div>
 
+    <!-- Top right menu and language toggle -->
+    <div class="topBar" role="navigation" aria-label="Top menu">
+      <div class="topLinks">
+        <a class="topLink" href="./client-portal.html" data-i18n="menu_portal">Client Portal</a>
+        <a class="topLink" href="./about.html" data-i18n="menu_about">About us</a>
+        <a class="topLink" href="./contact.html" data-i18n="menu_contact">Contact us</a>
+      </div>
+
+      <div class="langToggle" aria-label="Language selector">
+        <button class="langBtn" type="button" data-lang="en" title="English">
+          <span class="flag">🇬🇧</span>
+          <span class="code">EN</span>
+        </button>
+        <button class="langBtn" type="button" data-lang="de" title="Deutsch">
+          <span class="flag">🇨🇭</span>
+          <span class="code">DE</span>
+        </button>
+        <button class="langBtn" type="button" data-lang="fr" title="Français">
+          <span class="flag">🇫🇷</span>
+          <span class="code">FR</span>
+        </button>
+      </div>
+    </div>
+
     <main class="shell">
       <!-- Left: navigation -->
       <aside class="nav">
+        <!-- Decorative silhouette behind the left column -->
+        <div class="navSilo" aria-hidden="true">
+          <svg class="navSiloSvg" viewBox="0 0 240 860" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="navRoadGrad" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.14)" />
+                <stop offset="100%" stop-color="rgba(255,255,255,0.06)" />
+              </linearGradient>
+            </defs>
+
+            <path
+              d="M 120 40
+                 C 160 90, 185 150, 140 210
+                 C 95 270, 55 330, 86 400
+                 C 115 470, 170 520, 140 600
+                 C 118 660, 70 705, 92 770
+                 C 110 825, 150 840, 120 835"
+              fill="none"
+              stroke="url(#navRoadGrad)"
+              stroke-width="150"
+              stroke-linecap="round"
+              opacity="0.9"
+            />
+
+            <path
+              d="M 120 40
+                 C 160 90, 185 150, 140 210
+                 C 95 270, 55 330, 86 400
+                 C 115 470, 170 520, 140 600
+                 C 118 660, 70 705, 92 770
+                 C 110 825, 150 840, 120 835"
+              fill="none"
+              stroke="rgba(255,255,255,0.28)"
+              stroke-width="4"
+              stroke-linecap="round"
+              stroke-dasharray="2 12"
+              opacity="0.85"
+            />
+          </svg>
+        </div>
+
         <div class="navHeader">
-          <div class="brand">ITFUNDAMENTALS.CH</div>
-          <div class="title">The climb</div>
+          <div class="logoRow">
+            <img class="logoImg" src="./assets/logo.png" alt="IT Fundamentals logo" />
+            <div class="logoText">
+              <div class="brand" data-i18n="top_brand">ITFUNDAMENTALS.CH</div>
+              <div class="tagline" data-i18n="top_tagline">Secure cloud foundations for micro and small business</div>
+            </div>
+          </div>
+
+          <div class="title" data-i18n="top_title">The climb</div>
         </div>
 
         <!-- We show 1 at the bottom by using column-reverse in CSS -->
         <nav class="stageNav" aria-label="Stages">
           <button class="stagePill" data-goto="stage-basecamp" type="button">
             <span class="num">1</span>
-            <span class="label">Base camp</span>
+            <span class="label" data-i18n="nav_basecamp">Base camp</span>
           </button>
 
           <button class="stagePill" data-goto="stage-discover" type="button">
             <span class="num">2</span>
-            <span class="label">Discover</span>
+            <span class="label" data-i18n="nav_discover">Discover</span>
           </button>
 
           <button class="stagePill" data-goto="stage-transition" type="button">
             <span class="num">3</span>
-            <span class="label">Transition</span>
+            <span class="label" data-i18n="nav_transition">Transition</span>
           </button>
 
           <button class="stagePill" data-goto="stage-secure" type="button">
             <span class="num">4</span>
-            <span class="label">Secure</span>
+            <span class="label" data-i18n="nav_secure">Secure</span>
           </button>
 
           <button class="stagePill" data-goto="stage-above" type="button">
             <span class="num">5</span>
-            <span class="label">Above the clouds</span>
+            <span class="label" data-i18n="nav_above">Above the clouds</span>
           </button>
 
           <button class="stagePill" data-goto="stage-ready" type="button">
             <span class="num">6</span>
-            <span class="label">Ready</span>
+            <span class="label" data-i18n="nav_ready">Ready</span>
           </button>
         </nav>
 
         <div class="navFooter">
-          <div class="hintTitle">Scroll down to climb up</div>
-          <div class="hintSub">Or click a stage</div>
+          <div class="hintTitle" data-i18n="hint_title">Scroll down to climb up</div>
+          <div class="hintSub" data-i18n="hint_sub">Or click a stage</div>
         </div>
       </aside>
 
       <!-- Centre: content -->
       <section class="content">
-        <!-- IMPORTANT:
-             We flip the scroll visually using .scrollFlip on this wrapper.
-             That makes the user LAND at base camp (bottom visually),
-             and scrolling down feels like climbing up.
-        -->
         <div class="scrollFlip" id="scrollFlip">
-          <!-- Base camp (user lands here) -->
           <section class="stage stageSection" id="stage-basecamp" data-index="0">
             <article class="card">
-              <div class="chip">BASE CAMP</div>
-              <h2>Stabilise what you already use</h2>
+              <div class="chip" data-i18n="chip_basecamp">BASE CAMP</div>
+              <h2 data-i18n="h_basecamp">Stabilise what you already use</h2>
               <ul>
-                <li>Reduce scattered tools and ad hoc setups</li>
-                <li>Establish a clear security baseline</li>
-                <li>Set up backup and monitoring foundations</li>
-                <li>Remove avoidable risk and unplanned spend</li>
+                <li data-i18n="b_basecamp_1">Reduce scattered tools and ad hoc setups</li>
+                <li data-i18n="b_basecamp_2">Establish a clear security baseline</li>
+                <li data-i18n="b_basecamp_3">Set up backup and monitoring foundations</li>
+                <li data-i18n="b_basecamp_4">Remove avoidable risk and unplanned spend</li>
               </ul>
 
               <div class="cardIcons">
@@ -91,12 +157,12 @@
 
           <section class="stage stageSection" id="stage-discover" data-index="1">
             <article class="card">
-              <div class="chip">DISCOVER</div>
-              <h2>Understand the current state</h2>
+              <div class="chip" data-i18n="chip_discover">DISCOVER</div>
+              <h2 data-i18n="h_discover">Understand the current state</h2>
               <ul>
-                <li>Short review of tools, risks, and priorities</li>
-                <li>Confirm users, devices, domain, and scope</li>
-                <li>Agree the simplest path forward</li>
+                <li data-i18n="b_discover_1">Short review of tools, risks, and priorities</li>
+                <li data-i18n="b_discover_2">Confirm users, devices, domain, and scope</li>
+                <li data-i18n="b_discover_3">Agree the simplest path forward</li>
               </ul>
 
               <div class="cardIcons">
@@ -109,12 +175,12 @@
 
           <section class="stage stageSection" id="stage-transition" data-index="2">
             <article class="card">
-              <div class="chip">TRANSITION</div>
-              <h2>Move into Microsoft 365 cleanly</h2>
+              <div class="chip" data-i18n="chip_transition">TRANSITION</div>
+              <h2 data-i18n="h_transition">Move into Microsoft 365 cleanly</h2>
               <ul>
-                <li>Migrate email, calendars, and files</li>
-                <li>Set up Teams, SharePoint, OneDrive</li>
-                <li>Minimal disruption, clean cutover</li>
+                <li data-i18n="b_transition_1">Migrate email, calendars, and files</li>
+                <li data-i18n="b_transition_2">Set up Teams, SharePoint, OneDrive</li>
+                <li data-i18n="b_transition_3">Minimal disruption, clean cutover</li>
               </ul>
 
               <div class="cardIcons">
@@ -127,12 +193,12 @@
 
           <section class="stage stageSection" id="stage-secure" data-index="3">
             <article class="card">
-              <div class="chip">SECURE</div>
-              <h2>Security by default</h2>
+              <div class="chip" data-i18n="chip_secure">SECURE</div>
+              <h2 data-i18n="h_secure">Security by default</h2>
               <ul>
-                <li>MFA enforced for all users</li>
-                <li>Baseline policies applied</li>
-                <li>Safer sharing and permissions</li>
+                <li data-i18n="b_secure_1">MFA enforced for all users</li>
+                <li data-i18n="b_secure_2">Baseline policies applied</li>
+                <li data-i18n="b_secure_3">Safer sharing and permissions</li>
               </ul>
 
               <div class="cardIcons">
@@ -145,13 +211,13 @@
 
           <section class="stage stageSection" id="stage-above" data-index="4">
             <article class="card">
-              <div class="chip">ABOVE THE CLOUDS</div>
-              <h2>Managed, monitored, backed up</h2>
+              <div class="chip" data-i18n="chip_above">ABOVE THE CLOUDS</div>
+              <h2 data-i18n="h_above">Managed, monitored, backed up</h2>
               <ul>
-                <li>Backup for Microsoft 365 data with tested recovery</li>
-                <li>Monitoring and alerting for issues that matter</li>
-                <li>Onboarding and offboarding done properly</li>
-                <li>Predictable cost and calmer day to day operations</li>
+                <li data-i18n="b_above_1">Backup for Microsoft 365 data with tested recovery</li>
+                <li data-i18n="b_above_2">Monitoring and alerting for issues that matter</li>
+                <li data-i18n="b_above_3">Onboarding and offboarding done properly</li>
+                <li data-i18n="b_above_4">Predictable cost and calmer day to day operations</li>
               </ul>
 
               <div class="cardIcons">
@@ -164,12 +230,12 @@
 
           <section class="stage stageSection" id="stage-ready" data-index="5">
             <article class="card">
-              <div class="chip">READY</div>
-              <h2>AI and automation, when you choose</h2>
+              <div class="chip" data-i18n="chip_ready">READY</div>
+              <h2 data-i18n="h_ready">AI and automation, when you choose</h2>
               <ul>
-                <li>Centralised data and clean permissions</li>
-                <li>Auditable access and safer sharing</li>
-                <li>AI as a value add, not a risk</li>
+                <li data-i18n="b_ready_1">Centralised data and clean permissions</li>
+                <li data-i18n="b_ready_2">Auditable access and safer sharing</li>
+                <li data-i18n="b_ready_3">AI as a value add, not a risk</li>
               </ul>
 
               <div class="cardIcons">
@@ -203,7 +269,6 @@
               </filter>
             </defs>
 
-            <!-- Road shape (less uniform, still smooth) -->
             <path
               d="M 120 30
                  C 175 75, 205 135, 150 200
@@ -218,7 +283,6 @@
               opacity="0.9"
             />
 
-            <!-- Dotted route line -->
             <path
               id="climbPath"
               d="M 120 30
@@ -234,10 +298,8 @@
               stroke-dasharray="2 12"
             />
 
-            <!-- Mile markers (generated in JS so they stay aligned to the route) -->
             <g id="miles" opacity="0.55"></g>
 
-            <!-- Climber dot -->
             <g id="climber" filter="url(#softGlow)">
               <circle r="12" fill="rgba(255,255,255,0.95)"></circle>
               <circle r="22" fill="rgba(255,255,255,0.12)"></circle>

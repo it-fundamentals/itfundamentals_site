@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IT Fundamentals | About</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+
+  <body>
+    <div class="bg" aria-hidden="true"></div>
+    <div class="bgOverlay" aria-hidden="true" id="bgOverlay"></div>
+
+    <div class="topBar" role="navigation" aria-label="Top menu">
+      <div class="topLinks">
+        <a class="topLink" href="./client-portal.html" data-i18n="menu_portal">Client Portal</a>
+        <a class="topLink" href="./about.html" data-i18n="menu_about">About us</a>
+        <a class="topLink" href="./contact.html" data-i18n="menu_contact">Contact us</a>
+        <a class="topLink" href="./index.html">The climb</a>
+      </div>
+
+      <div class="langToggle" aria-label="Language selector">
+        <button class="langBtn" type="button" data-lang="en" title="English">
+          <span class="flag">🇬🇧</span>
+          <span class="code">EN</span>
+        </button>
+        <button class="langBtn" type="button" data-lang="de" title="Deutsch">
+          <span class="flag">🇨🇭</span>
+          <span class="code">DE</span>
+        </button>
+        <button class="langBtn" type="button" data-lang="fr" title="Français">
+          <span class="flag">🇫🇷</span>
+          <span class="code">FR</span>
+        </button>
+      </div>
+    </div>
+
+    <main class="simplePageShell">
+      <article class="simpleCard">
+        <h1 data-i18n="page_about_title">About us</h1>
+        <p data-i18n="page_about_body">
+          We help micro and small businesses build a stable, secure Microsoft 365 foundation. The focus is practical
+          delivery, predictable outcomes, and a clean path to modern security and automation.
+        </p>
+      </article>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
