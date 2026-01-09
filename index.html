@@ -7,93 +7,11 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
 
-  <body class="climbLayout">
+  <body>
     <div class="bg" aria-hidden="true"></div>
     <div class="bgOverlay" aria-hidden="true" id="bgOverlay"></div>
 
     <div class="topBar" role="navigation" aria-label="Top menu">
-      <a class="brandLink" href="./index.html" aria-label="IT Fundamentals home">
-        <svg class="brandBanner" viewBox="0 0 980 92" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="IT Fundamentals banner">
-          <defs>
-            <linearGradient id="itfShieldRed" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#ff3b30" stop-opacity="0.98"></stop>
-              <stop offset="100%" stop-color="#c91810" stop-opacity="0.98"></stop>
-            </linearGradient>
-
-            <linearGradient id="itfMetal" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#f3f6ff" stop-opacity="0.98"></stop>
-              <stop offset="55%" stop-color="#aeb7c7" stop-opacity="0.98"></stop>
-              <stop offset="100%" stop-color="#ffffff" stop-opacity="0.98"></stop>
-            </linearGradient>
-
-            <filter id="itfSoftGlow" x="-40%" y="-40%" width="180%" height="180%">
-              <feGaussianBlur stdDeviation="1.8" result="b"></feGaussianBlur>
-              <feMerge>
-                <feMergeNode in="b"></feMergeNode>
-                <feMergeNode in="SourceGraphic"></feMergeNode>
-              </feMerge>
-            </filter>
-
-            <filter id="itfDrop" x="-30%" y="-30%" width="160%" height="160%">
-              <feGaussianBlur stdDeviation="2.2" result="shadow"></feGaussianBlur>
-              <feOffset dx="0" dy="2" result="off"></feOffset>
-              <feColorMatrix
-                in="off"
-                type="matrix"
-                values="0 0 0 0 0
-                        0 0 0 0 0
-                        0 0 0 0 0
-                        0 0 0 0.55 0"
-                result="shadowColor"
-              ></feColorMatrix>
-              <feMerge>
-                <feMergeNode in="shadowColor"></feMergeNode>
-                <feMergeNode in="SourceGraphic"></feMergeNode>
-              </feMerge>
-            </filter>
-          </defs>
-
-          <g transform="translate(12,10)" filter="url(#itfDrop)">
-            <path
-              d="M 48 2
-                 C 62 2, 78 8, 86 14
-                 L 86 46
-                 C 86 66, 70 78, 48 86
-                 C 26 78, 10 66, 10 46
-                 L 10 14
-                 C 18 8, 34 2, 48 2 Z"
-              fill="url(#itfMetal)"
-              opacity="0.92"
-              filter="url(#itfSoftGlow)"
-            ></path>
-
-            <path
-              d="M 48 10
-                 C 60 10, 72 15, 78 19
-                 L 78 46
-                 C 78 62, 64 72, 48 78
-                 C 32 72, 18 62, 18 46
-                 L 18 19
-                 C 24 15, 36 10, 48 10 Z"
-              fill="url(#itfShieldRed)"
-            ></path>
-
-            <path
-              d="M 42 26 L 54 26 L 54 38 L 66 38 L 66 50 L 54 50 L 54 62 L 42 62 L 42 50 L 30 50 L 30 38 L 42 38 Z"
-              fill="#ffffff"
-              opacity="0.98"
-            ></path>
-          </g>
-
-          <g transform="translate(120,18)">
-            <text class="brandUrl" x="0" y="18">www.itfundamentals.ch</text>
-            <text class="brandTitle" x="0" y="56">IT Fundamentals</text>
-            <rect class="brandRule" x="0" y="68" width="828" height="6" rx="3"></rect>
-            <text class="brandTagline" x="0" y="88">Secure cloud foundations for micro and small business</text>
-          </g>
-        </svg>
-      </a>
-
       <div class="topLinks">
         <a class="topLink" href="./client-portal.html" data-i18n="menu_portal">Client Portal</a>
         <a class="topLink" href="./about.html" data-i18n="menu_about">About us</a>
@@ -122,7 +40,13 @@
         <div class="navFrame navFrameClimb">
           <div class="logoPanel logoPanelLarge">
             <div class="logoMark logoMarkLarge" aria-hidden="true">
-              <svg viewBox="0 0 120 120" class="logoSvg logoSvgLarge" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="IT Fundamentals mark">
+              <svg
+                viewBox="0 0 120 120"
+                class="logoSvg logoSvgLarge"
+                xmlns="http://www.w3.org/2000/svg"
+                role="img"
+                aria-label="IT Fundamentals mark"
+              >
                 <defs>
                   <linearGradient id="shieldRed" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stop-color="#ff3b30" stop-opacity="0.95"></stop>
