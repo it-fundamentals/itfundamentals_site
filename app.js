@@ -13,8 +13,6 @@
       nav_secure: "Secure",
       nav_above: "Above the clouds",
       nav_ready: "Ready",
-      hint_title: "Scroll down to climb up",
-      hint_sub: "Or click a stage",
 
       chip_basecamp: "BASE CAMP",
       h_basecamp: "Stabilise what you already use",
@@ -82,8 +80,6 @@
       nav_secure: "Absichern",
       nav_above: "Über den Wolken",
       nav_ready: "Bereit",
-      hint_title: "Scrolle nach unten, um aufzusteigen",
-      hint_sub: "Oder wähle eine Etappe",
 
       chip_basecamp: "BASISLAGER",
       h_basecamp: "Stabilisiere, was du bereits nutzt",
@@ -151,8 +147,6 @@
       nav_secure: "Sécuriser",
       nav_above: "Au dessus des nuages",
       nav_ready: "Prêt",
-      hint_title: "Faites défiler vers le bas pour monter",
-      hint_sub: "Ou sélectionnez une étape",
 
       chip_basecamp: "CAMP DE BASE",
       h_basecamp: "Stabiliser ce que vous utilisez déjà",
@@ -261,7 +255,6 @@
   // The climb behaviour (index page only)
   // ----------------------------
   const overlay = document.getElementById("bgOverlay");
-  const scrollFlip = document.getElementById("scrollFlip");
 
   const stageIds = [
     "stage-basecamp",
@@ -283,6 +276,7 @@
   const climber = document.getElementById("climber");
   const milesGroup = document.getElementById("miles");
 
+  // If this is not the climb page, stop here (language still works above)
   if (!stages.length) return;
 
   let activeIndex = 0;
