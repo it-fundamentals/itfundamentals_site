@@ -57,6 +57,7 @@
       menu_portal: "Client Portal",
       menu_about: "About us",
       menu_contact: "Contact us",
+      menu_climb: "The climb",
 
       page_portal_title: "Client Portal",
       page_portal_body:
@@ -125,6 +126,7 @@
       menu_portal: "Kundenportal",
       menu_about: "Über uns",
       menu_contact: "Kontakt",
+      menu_climb: "Der Aufstieg",
 
       page_portal_title: "Kundenportal",
       page_portal_body:
@@ -193,6 +195,7 @@
       menu_portal: "Portail client",
       menu_about: "À propos",
       menu_contact: "Contact",
+      menu_climb: "L’ascension",
 
       page_portal_title: "Portail client",
       page_portal_body:
@@ -280,7 +283,6 @@
   const climber = document.getElementById("climber");
   const milesGroup = document.getElementById("miles");
 
-  // If this is not the climb page, stop here (language still works above)
   if (!stages.length) return;
 
   let activeIndex = 0;
@@ -313,7 +315,6 @@
     });
   });
 
-  // Stage activation
   const stageObserver = new IntersectionObserver(
     (entries) => {
       const visible = entries.filter((e) => e.isIntersecting);
@@ -332,7 +333,6 @@
 
   stages.forEach((s) => stageObserver.observe(s));
 
-  // Card reveal
   const cardObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((e) => {
@@ -372,7 +372,6 @@
     }
   }
 
-  // Route positioning (smooth, continuous with scroll)
   function updateClimber(progress01) {
     if (!climbPath || !climber) return;
 
@@ -383,7 +382,6 @@
     climber.setAttribute("transform", `translate(${pt.x}, ${pt.y})`);
   }
 
-  // Gradual overlay fade while climbing (continuous)
   function updateOverlay(progress01) {
     if (!overlay) return;
 
@@ -412,7 +410,6 @@
 
   window.addEventListener("scroll", onScroll, { passive: true });
 
-  // Initial state, force Base camp selected on load
   setActive(0);
   cards.forEach((c, i) => {
     if (i === 0) c.classList.add("is-visible");
@@ -425,7 +422,6 @@
   }
 
   window.addEventListener("load", () => {
-    // Force the page to land on Base camp every time
     setActive(0);
     scrollToStage("stage-basecamp", "auto");
     initRoute();
