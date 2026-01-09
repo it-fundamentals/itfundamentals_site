@@ -8,13 +8,9 @@
   </head>
 
   <body>
-    <!-- Fixed background (Matterhorn) -->
     <div class="bg" aria-hidden="true"></div>
-
-    <!-- Gradual overlay that lightens as you climb -->
     <div class="bgOverlay" aria-hidden="true" id="bgOverlay"></div>
 
-    <!-- Top right menu and language toggle -->
     <div class="topBar" role="navigation" aria-label="Top menu">
       <div class="topLinks">
         <a class="topLink" href="./client-portal.html" data-i18n="menu_portal">Client Portal</a>
@@ -39,101 +35,61 @@
     </div>
 
     <main class="shell">
-      <!-- Left: navigation -->
       <aside class="nav">
-        <!-- Decorative silhouette behind the left column -->
-        <div class="navSilo" aria-hidden="true">
-          <svg class="navSiloSvg" viewBox="0 0 240 860" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="navRoadGrad" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stop-color="rgba(255,255,255,0.14)" />
-                <stop offset="100%" stop-color="rgba(255,255,255,0.06)" />
-              </linearGradient>
-            </defs>
-
-            <path
-              d="M 120 40
-                 C 160 90, 185 150, 140 210
-                 C 95 270, 55 330, 86 400
-                 C 115 470, 170 520, 140 600
-                 C 118 660, 70 705, 92 770
-                 C 110 825, 150 840, 120 835"
-              fill="none"
-              stroke="url(#navRoadGrad)"
-              stroke-width="150"
-              stroke-linecap="round"
-              opacity="0.9"
-            />
-
-            <path
-              d="M 120 40
-                 C 160 90, 185 150, 140 210
-                 C 95 270, 55 330, 86 400
-                 C 115 470, 170 520, 140 600
-                 C 118 660, 70 705, 92 770
-                 C 110 825, 150 840, 120 835"
-              fill="none"
-              stroke="rgba(255,255,255,0.28)"
-              stroke-width="4"
-              stroke-linecap="round"
-              stroke-dasharray="2 12"
-              opacity="0.85"
-            />
-          </svg>
-        </div>
-
-        <div class="navHeader">
-          <div class="logoRow">
-            <img class="logoImg" src="./assets/logo.png" alt="IT Fundamentals logo" />
-            <div class="logoText">
-              <div class="brand" data-i18n="top_brand">ITFUNDAMENTALS.CH</div>
-              <div class="tagline" data-i18n="top_tagline">Secure cloud foundations for micro and small business</div>
+        <div class="navFrame">
+          <div class="navHeader">
+            <div class="logoRow">
+              <img class="logoImg" src="./assets/logo.png" alt="IT Fundamentals logo" />
+              <div class="logoText">
+                <div class="brand" data-i18n="top_brand">ITFUNDAMENTALS.CH</div>
+                <div class="tagline" data-i18n="top_tagline">
+                  Secure cloud foundations for micro and small business
+                </div>
+              </div>
             </div>
+
+            <div class="title" data-i18n="top_title">The climb</div>
           </div>
 
-          <div class="title" data-i18n="top_title">The climb</div>
-        </div>
+          <nav class="stageNav" aria-label="Stages">
+            <button class="stagePill" data-goto="stage-basecamp" type="button">
+              <span class="num">1</span>
+              <span class="label" data-i18n="nav_basecamp">Base camp</span>
+            </button>
 
-        <!-- We show 1 at the bottom by using column-reverse in CSS -->
-        <nav class="stageNav" aria-label="Stages">
-          <button class="stagePill" data-goto="stage-basecamp" type="button">
-            <span class="num">1</span>
-            <span class="label" data-i18n="nav_basecamp">Base camp</span>
-          </button>
+            <button class="stagePill" data-goto="stage-discover" type="button">
+              <span class="num">2</span>
+              <span class="label" data-i18n="nav_discover">Discover</span>
+            </button>
 
-          <button class="stagePill" data-goto="stage-discover" type="button">
-            <span class="num">2</span>
-            <span class="label" data-i18n="nav_discover">Discover</span>
-          </button>
+            <button class="stagePill" data-goto="stage-transition" type="button">
+              <span class="num">3</span>
+              <span class="label" data-i18n="nav_transition">Transition</span>
+            </button>
 
-          <button class="stagePill" data-goto="stage-transition" type="button">
-            <span class="num">3</span>
-            <span class="label" data-i18n="nav_transition">Transition</span>
-          </button>
+            <button class="stagePill" data-goto="stage-secure" type="button">
+              <span class="num">4</span>
+              <span class="label" data-i18n="nav_secure">Secure</span>
+            </button>
 
-          <button class="stagePill" data-goto="stage-secure" type="button">
-            <span class="num">4</span>
-            <span class="label" data-i18n="nav_secure">Secure</span>
-          </button>
+            <button class="stagePill" data-goto="stage-above" type="button">
+              <span class="num">5</span>
+              <span class="label" data-i18n="nav_above">Above the clouds</span>
+            </button>
 
-          <button class="stagePill" data-goto="stage-above" type="button">
-            <span class="num">5</span>
-            <span class="label" data-i18n="nav_above">Above the clouds</span>
-          </button>
+            <button class="stagePill" data-goto="stage-ready" type="button">
+              <span class="num">6</span>
+              <span class="label" data-i18n="nav_ready">Ready</span>
+            </button>
+          </nav>
 
-          <button class="stagePill" data-goto="stage-ready" type="button">
-            <span class="num">6</span>
-            <span class="label" data-i18n="nav_ready">Ready</span>
-          </button>
-        </nav>
-
-        <div class="navFooter">
-          <div class="hintTitle" data-i18n="hint_title">Scroll down to climb up</div>
-          <div class="hintSub" data-i18n="hint_sub">Or click a stage</div>
+          <div class="navFooter">
+            <div class="hintTitle" data-i18n="hint_title">Scroll down to climb up</div>
+            <div class="hintSub" data-i18n="hint_sub">Or click a stage</div>
+          </div>
         </div>
       </aside>
 
-      <!-- Centre: content -->
       <section class="content">
         <div class="scrollFlip" id="scrollFlip">
           <section class="stage stageSection" id="stage-basecamp" data-index="0">
@@ -248,7 +204,6 @@
         </div>
       </section>
 
-      <!-- Right: route panel -->
       <aside class="route">
         <div class="routePanel">
           <div class="routeTopIcon" title="Above the clouds">☁️</div>

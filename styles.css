@@ -53,7 +53,10 @@ body {
 .topBar {
   position: fixed;
   top: 18px;
-  right: 18px;
+
+  /* Keep the top bar out of the right route panel */
+  right: calc(26px + 340px + 28px);
+
   z-index: 5;
   display: flex;
   align-items: center;
@@ -154,31 +157,19 @@ body {
 }
 
 .nav {
-  position: sticky;
-  overflow: hidden;
+  overflow: visible;
 }
 
-.navSilo {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.55;
-}
-
-.navSiloSvg {
-  width: 100%;
-  height: 100%;
-  display: block;
-  transform: translateX(-34px) scale(1.05);
-  filter: blur(0px);
-}
-
-.navHeader,
-.stageNav,
-.navFooter {
+/* Single translucent boundary around the left column */
+.navFrame {
   position: relative;
-  z-index: 1;
+  height: 100%;
+  padding: 14px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(12px);
 }
 
 .navHeader {
@@ -192,37 +183,43 @@ body {
 
 .logoRow {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
 }
 
 .logoImg {
-  width: 54px;
-  height: 54px;
+  width: 62px;
+  height: 62px;
   object-fit: contain;
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.10);
   padding: 8px;
+  flex: 0 0 auto;
 }
 
 .logoText {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
+  padding-top: 2px;
+  min-width: 0;
 }
 
 .brand {
   font-size: 12px;
   letter-spacing: 0.16em;
   opacity: 0.78;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tagline {
   font-size: 13px;
-  line-height: 1.2;
-  opacity: 0.82;
-  max-width: 210px;
+  line-height: 1.25;
+  opacity: 0.84;
+  max-width: 240px;
 }
 
 .title {
@@ -292,8 +289,8 @@ body {
 
 .navFooter {
   position: absolute;
-  left: 0;
-  right: 0;
+  left: 14px;
+  right: 14px;
   bottom: 14px;
   padding: 18px 18px;
   border-radius: var(--radius);
@@ -315,12 +312,10 @@ body {
   min-height: 100vh;
 }
 
-/* The trick: reverse the visual scroll direction without wheel hacks */
 .scrollFlip {
   transform: scaleY(-1);
 }
 
-/* Flip each stage back to normal */
 .stageSection {
   transform: scaleY(-1);
   min-height: 92vh;
@@ -429,7 +424,6 @@ body {
   fill: rgba(255, 255, 255, 0.35);
 }
 
-/* Simple page layout for the new pages */
 .simplePageShell {
   position: relative;
   z-index: 2;
@@ -494,8 +488,14 @@ body {
     height: auto;
   }
 
+  .navFrame {
+    height: auto;
+  }
+
   .navFooter {
     position: relative;
+    left: auto;
+    right: auto;
     bottom: auto;
     margin-top: 14px;
   }
