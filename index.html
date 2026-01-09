@@ -20,15 +20,15 @@
 
       <div class="langToggle" aria-label="Language selector">
         <button class="langBtn" type="button" data-lang="en" title="English">
-          <span class="flag">🇬🇧</span>
+          <span class="flag" aria-hidden="true">🇬🇧</span>
           <span class="code">EN</span>
         </button>
         <button class="langBtn" type="button" data-lang="de" title="Deutsch">
-          <span class="flag">🇨🇭</span>
+          <span class="flag" aria-hidden="true">🇨🇭</span>
           <span class="code">DE</span>
         </button>
         <button class="langBtn" type="button" data-lang="fr" title="Français">
-          <span class="flag">🇫🇷</span>
+          <span class="flag" aria-hidden="true">🇫🇷</span>
           <span class="code">FR</span>
         </button>
       </div>
@@ -37,8 +37,60 @@
     <main class="shell">
       <aside class="nav">
         <div class="navFrame navFrameClimb">
-          <div class="logoPanel">
-            <img class="logoHero" src="./assets/logo.png" alt="IT Fundamentals logo" />
+          <div class="logoPanel logoPanelTransparent">
+            <div class="logoMark" aria-hidden="true">
+              <svg viewBox="0 0 120 120" class="logoSvg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="IT Fundamentals mark">
+                <defs>
+                  <linearGradient id="shieldRed" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#ff3b30" stop-opacity="0.95"></stop>
+                    <stop offset="100%" stop-color="#c91810" stop-opacity="0.98"></stop>
+                  </linearGradient>
+                  <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#e9eef7" stop-opacity="0.95"></stop>
+                    <stop offset="55%" stop-color="#aeb7c7" stop-opacity="0.95"></stop>
+                    <stop offset="100%" stop-color="#f6f8ff" stop-opacity="0.95"></stop>
+                  </linearGradient>
+                  <filter id="markGlow" x="-40%" y="-40%" width="180%" height="180%">
+                    <feGaussianBlur stdDeviation="2.5" result="b"></feGaussianBlur>
+                    <feMerge>
+                      <feMergeNode in="b"></feMergeNode>
+                      <feMergeNode in="SourceGraphic"></feMergeNode>
+                    </feMerge>
+                  </filter>
+                </defs>
+
+                <path
+                  d="M 60 8
+                     C 80 8, 96 16, 104 22
+                     L 104 60
+                     C 104 88, 84 104, 60 112
+                     C 36 104, 16 88, 16 60
+                     L 16 22
+                     C 24 16, 40 8, 60 8 Z"
+                  fill="url(#metal)"
+                  opacity="0.92"
+                  filter="url(#markGlow)"
+                ></path>
+
+                <path
+                  d="M 60 16
+                     C 76 16, 90 22, 96 26
+                     L 96 60
+                     C 96 82, 80 94, 60 100
+                     C 40 94, 24 82, 24 60
+                     L 24 26
+                     C 30 22, 44 16, 60 16 Z"
+                  fill="url(#shieldRed)"
+                ></path>
+
+                <path
+                  d="M 52 34 L 68 34 L 68 52 L 86 52 L 86 68 L 68 68 L 68 86 L 52 86 L 52 68 L 34 68 L 34 52 L 52 52 Z"
+                  fill="#ffffff"
+                  opacity="0.98"
+                ></path>
+              </svg>
+            </div>
+
             <div class="logoMeta">
               <div class="brand" data-i18n="top_brand">ITFUNDAMENTALS.CH</div>
               <div class="tagline" data-i18n="top_tagline">

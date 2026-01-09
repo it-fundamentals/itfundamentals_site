@@ -163,31 +163,42 @@ body {
   overflow: hidden;
 }
 
-/* Logo as its own block */
+/* Logo as code, no grey image background */
 .logoPanel {
-  padding: 16px 16px;
+  padding: 14px 12px;
   border-radius: 22px;
-  background: rgba(10, 14, 24, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.30);
-  backdrop-filter: blur(12px);
   display: grid;
-  grid-template-columns: 1fr;
-  justify-items: start;
-  gap: 10px;
+  grid-template-columns: 88px 1fr;
+  align-items: center;
+  column-gap: 14px;
 }
 
-.logoHero {
-  width: 210px;
-  height: auto;
+.logoPanelTransparent {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.logoMark {
+  width: 88px;
+  height: 88px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(10px);
+}
+
+.logoSvg {
+  width: 68px;
+  height: 68px;
   display: block;
-  border-radius: 16px;
 }
 
 .logoMeta {
   display: grid;
   gap: 6px;
-  width: 100%;
 }
 
 .brand {
@@ -210,7 +221,6 @@ body {
   gap: 12px;
 }
 
-/* Gap between logo and menu */
 .stageNavClimb {
   margin-top: 18px;
   padding-bottom: 96px;
@@ -267,7 +277,7 @@ body {
   border-color: rgba(0, 0, 0, 0.08);
 }
 
-/* Title at the bottom, separate from menu */
+/* Title at the bottom */
 .climbTitleDock {
   position: absolute;
   left: 14px;
@@ -404,13 +414,28 @@ body {
   fill: rgba(255, 255, 255, 0.35);
 }
 
-.simplePageShell {
+.pageShell {
   position: relative;
   z-index: 2;
   min-height: 100vh;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.pageSide {
+  position: sticky;
+  top: 18px;
+  align-self: start;
+  height: calc(100vh - 36px);
+}
+
+.pageMain {
+  min-height: calc(100vh - 48px);
   display: grid;
   place-items: center;
-  padding: 24px;
 }
 
 .simpleCard {
@@ -435,31 +460,6 @@ body {
   font-size: 18px;
   line-height: 1.7;
   color: rgba(255, 255, 255, 0.78);
-}
-
-/* Other pages layout, keep consistent left logo block */
-.pageShell {
-  position: relative;
-  z-index: 2;
-  min-height: 100vh;
-  padding: 24px;
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 24px;
-  align-items: start;
-}
-
-.pageSide {
-  position: sticky;
-  top: 18px;
-  align-self: start;
-  height: calc(100vh - 36px);
-}
-
-.pageMain {
-  min-height: calc(100vh - 48px);
-  display: grid;
-  place-items: center;
 }
 
 @media (max-width: 1200px) {
