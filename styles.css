@@ -11,6 +11,8 @@
   --gap: 24px;
   --navW: 320px;
   --routeW: 340px;
+
+  --topBarMaxW: 980px;
 }
 
 * {
@@ -55,25 +57,34 @@ body {
 .topBar {
   position: fixed;
   top: 18px;
-  left: calc(var(--pad) + var(--navW) + var(--gap));
-  right: var(--pad);
   z-index: 5;
+
+  right: var(--pad);
+  left: auto;
+
+  width: min(var(--topBarMaxW), calc(100vw - (var(--pad) * 2) - var(--navW) - var(--gap)));
+
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
+
   gap: 10px;
-  padding: 9px 9px;
+  padding: 9px 12px;
+
   border-radius: 18px;
   background: rgba(10, 14, 24, 0.62);
   border: 1px solid rgba(255, 255, 255, 0.10);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.30);
   backdrop-filter: blur(12px);
+
+  flex-wrap: wrap;
 }
 
 .topLinks {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .topLink {
@@ -99,8 +110,9 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding-left: 6px;
+  padding-left: 10px;
   border-left: 1px solid rgba(255, 255, 255, 0.10);
+  margin-left: auto;
 }
 
 .langBtn {
@@ -521,6 +533,8 @@ body {
   .topBar {
     left: var(--pad);
     right: var(--pad);
+    width: auto;
+    max-width: none;
     justify-content: space-between;
   }
 

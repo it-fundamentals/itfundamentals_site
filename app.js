@@ -256,18 +256,9 @@
   // ----------------------------
   const overlay = document.getElementById("bgOverlay");
 
-  const stageIds = [
-    "stage-basecamp",
-    "stage-discover",
-    "stage-transition",
-    "stage-secure",
-    "stage-above",
-    "stage-ready",
-  ];
+  const stageIds = ["stage-basecamp", "stage-discover", "stage-transition", "stage-secure", "stage-above", "stage-ready"];
 
-  const stages = stageIds
-    .map((id) => document.getElementById(id))
-    .filter(Boolean);
+  const stages = stageIds.map((id) => document.getElementById(id)).filter(Boolean);
 
   const navButtons = Array.from(document.querySelectorAll(".stagePill"));
   const cards = Array.from(document.querySelectorAll(".card"));
@@ -388,8 +379,9 @@
     overlay.style.opacity = String(op);
 
     const vignette = 0.78 + (0.62 - 0.78) * climb;
-    overlay.style.background =
-      `radial-gradient(1200px 700px at 55% 45%, rgba(0,0,0,${(vignette - 0.25).toFixed(3)}), rgba(0,0,0,${vignette.toFixed(3)}))`;
+    overlay.style.background = `radial-gradient(1200px 700px at 55% 45%, rgba(0,0,0,${(vignette - 0.25).toFixed(
+      3
+    )}), rgba(0,0,0,${vignette.toFixed(3)}))`;
   }
 
   let raf = 0;
