@@ -4,8 +4,6 @@
   --panel2: rgba(10, 14, 24, 0.6);
   --text: rgba(255, 255, 255, 0.92);
   --muted: rgba(255, 255, 255, 0.72);
-  --soft: rgba(255, 255, 255, 0.16);
-  --soft2: rgba(255, 255, 255, 0.08);
   --shadow: rgba(0, 0, 0, 0.42);
   --radius: 22px;
 }
@@ -49,16 +47,16 @@ body {
   pointer-events: none;
 }
 
-/* Top bar menu and language toggle */
+/* Top bar */
 .topBar {
   position: fixed;
   top: 18px;
-  right: calc(26px + 340px + 28px);
+  right: calc(24px + 340px + 24px);
   z-index: 5;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 10px;
+  gap: 10px;
+  padding: 9px 9px;
   border-radius: 18px;
   background: rgba(10, 14, 24, 0.62);
   border: 1px solid rgba(255, 255, 255, 0.10);
@@ -74,7 +72,7 @@ body {
 
 .topLink {
   display: inline-block;
-  padding: 10px 12px;
+  padding: 9px 11px;
   border-radius: 14px;
   text-decoration: none;
   color: var(--text);
@@ -102,7 +100,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 10px;
+  padding: 9px 10px;
   border-radius: 14px;
   cursor: pointer;
   color: var(--text);
@@ -140,8 +138,8 @@ body {
   z-index: 2;
   display: grid;
   grid-template-columns: 320px minmax(560px, 1fr) 340px;
-  gap: 28px;
-  padding: 26px 26px 26px 26px;
+  gap: 24px;
+  padding: 24px 24px 24px 24px;
   min-height: 100vh;
 }
 
@@ -153,11 +151,6 @@ body {
   height: calc(100vh - 36px);
 }
 
-.nav {
-  overflow: visible;
-}
-
-/* Single translucent boundary around the left column */
 .navFrame {
   position: relative;
   height: 100%;
@@ -167,76 +160,60 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.10);
   box-shadow: 0 28px 70px rgba(0, 0, 0, 0.34);
   backdrop-filter: blur(12px);
+  overflow: hidden;
 }
 
-.navHeader {
-  padding: 18px 18px;
-  border-radius: var(--radius);
-  background: var(--panel);
-  box-shadow: 0 18px 40px var(--shadow);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-}
-
-.logoRow {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-}
-
-.logoImg {
-  width: 84px;
-  height: 84px;
-  object-fit: contain;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.05);
+/* Logo as its own block */
+.logoPanel {
+  padding: 16px 16px;
+  border-radius: 22px;
+  background: rgba(10, 14, 24, 0.72);
   border: 1px solid rgba(255, 255, 255, 0.10);
-  padding: 10px;
-  flex: 0 0 auto;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.30);
+  backdrop-filter: blur(12px);
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: start;
+  gap: 10px;
 }
 
-.logoText {
-  display: flex;
-  flex-direction: column;
+.logoHero {
+  width: 210px;
+  height: auto;
+  display: block;
+  border-radius: 16px;
+}
+
+.logoMeta {
+  display: grid;
   gap: 6px;
-  padding-top: 4px;
-  min-width: 0;
+  width: 100%;
 }
 
 .brand {
   font-size: 12px;
   letter-spacing: 0.16em;
-  opacity: 0.80;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  opacity: 0.82;
 }
 
 .tagline {
   font-size: 13px;
-  line-height: 1.25;
+  line-height: 1.3;
   opacity: 0.84;
-  max-width: 220px;
+  max-width: 260px;
 }
 
-.title {
-  font-size: 42px;
-  line-height: 1.02;
-  font-weight: 820;
-}
-
-.titleClimb {
-  margin-top: 14px;
-}
-
+/* Climb menu */
 .stageNav {
   display: flex;
   flex-direction: column-reverse;
-  gap: 14px;
+  gap: 12px;
 }
 
-.stageNavOffset {
+/* Gap between logo and menu */
+.stageNavClimb {
   margin-top: 18px;
+  padding-bottom: 96px;
 }
 
 .stagePill {
@@ -245,11 +222,11 @@ body {
   grid-template-columns: 44px 1fr;
   align-items: center;
   gap: 12px;
-  padding: 16px 16px;
-  border-radius: var(--radius);
-  background: var(--panel2);
+  padding: 14px 14px;
+  border-radius: 22px;
+  background: rgba(10, 14, 24, 0.58);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
   color: var(--text);
   cursor: pointer;
   text-align: left;
@@ -274,13 +251,13 @@ body {
 }
 
 .stagePill .label {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 760;
   letter-spacing: 0.01em;
 }
 
 .stagePill.is-active {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.90);
   color: #0b1020;
   border-color: rgba(255, 255, 255, 0.82);
 }
@@ -288,6 +265,27 @@ body {
 .stagePill.is-active .num {
   background: rgba(0, 0, 0, 0.06);
   border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Title at the bottom, separate from menu */
+.climbTitleDock {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  padding: 16px 16px;
+  border-radius: 22px;
+  background: rgba(10, 14, 24, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.30);
+  backdrop-filter: blur(12px);
+}
+
+.climbTitleText {
+  font-size: 44px;
+  line-height: 1.02;
+  font-weight: 840;
+  letter-spacing: -0.02em;
 }
 
 .content {
@@ -303,7 +301,7 @@ body {
   min-height: 92vh;
   display: grid;
   place-items: center;
-  padding: 60px 0;
+  padding: 56px 0;
 }
 
 .card {
@@ -311,7 +309,7 @@ body {
   padding: 26px 28px;
   border-radius: 28px;
   background: rgba(8, 12, 20, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   box-shadow: 0 28px 70px rgba(0, 0, 0, 0.44);
   backdrop-filter: blur(12px);
   transform-origin: left center;
@@ -390,7 +388,7 @@ body {
   height: 38px;
   border-radius: 14px;
   background: rgba(0, 0, 0, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   display: grid;
   place-items: center;
   opacity: 0.85;
@@ -412,7 +410,7 @@ body {
   min-height: 100vh;
   display: grid;
   place-items: center;
-  padding: 26px;
+  padding: 24px;
 }
 
 .simpleCard {
@@ -439,14 +437,15 @@ body {
   color: rgba(255, 255, 255, 0.78);
 }
 
+/* Other pages layout, keep consistent left logo block */
 .pageShell {
   position: relative;
   z-index: 2;
   min-height: 100vh;
-  padding: 26px;
+  padding: 24px;
   display: grid;
   grid-template-columns: 320px 1fr;
-  gap: 28px;
+  gap: 24px;
   align-items: start;
 }
 
@@ -454,10 +453,11 @@ body {
   position: sticky;
   top: 18px;
   align-self: start;
+  height: calc(100vh - 36px);
 }
 
 .pageMain {
-  min-height: calc(100vh - 52px);
+  min-height: calc(100vh - 48px);
   display: grid;
   place-items: center;
 }
@@ -470,10 +470,6 @@ body {
 
   .route {
     display: none;
-  }
-
-  .card h2 {
-    font-size: 44px;
   }
 
   .topBar {
@@ -497,10 +493,6 @@ body {
     height: auto;
   }
 
-  .navFrame {
-    height: auto;
-  }
-
   .topLinks {
     display: none;
   }
@@ -512,5 +504,6 @@ body {
   .pageSide {
     position: relative;
     top: auto;
+    height: auto;
   }
 }
