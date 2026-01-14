@@ -74,7 +74,10 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
                   d="M 60 16 C 76 16, 90 22, 96 26 L 96 60 C 96 82, 80 94, 60 100 C 40 94, 24 82, 24 60 L 24 26 C 30 22, 44 16, 60 16 Z"
                   fill="#ff3b30"
                 />
-                <path d="M 52 34 L 68 34 L 68 52 L 86 52 L 86 68 L 68 68 L 68 86 L 52 86 L 52 68 L 34 68 L 34 52 L 52 52 Z" fill="white" />
+                <path
+                  d="M 52 34 L 68 34 L 68 52 L 86 52 L 86 68 L 68 68 L 68 86 L 52 86 L 52 68 L 34 68 L 34 52 L 52 52 Z"
+                  fill="white"
+                />
               </svg>
             </div>
             <div>
@@ -84,23 +87,39 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
           </div>
 
           <nav className="flex flex-col-reverse gap-3 overflow-y-auto pr-1">
-            {stages.map((stage, idx) => (
-              <button
-                key={stage.id}
-                onClick={() => document.getElementById(stage.id)?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
-                className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all border ${
-                  activeStageId === stage.id
-                    ? 'bg-white text-[#0b1020] border-white shadow-xl translate-x-1 scale-[1.02]'
-                    : 'bg-[#0a0e18]/40 text-white/70 border-white/5 hover:border-white/20 hover:bg-white/5'
-                }`}
-                type="button"
-              >
-                <span className={`w-8 h-8 rounded-lg flex items-center justify-center font-extrabold text-sm ${activeStageId === stage.id ? 'bg-black/5' : 'bg-white/5'}`}>
-                  {idx + 1}
-                </span>
-                <span className="font-bold text-sm tracking-tight">{stage.chip}</span>
-              </button>
-            ))}
+            {stages.map((stage, idx) => {
+              const isActive = activeStageId === stage.id;
+
+              return (
+                <button
+                  key={stage.id}
+                  onClick={() => document.getElementById(stage.id)?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+                  className={`w-full flex flex-col gap-3 p-4 rounded-2xl transition-all border ${
+                    isActive
+                      ? 'bg-white text-[#0b1020] border-white shadow-xl translate-x-1 scale-[1.02]'
+                      : 'bg-[#0a0e18]/40 text-white/70 border-white/5 hover:border-white/20 hover:bg-white/5'
+                  }`}
+                  type="button"
+                >
+                  <div className="w-full flex items-center gap-4">
+                    <span
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center font-extrabold text-sm ${
+                        isActive ? 'bg-black/5' : 'bg-white/5'
+                      }`}
+                    >
+                      {idx + 1}
+                    </span>
+                    <span className="font-bold text-sm tracking-tight">{stage.chip}</span>
+                  </div>
+
+                  {isActive ? (
+                    <div className="w-full">
+                      <div className="h-[3px] w-full rounded-full bg-[#D52B1E]" />
+                    </div>
+                  ) : null}
+                </button>
+              );
+            })}
           </nav>
 
           <div className="mt-auto pt-6 border-t border-white/5">
