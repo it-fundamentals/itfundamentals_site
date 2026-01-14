@@ -1,6 +1,7 @@
 // src/components/Atmosphere.tsx
 import React, { useMemo } from 'react';
 import { motion, useTransform, type MotionValue } from 'framer-motion';
+import SnowCanvas from './SnowCanvas';
 
 interface AtmosphereProps {
   progress: MotionValue<number>;
@@ -16,45 +17,45 @@ type SnowParticle = {
 };
 
 function Snowfall({ progress }: { progress: MotionValue<number> }) {
-  const snowOpacity = useTransform(progress, [0, 1], [0.8, 0.05]);
-  const snowScale = useTransform(progress, [0, 1], [1, 1.5]);
+  const snowOpacity = useTransform(progress, [0, 1], [0.55, 0.02]);
+  const snowScale = useTransform(progress, [0, 1], [1, 1.35]);
 
   const particles = useMemo<SnowParticle[]>(() => {
-    return Array.from({ length: 80 }).map((_, i) => ({
+    return Array.from({ length: 70 }).map((_, i) => ({
       id: i,
       x: Math.random() * 100,
-      size: 2 + Math.random() * 4,
-      duration: 6 + Math.random() * 10,
+      size: 1.6 + Math.random() * 3.2,
+      duration: 7 + Math.random() * 10,
       delay: Math.random() * 10,
-      drift: (Math.random() - 0.5) * 40,
+      drift: (Math.random() - 0.5) * 34
     }));
   }, []);
 
   return (
     <motion.div
-      className="fixed inset-0 pointer-events-none z-20"
+      className="fixed inset-0 pointer-events-none z-[18]"
       style={{ opacity: snowOpacity, scale: snowScale }}
       aria-hidden="true"
     >
       {particles.map((p) => (
         <motion.div
           key={p.id}
-          className="absolute rounded-full bg-white/90"
+          className="absolute rounded-full bg-white/80"
           style={{
             left: `${p.x}%`,
             top: `-10%`,
             width: `${p.size}px`,
-            height: `${p.size}px`,
+            height: `${p.size}px`
           }}
           animate={{
-            y: ['-10%', '110%'],
-            x: ['0%', `${p.drift}px`],
+            y: ['-10%', '112%'],
+            x: ['0%', `${p.drift}px`]
           }}
           transition={{
             duration: p.duration,
             repeat: Infinity,
             ease: 'linear',
-            delay: -p.delay,
+            delay: -p.delay
           }}
         />
       ))}
@@ -68,7 +69,7 @@ function FloatingClouds({ progress }: { progress: MotionValue<number> }) {
 
   return (
     <motion.div
-      className="fixed inset-0 pointer-events-none z-30 overflow-hidden"
+      className="fixed inset-0 pointer-events-none z-[25] overflow-hidden"
       style={{ opacity: cloudsOpacity, y: cloudsY }}
       aria-hidden="true"
     >
@@ -94,13 +95,20 @@ export default function Atmosphere({ progress }: AtmosphereProps) {
 
   return (
     <>
+      {/* Dark overlay */}
       <motion.div
         className="fixed inset-0 pointer-events-none z-[5] bg-[#070a12]"
         style={{ opacity: brightnessOverlay }}
         aria-hidden="true"
       />
 
+      {/* Storm layer (canvas based, heavy at start, fades as you climb) */}
+      <SnowCanvas progress={progress} />
+
+      {/* Light particle layer on top to give depth */}
       <Snowfall progress={progress} />
+
+      {/* Peak clouds */}
       <FloatingClouds progress={progress} />
     </>
   );
