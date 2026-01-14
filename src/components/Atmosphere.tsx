@@ -48,7 +48,7 @@ function Snowfall({ progress }: { progress: MotionValue<number> }) {
           }}
           animate={{
             y: ['-10%', '110%'],
-            x: [`0%`, `${p.drift}px`],
+            x: ['0%', `${p.drift}px`],
           }}
           transition={{
             duration: p.duration,
