@@ -29,8 +29,6 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
   const pathData =
     'M 120 30 C 175 75, 205 135, 150 200 C 100 260, 45 315, 92 385 C 135 450, 200 500, 155 575 C 118 635, 52 680, 95 745 C 130 805, 165 830, 120 830';
 
-  const stages = useMemo(() => Object.values(dict.stages) as Stage[], [dict.stages]);
-
   useEffect(() => {
     if (!pathRef.current) return;
 
@@ -42,7 +40,8 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
       setPathPoint({ x: point.x, y: point.y });
     });
 
-    const stagesCount = stages.length;
+    const stageKeys = Object.keys(dict.stages);
+    const stagesCount = stageKeys.length;
 
     const dots: Point[] = [];
     for (let i = 0; i < stagesCount; i++) {
@@ -53,41 +52,13 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
     setMilestones(dots);
 
     return () => unsubscribe();
-  }, [smoothProgress, stages]);
+  }, [smoothProgress, dict.stages]);
 
-  const scrollToStage = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  };
+  const stages = useMemo(() => Object.values(dict.stages) as Stage[], [dict.stages]);
 
   return (
-    <div ref={containerRef} className="relative flex min-h-[520vh] md:min-h-[700vh] pt-24 sm:pt-32 px-4 sm:px-6 gap-8 overflow-visible">
+    <div ref={containerRef} className="relative flex min-h-[700vh] pt-32 px-6 gap-8 overflow-visible">
       <Atmosphere progress={smoothProgress} />
-
-      {/* Mobile stage selector */}
-      <div className="xl:hidden fixed left-0 right-0 z-[90] top-[78px] sm:top-[104px] px-3 sm:px-4 pointer-events-none">
-        <div className="pointer-events-auto max-w-6xl mx-auto bg-[#0a0e18]/55 backdrop-blur-xl border border-white/10 rounded-2xl p-2 shadow-2xl">
-          <div className="flex items-center gap-2 overflow-x-auto overflow-y-hidden pr-1">
-            {stages.map((stage, idx) => {
-              const isActive = activeStageId === stage.id;
-              return (
-                <button
-                  key={stage.id}
-                  type="button"
-                  onClick={() => scrollToStage(stage.id)}
-                  className={`flex items-center gap-2 whitespace-nowrap px-3 py-2 rounded-xl border transition-all ${
-                    isActive ? 'bg-white text-[#0b1020] border-white' : 'bg-white/5 text-white/80 border-white/10 hover:bg-white/10'
-                  }`}
-                >
-                  <span className={`w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black ${isActive ? 'bg-black/5' : 'bg-white/10'}`}>
-                    {idx + 1}
-                  </span>
-                  <span className="text-xs font-black tracking-widest">{stage.chip}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
 
       {/* Left menu stays sticky */}
       <aside className="sticky top-32 left-0 h-[calc(100vh-160px)] w-80 flex-shrink-0 z-[60] hidden xl:block">
@@ -104,10 +75,7 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
                   d="M 60 16 C 76 16, 90 22, 96 26 L 96 60 C 96 82, 80 94, 60 100 C 40 94, 24 82, 24 60 L 24 26 C 30 22, 44 16, 60 16 Z"
                   fill="#ff3b30"
                 />
-                <path
-                  d="M 52 34 L 68 34 L 68 52 L 86 52 L 86 68 L 68 68 L 68 86 L 52 86 L 52 68 L 34 68 L 34 52 L 52 52 Z"
-                  fill="white"
-                />
+                <path d="M 52 34 L 68 34 L 68 52 L 86 52 L 86 68 L 68 68 L 68 86 L 52 86 L 52 68 L 34 68 L 34 52 L 52 52 Z" fill="white" />
               </svg>
             </div>
             <div>
@@ -116,6 +84,7 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
             </div>
           </div>
 
+          {/* Key fix: hide horizontal overflow so no scrollbar appears */}
           <nav className="flex flex-col-reverse gap-3 overflow-y-auto overflow-x-hidden pr-1">
             {stages.map((stage, idx) => {
               const isActive = activeStageId === stage.id;
@@ -123,7 +92,7 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
               return (
                 <button
                   key={stage.id}
-                  onClick={() => scrollToStage(stage.id)}
+                  onClick={() => document.getElementById(stage.id)?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
                   className={`w-full flex flex-col gap-3 p-4 rounded-2xl transition-all border ${
                     isActive
                       ? 'bg-white text-[#0b1020] border-white shadow-xl scale-[1.02]'
@@ -132,7 +101,11 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
                   type="button"
                 >
                   <div className="w-full flex items-center gap-4">
-                    <span className={`w-8 h-8 rounded-lg flex items-center justify-center font-extrabold text-sm ${isActive ? 'bg-black/5' : 'bg-white/5'}`}>
+                    <span
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center font-extrabold text-sm ${
+                        isActive ? 'bg-black/5' : 'bg-white/5'
+                      }`}
+                    >
                       {idx + 1}
                     </span>
                     <span className="font-bold text-sm tracking-tight">{stage.chip}</span>
@@ -155,7 +128,7 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
       </aside>
 
       {/* Content scrolls */}
-      <section className="flex-1 space-y-[52vh] sm:space-y-[60vh] pb-[52vh] sm:pb-[60vh] relative z-20">
+      <section className="flex-1 space-y-[60vh] pb-[60vh] relative z-20">
         {stages.map((stage) => (
           <StageCard key={stage.id} stage={stage} onInView={() => setActiveStageId(stage.id)} />
         ))}
@@ -201,14 +174,14 @@ function StageCard({ stage, onInView }: { stage: Stage; onInView: () => void }) 
       whileInView={{ opacity: 1, x: 0, scale: 1 }}
       viewport={{ once: false, amount: 0.3 }}
       transition={{ duration: 0.95, ease: [0.2, 0.8, 0.2, 1] }}
-      className="w-full max-w-4xl bg-[#0a0e18]/78 backdrop-blur-3xl border border-white/10 p-6 sm:p-10 rounded-[30px] sm:rounded-[48px] shadow-2xl hover:border-white/20 transition-all duration-700"
+      className="max-w-4xl bg-[#0a0e18]/78 backdrop-blur-3xl border border-white/10 p-10 rounded-[48px] shadow-2xl hover:border-white/20 transition-all duration-700"
     >
-      <div className="flex items-start justify-between gap-5 sm:gap-6">
+      <div className="flex items-start justify-between gap-6">
         <div>
-          <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-[10px] sm:text-xs font-black tracking-widest text-white/70">
+          <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-xs font-black tracking-widest text-white/70">
             {stage.chip}
           </div>
-          <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-white/95 mt-4 sm:mt-5">{stage.title}</h2>
+          <h2 className="text-4xl font-black tracking-tight text-white/95 mt-5">{stage.title}</h2>
         </div>
 
         <div className="hidden sm:flex items-center gap-2 opacity-90">
@@ -220,20 +193,20 @@ function StageCard({ stage, onInView }: { stage: Stage; onInView: () => void }) 
         </div>
       </div>
 
-      <div className="mt-6 sm:mt-8 grid gap-3">
+      <div className="mt-8 grid gap-3">
         {stage.items.map((item, i) => (
-          <div key={i} className="flex items-start gap-3 bg-white/5 border border-white/10 rounded-2xl px-4 sm:px-5 py-4">
+          <div key={i} className="flex items-start gap-3 bg-white/5 border border-white/10 rounded-2xl px-5 py-4">
             <div className="mt-[2px] w-6 h-6 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center text-xs font-black text-white/80">
               {i + 1}
             </div>
-            <div className="text-white/78 text-sm sm:text-base leading-relaxed">{item}</div>
+            <div className="text-white/78 text-base leading-relaxed">{item}</div>
           </div>
         ))}
       </div>
 
-      <div className="mt-6 sm:mt-8 flex flex-wrap gap-3">
+      <div className="mt-8 flex flex-wrap gap-3">
         {stage.iconLabels.slice(0, 3).map((label, i) => (
-          <div key={i} className="text-[10px] sm:text-xs font-bold tracking-wide text-white/60 bg-black/20 border border-white/10 rounded-full px-4 py-2">
+          <div key={i} className="text-xs font-bold tracking-wide text-white/60 bg-black/20 border border-white/10 rounded-full px-4 py-2">
             {label}
           </div>
         ))}
