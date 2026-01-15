@@ -1,0 +1,15 @@
+[33m5726d84[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mback-one-step[m[33m, [m[1;31morigin/back-one-step[m[33m)[m new cut
+[33m1fd2ae2[m Revert "make mobile friendly"
+[33mb745773[m sync
+[33m39f8cd9[m make mobile friendly
+[33m7e29ac7[m save
+[33mdfcb7fd[m sds
+[33m24511da[m sync
+[33m26007f0[m comit 1234
+[33m13fc7b0[m Fix SWA build to use Node 22 and upload dist
+[33m0cc9eca[m Fix Atmosphere component
+[33md6a42f2[m Fix Atmosphere build
+[33mf6ed9dd[m sync
+[33me4d75bd[m Commit 12345
+[33m339304d[m comint
+[33mbb6a956[m yml file
