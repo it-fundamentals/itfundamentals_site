@@ -1,3 +1,4 @@
+// src/components/MountainClimb.tsx
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, useInView, useScroll, useSpring } from 'framer-motion';
 import { Dictionary, Stage } from '../types';
@@ -74,10 +75,7 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
                   d="M 60 16 C 76 16, 90 22, 96 26 L 96 60 C 96 82, 80 94, 60 100 C 40 94, 24 82, 24 60 L 24 26 C 30 22, 44 16, 60 16 Z"
                   fill="#ff3b30"
                 />
-                <path
-                  d="M 52 34 L 68 34 L 68 52 L 86 52 L 86 68 L 68 68 L 68 86 L 52 86 L 52 68 L 34 68 L 34 52 L 52 52 Z"
-                  fill="white"
-                />
+                <path d="M 52 34 L 68 34 L 68 52 L 86 52 L 86 68 L 68 68 L 68 86 L 52 86 L 52 68 L 34 68 L 34 52 L 52 52 Z" fill="white" />
               </svg>
             </div>
             <div>
@@ -114,7 +112,7 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
 
                   {isActive ? (
                     <div className="w-full">
-                      <div className="h-[3px] w-full rounded-full bg-[#D52B1E]" />
+                      <div className="h-[6px] w-full rounded-full bg-[#D52B1E]" />
                     </div>
                   ) : null}
                 </button>
@@ -122,7 +120,8 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
             })}
           </nav>
 
-          <div className="mt-auto pt-6 border-t border-white/5">
+          {/* Removed border-t to avoid the extra grey divider line under Base Camp */}
+          <div className="mt-auto pt-6">
             <h1 className="text-4xl font-black italic tracking-tighter leading-none text-white/90">{dict.top_title}</h1>
           </div>
         </div>
@@ -148,10 +147,11 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
               <circle key={i} cx={m.x} cy={m.y} r={i === 0 || i === milestones.length - 1 ? 10 : 8} fill="rgba(255,255,255,0.42)" />
             ))}
 
-            <motion.g animate={{ transform: `translate(${pathPoint.x}px, ${pathPoint.y}px)` }} transition={{ type: 'spring', stiffness: 100, damping: 20 }}>
+            {/* Use an SVG transform attribute so the marker reliably follows scroll progress */}
+            <g transform={`translate(${pathPoint.x} ${pathPoint.y})`}>
               <circle r="22" fill="rgba(255,255,255,0.16)" className="blur-sm" />
               <circle r="12" fill="white" />
-            </motion.g>
+            </g>
           </svg>
         </div>
       </aside>
