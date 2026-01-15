@@ -84,7 +84,8 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
             </div>
           </div>
 
-          <nav className="flex flex-col-reverse gap-3 overflow-y-auto pr-1">
+          {/* Key fix: hide horizontal overflow so no scrollbar appears */}
+          <nav className="flex flex-col-reverse gap-3 overflow-y-auto overflow-x-hidden pr-1">
             {stages.map((stage, idx) => {
               const isActive = activeStageId === stage.id;
 
@@ -94,7 +95,7 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
                   onClick={() => document.getElementById(stage.id)?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
                   className={`w-full flex flex-col gap-3 p-4 rounded-2xl transition-all border ${
                     isActive
-                      ? 'bg-white text-[#0b1020] border-white shadow-xl translate-x-1 scale-[1.02]'
+                      ? 'bg-white text-[#0b1020] border-white shadow-xl scale-[1.02]'
                       : 'bg-[#0a0e18]/40 text-white/70 border-white/5 hover:border-white/20 hover:bg-white/5'
                   }`}
                   type="button"
@@ -120,7 +121,6 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
             })}
           </nav>
 
-          {/* Removed border-t to avoid the extra grey divider line under Base Camp */}
           <div className="mt-auto pt-6">
             <h1 className="text-4xl font-black italic tracking-tighter leading-none text-white/90">{dict.top_title}</h1>
           </div>
@@ -147,7 +147,6 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
               <circle key={i} cx={m.x} cy={m.y} r={i === 0 || i === milestones.length - 1 ? 10 : 8} fill="rgba(255,255,255,0.42)" />
             ))}
 
-            {/* Use an SVG transform attribute so the marker reliably follows scroll progress */}
             <g transform={`translate(${pathPoint.x} ${pathPoint.y})`}>
               <circle r="22" fill="rgba(255,255,255,0.16)" className="blur-sm" />
               <circle r="12" fill="white" />
