@@ -57,11 +57,14 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
   const stages = useMemo(() => Object.values(dict.stages) as Stage[], [dict.stages]);
 
   return (
-    <div ref={containerRef} className="relative flex min-h-[700vh] pt-32 px-6 gap-8 overflow-visible">
+    <div
+      ref={containerRef}
+      className="relative flex min-h-[700vh] px-4 sm:px-6 gap-8 overflow-visible"
+    >
       <Atmosphere progress={smoothProgress} />
 
-      {/* Left menu stays sticky */}
-      <aside className="sticky top-32 left-0 h-[calc(100vh-160px)] w-80 flex-shrink-0 z-[60] hidden xl:block">
+      {/* Left menu stays sticky, desktop only */}
+      <aside className="sticky top-28 left-0 h-[calc(100vh-140px)] w-80 flex-shrink-0 z-[60] hidden xl:block">
         <div className="h-full bg-[#0a0e18]/40 backdrop-blur-2xl border border-white/10 rounded-[32px] p-4 flex flex-col relative overflow-hidden shadow-2xl">
           <div className="bg-[#0a0e18]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex items-center gap-4 mb-4">
             <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center p-2">
@@ -75,16 +78,20 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
                   d="M 60 16 C 76 16, 90 22, 96 26 L 96 60 C 96 82, 80 94, 60 100 C 40 94, 24 82, 24 60 L 24 26 C 30 22, 44 16, 60 16 Z"
                   fill="#ff3b30"
                 />
-                <path d="M 52 34 L 68 34 L 68 52 L 86 52 L 86 68 L 68 68 L 68 86 L 52 86 L 52 68 L 34 68 L 34 52 L 52 52 Z" fill="white" />
+                <path
+                  d="M 52 34 L 68 34 L 68 52 L 86 52 L 86 68 L 68 68 L 68 86 L 52 86 L 52 68 L 34 68 L 34 52 L 52 52 Z"
+                  fill="white"
+                />
               </svg>
             </div>
             <div>
               <div className="text-[10px] font-black tracking-widest text-white/50">{dict.top_brand}</div>
-              <div className="text-xs font-medium leading-tight text-white/90 max-w-[160px] mt-1">{dict.top_tagline}</div>
+              <div className="text-xs font-medium leading-tight text-white/90 max-w-[160px] mt-1">
+                {dict.top_tagline}
+              </div>
             </div>
           </div>
 
-          {/* Key fix: hide horizontal overflow so no scrollbar appears */}
           <nav className="flex flex-col-reverse gap-3 overflow-y-auto overflow-x-hidden pr-1">
             {stages.map((stage, idx) => {
               const isActive = activeStageId === stage.id;
@@ -128,23 +135,43 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
       </aside>
 
       {/* Content scrolls */}
-      <section className="flex-1 space-y-[60vh] pb-[60vh] relative z-20">
+      <section className="flex-1 space-y-[60vh] pb-[60vh] relative z-20 pt-28 sm:pt-32">
         {stages.map((stage) => (
           <StageCard key={stage.id} stage={stage} onInView={() => setActiveStageId(stage.id)} />
         ))}
       </section>
 
-      {/* Right path stays sticky */}
-      <aside className="sticky top-32 right-0 h-[calc(100vh-160px)] w-80 flex-shrink-0 hidden lg:block z-[60]">
+      {/* Right path stays sticky, desktop only */}
+      <aside className="sticky top-28 right-0 h-[calc(100vh-140px)] w-80 flex-shrink-0 hidden xl:block z-[60]">
         <div className="h-full bg-[#0a0e18]/40 backdrop-blur-2xl border border-white/10 rounded-[32px] p-6 relative overflow-hidden shadow-2xl">
           <div className="absolute top-4 right-4 text-3xl opacity-40">🏔️</div>
 
           <svg className="w-full h-full" viewBox="0 0 240 860" preserveAspectRatio="none">
-            <path ref={pathRef} d={pathData} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="120" strokeLinecap="round" />
-            <path d={pathData} fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="4" strokeDasharray="2 12" strokeLinecap="round" />
+            <path
+              ref={pathRef}
+              d={pathData}
+              fill="none"
+              stroke="rgba(255,255,255,0.08)"
+              strokeWidth="120"
+              strokeLinecap="round"
+            />
+            <path
+              d={pathData}
+              fill="none"
+              stroke="rgba(255,255,255,0.3)"
+              strokeWidth="4"
+              strokeDasharray="2 12"
+              strokeLinecap="round"
+            />
 
             {milestones.map((m, i) => (
-              <circle key={i} cx={m.x} cy={m.y} r={i === 0 || i === milestones.length - 1 ? 10 : 8} fill="rgba(255,255,255,0.42)" />
+              <circle
+                key={i}
+                cx={m.x}
+                cy={m.y}
+                r={i === 0 || i === milestones.length - 1 ? 10 : 8}
+                fill="rgba(255,255,255,0.42)"
+              />
             ))}
 
             <g transform={`translate(${pathPoint.x} ${pathPoint.y})`}>
@@ -174,14 +201,14 @@ function StageCard({ stage, onInView }: { stage: Stage; onInView: () => void }) 
       whileInView={{ opacity: 1, x: 0, scale: 1 }}
       viewport={{ once: false, amount: 0.3 }}
       transition={{ duration: 0.95, ease: [0.2, 0.8, 0.2, 1] }}
-      className="max-w-4xl bg-[#0a0e18]/78 backdrop-blur-3xl border border-white/10 p-10 rounded-[48px] shadow-2xl hover:border-white/20 transition-all duration-700"
+      className="max-w-4xl bg-[#0a0e18]/78 backdrop-blur-3xl border border-white/10 p-8 sm:p-10 rounded-[40px] sm:rounded-[48px] shadow-2xl hover:border-white/20 transition-all duration-700"
     >
       <div className="flex items-start justify-between gap-6">
         <div>
           <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-xs font-black tracking-widest text-white/70">
             {stage.chip}
           </div>
-          <h2 className="text-4xl font-black tracking-tight text-white/95 mt-5">{stage.title}</h2>
+          <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-white/95 mt-5">{stage.title}</h2>
         </div>
 
         <div className="hidden sm:flex items-center gap-2 opacity-90">
