@@ -1,14 +1,18 @@
 import React, { useMemo, useState } from 'react';
-import { HashRouter, Routes, Route, Link } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { Language } from './types';
-import { I18N, LANGUAGES } from './constants';
+import { I18N } from './constants';
 import MountainClimb from './components/MountainClimb';
 import PageTemplate from './components/PageTemplate';
+import SiteHeader from './components/SiteHeader';
+import LandingPage from './components/LandingPage';
 
 const isLanguage = (value: string | null): value is Language => value === 'en' || value === 'de' || value === 'fr';
 
-export default function App() {
+function AppInner() {
+  const navigate = useNavigate();
+
   const [lang, setLang] = useState<Language>(() => {
     const saved = localStorage.getItem('itf_lang');
     return isLanguage(saved) ? saved : 'en';
@@ -22,63 +26,50 @@ export default function App() {
   const dict = useMemo(() => I18N[lang], [lang]);
 
   return (
+    <div className="min-h-screen">
+      <SiteHeader dict={dict} lang={lang} onChangeLang={changeLang} />
+
+      <main className="pt-0">
+        <AnimatePresence mode="wait">
+          <Routes>
+            <Route path="/" element={<LandingPage dict={dict} onOpenClimb={() => navigate('/climb')} />} />
+
+            <Route
+              path="/climb"
+              element={
+                <div className="relative min-h-screen bg-[#070a12] text-white selection:bg-red-500/30">
+                  <div className="fixed inset-0 z-0">
+                    <img
+                      src="/assets/matterhorn.jpg"
+                      alt="Matterhorn"
+                      className="w-full h-full object-cover scale-105 opacity-80 saturate-[1.1] contrast-[1.1]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#070a12]/40 via-transparent to-[#070a12]/85" />
+                  </div>
+
+                  <div className="relative z-10">
+                    <MountainClimb dict={dict} />
+                  </div>
+                </div>
+              }
+            />
+
+            <Route path="/about" element={<PageTemplate title={dict.page_about_title} body={dict.page_about_body} />} />
+            <Route path="/contact" element={<PageTemplate title={dict.page_contact_title} body={dict.page_contact_body} />} />
+            <Route path="/portal" element={<PageTemplate title={dict.page_portal_title} body={dict.page_portal_body} />} />
+
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </AnimatePresence>
+      </main>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
     <HashRouter>
-      <div className="relative min-h-screen bg-[#070a12] text-white selection:bg-red-500/30">
-        <div className="fixed inset-0 z-0">
-          <img
-            src="/assets/matterhorn.jpg"
-            alt="Matterhorn"
-            className="w-full h-full object-cover scale-105 opacity-80 saturate-[1.1] contrast-[1.1]"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#070a12]/40 via-transparent to-[#070a12]/85" />
-        </div>
-
-        <header className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] w-full max-w-6xl px-4 pointer-events-none">
-          <div className="pointer-events-auto bg-[#0a0e18]/60 backdrop-blur-xl border border-white/10 rounded-2xl p-2 flex items-center justify-between shadow-2xl">
-            <nav className="flex items-center gap-2">
-              <Link to="/portal" className="px-4 py-2 rounded-xl text-sm font-bold bg-white/5 hover:bg-white/10 border border-white/5 transition-all">
-                {dict.menu_portal}
-              </Link>
-              <Link to="/about" className="px-4 py-2 rounded-xl text-sm font-bold bg-white/5 hover:bg-white/10 border border-white/5 transition-all">
-                {dict.menu_about}
-              </Link>
-              <Link to="/contact" className="px-4 py-2 rounded-xl text-sm font-bold bg-white/5 hover:bg-white/10 border border-white/5 transition-all">
-                {dict.menu_contact}
-              </Link>
-              <Link to="/" className="px-4 py-2 rounded-xl text-sm font-bold bg-white/5 hover:bg-white/10 border border-white/5 transition-all">
-                {dict.menu_climb}
-              </Link>
-            </nav>
-
-            <div className="flex items-center gap-2 border-l border-white/10 pl-2">
-              {LANGUAGES.map((l) => (
-                <button
-                  key={l.code}
-                  onClick={() => changeLang(l.code)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-all ${
-                    lang === l.code ? 'bg-white text-[#0b1020]' : 'bg-white/5 text-white hover:bg-white/10'
-                  }`}
-                  type="button"
-                >
-                  <span className="text-base">{l.flag}</span>
-                  <span className="text-xs font-black tracking-widest">{l.name}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </header>
-
-        <main className="relative z-10">
-          <AnimatePresence mode="wait">
-            <Routes>
-              <Route path="/" element={<MountainClimb dict={dict} />} />
-              <Route path="/about" element={<PageTemplate title={dict.page_about_title} body={dict.page_about_body} />} />
-              <Route path="/contact" element={<PageTemplate title={dict.page_contact_title} body={dict.page_contact_body} />} />
-              <Route path="/portal" element={<PageTemplate title={dict.page_portal_title} body={dict.page_portal_body} />} />
-            </Routes>
-          </AnimatePresence>
-        </main>
-      </div>
+      <AppInner />
     </HashRouter>
   );
 }

@@ -1,4 +1,3 @@
-// src/components/MountainClimb.tsx
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, useInView, useScroll, useSpring } from 'framer-motion';
 import { Dictionary, Stage } from '../types';
@@ -8,12 +7,8 @@ interface MountainClimbProps {
   dict: Dictionary;
 }
 
-type Point = { x: number; y: number };
-
 export default function MountainClimb({ dict }: MountainClimbProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const pathRef = useRef<SVGPathElement | null>(null);
-
   const [activeStageId, setActiveStageId] = useState('stage-basecamp');
 
   const { scrollYProgress } = useScroll({
@@ -22,61 +17,17 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
   });
 
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 90, damping: 26, restDelta: 0.001 });
-
-  const [pathPoint, setPathPoint] = useState<Point>({ x: 120, y: 830 });
-  const [milestones, setMilestones] = useState<Point[]>([]);
-
-  const pathData =
-    'M 120 30 C 175 75, 205 135, 150 200 C 100 260, 45 315, 92 385 C 135 450, 200 500, 155 575 C 118 635, 52 680, 95 745 C 130 805, 165 830, 120 830';
-
-  useEffect(() => {
-    if (!pathRef.current) return;
-
-    const totalLength = pathRef.current.getTotalLength();
-
-    const unsubscribe = smoothProgress.on('change', (latest: number) => {
-      if (!pathRef.current) return;
-      const point = pathRef.current.getPointAtLength(totalLength * (1 - latest));
-      setPathPoint({ x: point.x, y: point.y });
-    });
-
-    const stageKeys = Object.keys(dict.stages);
-    const stagesCount = stageKeys.length;
-
-    const dots: Point[] = [];
-    for (let i = 0; i < stagesCount; i++) {
-      const t = stagesCount === 1 ? 0 : i / (stagesCount - 1);
-      const pt = pathRef.current.getPointAtLength(totalLength * t);
-      dots.push({ x: pt.x, y: pt.y });
-    }
-    setMilestones(dots);
-
-    return () => unsubscribe();
-  }, [smoothProgress, dict.stages]);
-
   const stages = useMemo(() => Object.values(dict.stages) as Stage[], [dict.stages]);
 
   return (
     <div ref={containerRef} className="relative flex min-h-[700vh] pt-32 px-6 gap-8 overflow-visible">
       <Atmosphere progress={smoothProgress} />
 
-      {/* Left menu stays sticky */}
       <aside className="sticky top-32 left-0 h-[calc(100vh-160px)] w-80 flex-shrink-0 z-[60] hidden xl:block">
         <div className="h-full bg-[#0a0e18]/40 backdrop-blur-2xl border border-white/10 rounded-[32px] p-4 flex flex-col relative overflow-hidden shadow-2xl">
           <div className="bg-[#0a0e18]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center p-2">
-              <svg viewBox="0 0 120 120" className="w-full h-full">
-                <path
-                  d="M 60 8 C 80 8, 96 16, 104 22 L 104 60 C 104 88, 84 104, 60 112 C 36 104, 16 88, 16 60 L 16 22 C 24 16, 40 8, 60 8 Z"
-                  fill="#e9eef7"
-                  opacity="0.9"
-                />
-                <path
-                  d="M 60 16 C 76 16, 90 22, 96 26 L 96 60 C 96 82, 80 94, 60 100 C 40 94, 24 82, 24 60 L 24 26 C 30 22, 44 16, 60 16 Z"
-                  fill="#ff3b30"
-                />
-                <path d="M 52 34 L 68 34 L 68 52 L 86 52 L 86 68 L 68 68 L 68 86 L 52 86 L 52 68 L 34 68 L 34 52 L 52 52 Z" fill="white" />
-              </svg>
+            <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-xl overflow-hidden flex items-center justify-center">
+              <img src="/assets/logo.png" alt="IT Fundamentals" className="w-full h-full object-cover" />
             </div>
             <div>
               <div className="text-[10px] font-black tracking-widest text-white/50">{dict.top_brand}</div>
@@ -84,7 +35,6 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
             </div>
           </div>
 
-          {/* Key fix: hide horizontal overflow so no scrollbar appears */}
           <nav className="flex flex-col-reverse gap-3 overflow-y-auto overflow-x-hidden pr-1">
             {stages.map((stage, idx) => {
               const isActive = activeStageId === stage.id;
@@ -127,33 +77,11 @@ export default function MountainClimb({ dict }: MountainClimbProps) {
         </div>
       </aside>
 
-      {/* Content scrolls */}
       <section className="flex-1 space-y-[60vh] pb-[60vh] relative z-20">
         {stages.map((stage) => (
           <StageCard key={stage.id} stage={stage} onInView={() => setActiveStageId(stage.id)} />
         ))}
       </section>
-
-      {/* Right path stays sticky */}
-      <aside className="sticky top-32 right-0 h-[calc(100vh-160px)] w-80 flex-shrink-0 hidden lg:block z-[60]">
-        <div className="h-full bg-[#0a0e18]/40 backdrop-blur-2xl border border-white/10 rounded-[32px] p-6 relative overflow-hidden shadow-2xl">
-          <div className="absolute top-4 right-4 text-3xl opacity-40">🏔️</div>
-
-          <svg className="w-full h-full" viewBox="0 0 240 860" preserveAspectRatio="none">
-            <path ref={pathRef} d={pathData} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="120" strokeLinecap="round" />
-            <path d={pathData} fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="4" strokeDasharray="2 12" strokeLinecap="round" />
-
-            {milestones.map((m, i) => (
-              <circle key={i} cx={m.x} cy={m.y} r={i === 0 || i === milestones.length - 1 ? 10 : 8} fill="rgba(255,255,255,0.42)" />
-            ))}
-
-            <g transform={`translate(${pathPoint.x} ${pathPoint.y})`}>
-              <circle r="22" fill="rgba(255,255,255,0.16)" className="blur-sm" />
-              <circle r="12" fill="white" />
-            </g>
-          </svg>
-        </div>
-      </aside>
     </div>
   );
 }

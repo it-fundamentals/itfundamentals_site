@@ -1,10 +1,11 @@
-// src/components/Atmosphere.tsx
 import React, { useMemo } from 'react';
 import { motion, useTransform, type MotionValue } from 'framer-motion';
 import SnowCanvas from './SnowCanvas';
 
 interface AtmosphereProps {
   progress: MotionValue<number>;
+  mode?: 'fixed' | 'contained';
+  containerRef?: React.RefObject<HTMLElement | null>;
 }
 
 type SnowParticle = {
@@ -16,7 +17,7 @@ type SnowParticle = {
   drift: number;
 };
 
-function Snowfall({ progress }: { progress: MotionValue<number> }) {
+function Snowfall({ progress, mode }: { progress: MotionValue<number>; mode: 'fixed' | 'contained' }) {
   const snowOpacity = useTransform(progress, [0, 1], [0.55, 0.02]);
   const snowScale = useTransform(progress, [0, 1], [1, 1.35]);
 
@@ -31,9 +32,11 @@ function Snowfall({ progress }: { progress: MotionValue<number> }) {
     }));
   }, []);
 
+  const positionClass = mode === 'contained' ? 'absolute inset-0' : 'fixed inset-0';
+
   return (
     <motion.div
-      className="fixed inset-0 pointer-events-none z-[18]"
+      className={`${positionClass} pointer-events-none z-[18]`}
       style={{ opacity: snowOpacity, scale: snowScale }}
       aria-hidden="true"
     >
@@ -63,13 +66,15 @@ function Snowfall({ progress }: { progress: MotionValue<number> }) {
   );
 }
 
-function FloatingClouds({ progress }: { progress: MotionValue<number> }) {
+function FloatingClouds({ progress, mode }: { progress: MotionValue<number>; mode: 'fixed' | 'contained' }) {
   const cloudsOpacity = useTransform(progress, [0.6, 0.9], [0, 0.6]);
   const cloudsY = useTransform(progress, [0.6, 1], [100, 0]);
 
+  const positionClass = mode === 'contained' ? 'absolute inset-0' : 'fixed inset-0';
+
   return (
     <motion.div
-      className="fixed inset-0 pointer-events-none z-[25] overflow-hidden"
+      className={`${positionClass} pointer-events-none z-[25] overflow-hidden`}
       style={{ opacity: cloudsOpacity, y: cloudsY }}
       aria-hidden="true"
     >
@@ -90,26 +95,21 @@ function FloatingClouds({ progress }: { progress: MotionValue<number> }) {
   );
 }
 
-export default function Atmosphere({ progress }: AtmosphereProps) {
+export default function Atmosphere({ progress, mode = 'fixed', containerRef }: AtmosphereProps) {
   const brightnessOverlay = useTransform(progress, [0, 0.8], [0.75, 0]);
+  const positionClass = mode === 'contained' ? 'absolute inset-0' : 'fixed inset-0';
 
   return (
     <>
-      {/* Dark overlay */}
       <motion.div
-        className="fixed inset-0 pointer-events-none z-[5] bg-[#070a12]"
+        className={`${positionClass} pointer-events-none z-[5] bg-[#070a12]`}
         style={{ opacity: brightnessOverlay }}
         aria-hidden="true"
       />
 
-      {/* Storm layer (canvas based, heavy at start, fades as you climb) */}
-      <SnowCanvas progress={progress} />
-
-      {/* Light particle layer on top to give depth */}
-      <Snowfall progress={progress} />
-
-      {/* Peak clouds */}
-      <FloatingClouds progress={progress} />
+      <SnowCanvas progress={progress} mode={mode} containerRef={containerRef} />
+      <Snowfall progress={progress} mode={mode} />
+      <FloatingClouds progress={progress} mode={mode} />
     </>
   );
 }

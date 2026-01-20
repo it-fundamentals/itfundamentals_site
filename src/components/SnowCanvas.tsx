@@ -9,7 +9,15 @@ type Particle = {
   v: number;
 };
 
-export default function SnowCanvas({ progress }: { progress: MotionValue<number> }) {
+export default function SnowCanvas({
+  progress,
+  mode = 'fixed',
+  containerRef
+}: {
+  progress: MotionValue<number>;
+  mode?: 'fixed' | 'contained';
+  containerRef?: React.RefObject<HTMLElement | null>;
+}) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const progressRef = useRef(0);
 
@@ -27,12 +35,28 @@ export default function SnowCanvas({ progress }: { progress: MotionValue<number>
     let raf = 0;
     let particles: Particle[] = [];
 
+    let width = 0;
+    let height = 0;
+
+    const getSize = () => {
+      if (mode === 'contained') {
+        const el = containerRef?.current;
+        if (!el) return { w: 0, h: 0 };
+        return { w: el.clientWidth, h: el.clientHeight };
+      }
+      return { w: window.innerWidth, h: window.innerHeight };
+    };
+
     const resize = () => {
+      const { w, h } = getSize();
+      width = w;
+      height = h;
+
       const dpr = Math.max(1, window.devicePixelRatio || 1);
-      canvas.width = Math.floor(window.innerWidth * dpr);
-      canvas.height = Math.floor(window.innerHeight * dpr);
-      canvas.style.width = `${window.innerWidth}px`;
-      canvas.style.height = `${window.innerHeight}px`;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
@@ -41,8 +65,8 @@ export default function SnowCanvas({ progress }: { progress: MotionValue<number>
       particles = [];
       for (let i = 0; i < count; i++) {
         particles.push({
-          x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight,
+          x: Math.random() * width,
+          y: Math.random() * height,
           r: Math.random() * 2.6 + 0.8,
           d: Math.random() * count,
           v: Math.random() * 1.6 + 0.6
@@ -57,8 +81,8 @@ export default function SnowCanvas({ progress }: { progress: MotionValue<number>
         p.y += Math.cos(p.d) + p.v + intensity * 2.4;
         p.x += Math.sin(p.d) + wind;
 
-        if (p.x > window.innerWidth + 10 || p.x < -10 || p.y > window.innerHeight + 10) {
-          p.x = Math.random() * window.innerWidth;
+        if (p.x > width + 10 || p.x < -10 || p.y > height + 10) {
+          p.x = Math.random() * width;
           p.y = -10;
         }
       }
@@ -66,11 +90,9 @@ export default function SnowCanvas({ progress }: { progress: MotionValue<number>
 
     const draw = () => {
       const p = progressRef.current;
-
-      // Heavy at start (near 0), fades out as progress approaches 1
       const intensity = Math.max(0, Math.min(1, 1 - p));
 
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      ctx.clearRect(0, 0, width, height);
 
       if (intensity > 0.03) {
         const visibleCount = Math.max(0, Math.floor(particles.length * intensity));
@@ -95,21 +117,35 @@ export default function SnowCanvas({ progress }: { progress: MotionValue<number>
       createParticles();
     };
 
-    window.addEventListener('resize', onResize);
+    let ro: ResizeObserver | null = null;
+
+    if (mode === 'contained') {
+      const el = containerRef?.current;
+      if (el && 'ResizeObserver' in window) {
+        ro = new ResizeObserver(() => onResize());
+        ro.observe(el);
+      }
+    } else {
+      window.addEventListener('resize', onResize);
+    }
+
     resize();
     createParticles();
     draw();
 
     return () => {
+      if (ro) ro.disconnect();
       window.removeEventListener('resize', onResize);
       window.cancelAnimationFrame(raf);
     };
   }, []);
 
+  const positionClass = mode === 'contained' ? 'absolute inset-0' : 'fixed inset-0';
+
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-[15]"
+      className={`${positionClass} pointer-events-none z-[15]`}
       style={{ filter: 'blur(0.8px)' }}
       aria-hidden="true"
     />
